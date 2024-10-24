@@ -44,38 +44,38 @@
 ### Steps
 
 1. **Clone the Repository**
-   
-   ```
-   git clone https://github.com/yourusername/LeafAreaCalc.git
-   cd LeafAreaCalc
-   ```
+
+```
+git clone https://github.com/yourusername/LeafAreaCalc.git
+cd LeafAreaCalc
+```
 
 
-2. **Create and Activate Virtual Environment**
+3. **Create and Activate Virtual Environment**
 
-    ```
-    python -m venv venv
-    # On Windows
-    venv\Scripts\activate
-    # On Unix or MacOS
-    source venv/bin/activate
-    ```
+```
+python -m venv venv
+# On Windows
+venv\Scripts\activate
+# On Unix or MacOS
+source venv/bin/activate
+```
 
 3. **Install Dependencies**
 
 Once your virtual environment is activated, install the necessary Python packages by running the following command:
 
-    ```
-    pip install -r requirements.txt
-    ```
+```
+pip install -r requirements.txt
+```
 
 4. **Verify Installation**
 
 Ensure that all dependencies are installed correctly by running:
 
-    ```
-    python src/gui_leaf_area_classification.py
-    ```
+```
+python src/gui_leaf_area_classification.py
+```
 
 ## Configuration
 
@@ -83,58 +83,58 @@ LeafAreaCalc uses a configuration file (config/config.ini) to manage processing 
 
 ### Configuration File Structure
     
-    ```
-    [DEFAULT]
-    # Directory containing leaf images
-    image_directory = C:/Path/To/Your/Images
+```
+[DEFAULT]
+# Directory containing leaf images
+image_directory = C:/Path/To/Your/Images
 
-    # Processing parameters
-    # Minimum leaf area in mm² to consider
-    area_threshold = 10
+# Processing parameters
+# Minimum leaf area in mm² to consider
+area_threshold = 10
 
-    # Skip contrast adjustment (True or False)
-    skip_contrast_adjustment = False
+# Skip contrast adjustment (True or False)
+skip_contrast_adjustment = False
 
-    # Save intermediate images (True or False)
-    img_debug = False
+# Save intermediate images (True or False)
+img_debug = False
 
-    # Cropping percentages
-    # Percentage to crop from the left
-    crop_left = 20
+# Cropping percentages
+# Percentage to crop from the left
+crop_left = 20
 
-    # Percentage to crop from the right
-    crop_right = 3
+# Percentage to crop from the right
+crop_right = 3
 
-    # Percentage to crop from the top
-    crop_top = 3
+# Percentage to crop from the top
+crop_top = 3
 
-    # Percentage to crop from the bottom
-    crop_bottom = 3
+# Percentage to crop from the bottom
+crop_bottom = 3
 
-    # Specific filename to process (leave empty to process all images)
-    filename =
+# Specific filename to process (leave empty to process all images)
+filename =
 
-    # Adaptive Thresholding Parameters
-    # Enable or disable adaptive thresholding (True or False)
-    adaptive_threshold = True
+# Adaptive Thresholding Parameters
+# Enable or disable adaptive thresholding (True or False)
+adaptive_threshold = True
 
-    # Window size for adaptive thresholding (Must be an odd integer)
-    adaptive_window_size = 15
+# Window size for adaptive thresholding (Must be an odd integer)
+adaptive_window_size = 15
 
-    # Constant subtracted from mean in adaptive thresholding
-    adaptive_C = 2
+# Constant subtracted from mean in adaptive thresholding
+adaptive_C = 2
 
-    # RGB value above which pixels are considered near-white
-    color_threshold = 240
+# RGB value above which pixels are considered near-white
+color_threshold = 240
 
-    # Morphological Closing Parameters
-    # Kernel size for morphological closing (width,height)
-    kernel_size = (5, 5)
+# Morphological Closing Parameters
+# Kernel size for morphological closing (width,height)
+kernel_size = (5, 5)
 
-    # Logging
-    # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
-    log_level = DEBUG
-    ```
+# Logging
+# Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_level = DEBUG
+```
 
 ### Editing Configuration
 
@@ -163,9 +163,9 @@ LeafAreaCalc offers both a Graphical User Interface (GUI) and a Command-Line Int
 ### Graphical User Interface (GUI)
 1. Launch the GUI
 
-    ```
-    python src/gui_leaf_area_classification.py
-    ```
+```
+python src/gui_leaf_area_classification.py
+```
 
 2. Select Image Directory
 - Click on the "Select Image Directory" button.
@@ -189,9 +189,9 @@ LeafAreaCalc offers both a Graphical User Interface (GUI) and a Command-Line Int
 ### Command-Line Interface (CLI)
 For users who prefer command-line operations, LeafAreaCalc can be executed directly:
 
-    ```
-    python src/leaf_area_classification.py
-    ```
+```
+python src/leaf_area_classification.py
+```
 Note: Ensure that all necessary parameters are set in the `config/config.ini` file before running the CLI.
 
 ### Logging
