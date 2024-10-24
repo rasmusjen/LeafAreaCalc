@@ -3,77 +3,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Module Name: Leaf Area Classification
+Leaf Area Classification Processing Script with Adaptive Thresholding in RGB Space
 
-Description:
-------------
-This module processes scanned images of leaves to estimate their area.
-It applies a series of image processing techniques to detect and measure leaf regions,
-and outputs the results both as annotated images and as a CSV summary file.
+This script processes leaf images to calculate leaf area using adaptive thresholding
+in RGB space applied immediately after cropping, before converting to grayscale.
 
 Features:
 ---------
-- Configurable cropping based on percentage inputs.
+- Adaptive thresholding in RGB space to exclude near-white non-leaf areas.
+- Cropping based on configurable percentages.
 - Optional contrast adjustment using CLAHE.
-- Adaptive thresholding in RGB space to exclude near-white regions.
-- Noise reduction with Gaussian Blur.
-- Adaptive thresholding and morphological operations for binary image creation.
-- Contour detection to identify individual leaves.
-- Area calculation in square millimeters.
-- Mean RGB value calculation within each leaf contour.
-- Annotation of leaves with unique identifiers.
-- Generation of a comprehensive results table.
-- Logging of processing steps and errors.
-
-Usage:
-------
-1. Configure the parameters in `config/config.ini`.
-2. Run the script:
-       python leaf_area_classification.py
-
-Dependencies:
--------------
-- Python 3.6+
-- OpenCV (`cv2`)
-- NumPy
-- pandas
-- Pillow (`PIL`)
-- configparser
-- logging
-- threading
-
-Configuration:
---------------
-The script reads configuration parameters from `config/config.ini`. Ensure this file is properly
-configured before running the script. Key parameters include:
-
-- `image_directory`: Path to the directory containing leaf images.
-- `area_threshold`: Minimum area (in mm²) to consider a contour as a valid leaf.
-- `skip_contrast_adjustment`: Boolean flag to skip contrast adjustment.
-- `crop_left`, `crop_right`, `crop_top`, `crop_bottom`: Percentage values for cropping.
-- `filename`: Specific filename to process (optional).
-- `img_debug`: Boolean flag to save intermediate processing images for debugging.
-- `adaptive_threshold`: Boolean flag to enable adaptive thresholding.
-- `adaptive_window_size`: Window size for adaptive thresholding (must be odd).
-- `adaptive_C`: Constant subtracted from mean in adaptive thresholding.
-- `color_threshold`: RGB value threshold to identify near-white pixels.
+- Morphological operations to clean up the binary image.
+- Contour detection and area calculation.
+- Mean RGB calculation within detected leaf areas.
+- Configurable via 'config.ini' file.
+- Supports processing of individual files or entire directories.
+- Graceful termination using threading events.
 
 Author:
 -------
 Rasmus Jensen
-raje at ecos.au.dk
+raje at ecos au dk
 
 Date:
 -----
-Refined on October 22, 2024
+October 23, 2024
 
 Version:
 --------
-0.2.0
+0.3.0
 
-License:
---------
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 """
 
 import os
@@ -89,31 +48,32 @@ import pandas as pd
 from PIL import Image
 import re
 import threading
+import ast
 
-# Configure logging for debugging and information
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 @dataclass
 class Config:
     """
-    Configuration dataclass to hold all necessary parameters.
+    Configuration dataclass to hold all configuration parameters.
 
     Attributes:
-        image_directory (str): Path to the directory containing leaf images.
-        area_threshold (float): Minimum area (in mm²) to consider a contour as a valid leaf.
+        image_directory (str): Directory containing leaf images.
+        area_threshold (float): Minimum leaf area in mm² to consider.
         skip_contrast_adjustment (bool): Flag to skip contrast adjustment.
         crop_left_pct (float): Percentage to crop from the left.
         crop_right_pct (float): Percentage to crop from the right.
         crop_top_pct (float): Percentage to crop from the top.
         crop_bottom_pct (float): Percentage to crop from the bottom.
-        filename (str): Specific filename to process (optional).
-        img_debug (bool): Flag to save intermediate processing images for debugging.
-        adaptive_threshold (bool): Flag to enable adaptive thresholding.
-        adaptive_window_size (int): Size of the neighborhood window for adaptive thresholding (must be odd).
-        adaptive_C (int): Constant subtracted from the local mean in adaptive thresholding.
-        color_threshold (int): RGB value threshold to identify near-white pixels.
+        filename (str): Specific filename to process.
+        img_debug (bool): Flag to save intermediate images.
+        adaptive_threshold (bool): Enable adaptive thresholding in RGB space.
+        adaptive_window_size (int): Window size for adaptive thresholding.
+        adaptive_C (int): Constant subtracted from mean in adaptive thresholding.
+        color_threshold (int): Threshold to define near-white pixels.
     """
     image_directory: str
     area_threshold: float
@@ -128,17 +88,18 @@ class Config:
     adaptive_window_size: int
     adaptive_C: int
     color_threshold: int
+    kernel_size: Tuple[int, int]
 
 
 def read_config(config_file: str = 'config.ini') -> Config:
     """
-    Read configuration parameters from a config file.
+    Read the configuration from 'config.ini' and return a Config object.
 
     Args:
-        config_file (str, optional): Path to the configuration file. Defaults to 'config.ini'.
+        config_file (str): Name of the configuration file.
 
     Returns:
-        Config: Config dataclass with all parameters.
+        Config: Configuration object with all parameters.
     """
     # Determine the path to the config.ini file relative to this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -147,21 +108,24 @@ def read_config(config_file: str = 'config.ini') -> Config:
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
     config = config_parser['DEFAULT']
+    kernel_size_str = config.get('kernel_size', fallback='(5, 5)')
+    kernel_size = ast.literal_eval(kernel_size_str)
 
     return Config(
         image_directory=config.get('image_directory', ''),
-        area_threshold=config.getfloat('area_threshold', fallback=10.0),
+        area_threshold=config.getfloat('area_threshold', fallback=5.0),
         skip_contrast_adjustment=config.getboolean('skip_contrast_adjustment', fallback=False),
-        crop_left_pct=config.getfloat('crop_left', fallback=20.0) / 100.0,
-        crop_right_pct=config.getfloat('crop_right', fallback=3.0) / 100.0,
-        crop_top_pct=config.getfloat('crop_top', fallback=3.0) / 100.0,
-        crop_bottom_pct=config.getfloat('crop_bottom', fallback=3.0) / 100.0,
+        crop_left_pct=config.getfloat('crop_left', fallback=10.0) / 100.0,
+        crop_right_pct=config.getfloat('crop_right', fallback=2.0) / 100.0,
+        crop_top_pct=config.getfloat('crop_top', fallback=2.0) / 100.0,
+        crop_bottom_pct=config.getfloat('crop_bottom', fallback=2.0) / 100.0,
         filename=config.get('filename', fallback=''),
         img_debug=config.getboolean('img_debug', fallback=False),
         adaptive_threshold=config.getboolean('adaptive_threshold', fallback=True),
         adaptive_window_size=config.getint('adaptive_window_size', fallback=15),
         adaptive_C=config.getint('adaptive_C', fallback=2),
-        color_threshold=config.getint('color_threshold', fallback=240)
+        color_threshold=config.getint('color_threshold', fallback=200),
+        kernel_size=kernel_size
     )
 
 
@@ -170,10 +134,10 @@ def create_directories(config: Config) -> Tuple[str, str]:
     Create necessary directories for intermediate and result images.
 
     Args:
-        config (Config): Configuration dataclass.
+        config (Config): Configuration object.
 
     Returns:
-        Tuple[str, str]: Paths to intermediate and result folders.
+        Tuple[str, str]: Paths to the intermediate and result image directories.
     """
     intermediate_folder = os.path.join(config.image_directory, 'intermediate_img')
     result_folder = os.path.join(config.image_directory, 'result_img')
@@ -188,7 +152,7 @@ def get_image_files(config: Config) -> List[str]:
     Get the list of image files to process.
 
     Args:
-        config (Config): Configuration dataclass.
+        config (Config): Configuration object.
 
     Returns:
         List[str]: List of image filenames.
@@ -204,19 +168,20 @@ def get_image_files(config: Config) -> List[str]:
         return image_files
 
 
-def process_image(image_path: str, config: Config, intermediate_folder: str, result_folder: str, stop_event: threading.Event) -> Optional[Dict[str, Any]]:
+def process_image(image_path: str, config: Config, intermediate_folder: str, result_folder: str,
+                  stop_event: threading.Event) -> Optional[Dict[str, Any]]:
     """
     Process a single image and return the analysis results along with RGB statistics.
 
     Args:
         image_path (str): Path to the image file.
-        config (Config): Configuration dataclass with processing parameters.
-        intermediate_folder (str): Path to save intermediate images.
-        result_folder (str): Path to save the final result image.
+        config (Config): Configuration object.
+        intermediate_folder (str): Directory to save intermediate images.
+        result_folder (str): Directory to save result images.
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Optional[Dict[str, Any]]: Analysis results for the image or None if an error occurs or processing is stopped.
+        Optional[Dict[str, Any]]: Dictionary with analysis results or None if stopped.
     """
     if stop_event.is_set():
         logger.info("Processing was stopped before starting.")
@@ -294,20 +259,23 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         return None
 
 
-def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: str, filename: str, pixels_per_mm: float, stop_event: threading.Event) -> Tuple[np.ndarray, np.ndarray, int, int]:
+def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: str, filename: str,
+                     pixels_per_mm: float, stop_event: threading.Event) -> Tuple[np.ndarray, np.ndarray, int, int]:
     """
-    Apply preprocessing steps to the image, including adaptive thresholding in RGB space.
+    Apply preprocessing steps to the image, including adaptive thresholding in RGB space
+    immediately after cropping, before converting to grayscale.
 
     Args:
-        image_cv (np.ndarray): OpenCV image in BGR format.
-        config (Config): Configuration dataclass.
-        intermediate_folder (str): Path to save intermediate images.
+        image_cv (np.ndarray): Original OpenCV image in BGR format.
+        config (Config): Configuration object.
+        intermediate_folder (str): Directory to save intermediate images.
         filename (str): Name of the image file.
         pixels_per_mm (float): Pixels per millimeter.
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Tuple[np.ndarray, np.ndarray, int, int]: Processed binary image, cropped OpenCV image, top and left offsets.
+        Tuple[np.ndarray, np.ndarray, int, int]: Processed binary image, cropped OpenCV image,
+        top and left offsets used during cropping.
     """
     # Step 1: Cropping based on configured percentages
     height, width = image_cv.shape[:2]
@@ -324,50 +292,7 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
     if stop_event.is_set():
         return None, None, 0, 0
 
-    # Convert cropped image to grayscale
-    gray_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-
-    # Step 2: Conditional Contrast Adjustment using CLAHE
-    if not config.skip_contrast_adjustment:
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        contrast_image = clahe.apply(gray_image)
-        logger.debug("Applied CLAHE for contrast adjustment.")
-    else:
-        contrast_image = gray_image
-        logger.debug("Skipped contrast adjustment as per configuration.")
-
-    save_image(contrast_image, intermediate_folder, filename, '2_contrast_image', config.img_debug)
-
-    if stop_event.is_set():
-        return None, None, 0, 0
-
-    # Step 3: Apply Gaussian Blur to reduce noise
-    blurred_image = cv2.GaussianBlur(contrast_image, (5, 5), 0)
-    logger.debug("Applied Gaussian Blur.")
-    save_image(blurred_image, intermediate_folder, filename, '3_blurred_image', config.img_debug)
-
-    if stop_event.is_set():
-        return None, None, 0, 0
-
-    # Step 4: Adaptive Thresholding to binarize the image
-    binary_image = cv2.adaptiveThreshold(
-        blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY_INV, 11, 2  # Adjusted blockSize and C
-    )
-    save_image(binary_image, intermediate_folder, filename, '4_binary_image', config.img_debug)
-
-    if stop_event.is_set():
-        return None, None, 0, 0
-
-    # Step 5: Morphological Closing to close small gaps
-    kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-    closed_image = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel_close, iterations=2)
-    save_image(closed_image, intermediate_folder, filename, '5_closed_image', config.img_debug)
-
-    if stop_event.is_set():
-        return None, None, 0, 0
-
-    # Step 6: Adaptive Thresholding in RGB Space
+    # Step 2: Adaptive Thresholding in RGB Space
     if config.adaptive_threshold:
         logger.debug("Applying adaptive thresholding in RGB space.")
 
@@ -396,16 +321,64 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         # Invert mask to get non-near-white regions
         combined_mask = cv2.bitwise_not(combined_mask)
 
-        # Update the binary_image to exclude near-white regions
-        binary_image = cv2.bitwise_and(binary_image, combined_mask)
+        # Apply the combined mask to the cropped image
+        masked_image = cv2.bitwise_and(cropped_image, cropped_image, mask=combined_mask)
 
         logger.debug("Adaptive thresholding in RGB space applied.")
-        save_image(binary_image, intermediate_folder, filename, 'X_adaptive_threshold', config.img_debug)
+        save_image(masked_image, intermediate_folder, filename, '2_adaptive_threshold', config.img_debug)
+    else:
+        masked_image = cropped_image
 
-    # Step 7: Remove Small Objects based on Area Threshold
+    if stop_event.is_set():
+        return None, None, 0, 0
+
+    # Step 3: Convert to grayscale
+    gray_image = cv2.cvtColor(masked_image, cv2.COLOR_BGR2GRAY)
+
+    # Step 4: Conditional Contrast Adjustment using CLAHE
+    if not config.skip_contrast_adjustment:
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        contrast_image = clahe.apply(gray_image)
+        logger.debug("Applied CLAHE for contrast adjustment.")
+    else:
+        contrast_image = gray_image
+        logger.debug("Skipped contrast adjustment as per configuration.")
+
+    save_image(contrast_image, intermediate_folder, filename, '3_contrast_image', config.img_debug)
+
+    if stop_event.is_set():
+        return None, None, 0, 0
+
+    # Step 5: Apply Gaussian Blur to reduce noise
+    blurred_image = cv2.GaussianBlur(contrast_image, (5, 5), 0)
+    logger.debug("Applied Gaussian Blur.")
+    save_image(blurred_image, intermediate_folder, filename, '4_blurred_image', config.img_debug)
+
+    if stop_event.is_set():
+        return None, None, 0, 0
+
+    # Step 6: Adaptive Thresholding to binarize the image
+    binary_image = cv2.adaptiveThreshold(
+        blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY_INV, 11, 2  # Adjusted blockSize and C
+    )
+    save_image(binary_image, intermediate_folder, filename, '5_binary_image', config.img_debug)
+
+    if stop_event.is_set():
+        return None, None, 0, 0
+
+    # Step 7: Morphological Closing to close small gaps
+    kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    closed_image = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel_close, iterations=2)
+    save_image(closed_image, intermediate_folder, filename, '6_closed_image', config.img_debug)
+
+    if stop_event.is_set():
+        return None, None, 0, 0
+
+    # Step 8: Remove Small Objects based on Area Threshold
     area_threshold_pixels = config.area_threshold * (pixels_per_mm ** 2)
     cleaned_image = remove_small_objects(closed_image, area_threshold_pixels)
-    save_image(cleaned_image, intermediate_folder, filename, '6_cleaned_image', config.img_debug)
+    save_image(cleaned_image, intermediate_folder, filename, '7_cleaned_image', config.img_debug)
 
     if stop_event.is_set():
         return None, None, 0, 0
@@ -422,7 +395,7 @@ def remove_small_objects(closed_image: np.ndarray, area_threshold_pixels: float)
         area_threshold_pixels (float): Area threshold in pixels.
 
     Returns:
-        np.ndarray: Cleaned binary image.
+        np.ndarray: Cleaned binary image with small objects removed.
     """
     # Find connected components
     num_labels, labels_im = cv2.connectedComponents(closed_image)
@@ -464,119 +437,6 @@ def save_image(image: np.ndarray, folder: str, filename: str, step_name: str, im
         logger.debug(f"Skipping saving intermediate image: {filename}_{step_name}.png")
 
 
-def create_annotation_table(annotations: List[Dict[str, Any]], areas_mm2: List[float]) -> List[Tuple[str, str]]:
-    """
-    Create a table of annotations with contour numbers and areas.
-
-    Args:
-        annotations (List[Dict[str, Any]]): List of annotation dictionaries.
-        areas_mm2 (List[float]): List of leaf areas in mm².
-
-    Returns:
-        List[Tuple[str, str]]: List of tuples representing table rows.
-    """
-    table = []
-    for ann, area in zip(annotations, areas_mm2):
-        table.append((ann['text'], f"{area:.2f} mm²"))
-    logger.debug("Created annotation table.")
-    return table
-
-
-def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_position: Tuple[int, int] = (50, 50)) -> np.ndarray:
-    """
-    Add a table to the image at the specified position with enhanced aesthetics.
-
-    Args:
-        image (np.ndarray): Image to draw the table on.
-        table (List[Tuple[str, str]]): List of tuples representing table rows.
-        table_position (Tuple[int, int], optional): (x, y) position to place the table. Defaults to (50, 50).
-
-    Returns:
-        np.ndarray: Image with the table added.
-    """
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    base_font_scale = 0.6  # Base font scale for visibility
-    base_font_thickness = 2
-    base_line_height = 30
-    base_margin = 15
-
-    # Determine table size based on image width to ensure at least 10% width
-    image_height, image_width = image.shape[:2]
-    min_table_width = int(0.1 * image_width)
-    current_table_width = 300  # Increased width for better visibility
-    table_width = max(current_table_width, min_table_width)
-
-    # Calculate the number of rows and columns
-    num_rows = len(table) + 1  # Including header
-    num_cols = 2
-    table_height = num_rows * base_line_height + 2 * base_margin
-
-    x_start, y_start = table_position
-
-    # Dynamic Font Scaling based on image width
-    base_width = 1920  # Reference width for scaling
-    scale_factor = image_width / base_width
-    font_scale = base_font_scale * scale_factor
-    font_thickness = max(1, int(base_font_thickness * scale_factor))
-    line_height = int(base_line_height * scale_factor)
-    margin = int(base_margin * scale_factor)
-
-    # Adjust table position if it exceeds image boundaries
-    if x_start + table_width > image_width:
-        x_start = image_width - table_width - 20  # 20 pixels padding from the edge
-    if y_start + table_height > image_height:
-        y_start = image_height - table_height - 20  # 20 pixels padding from the edge
-
-    logger.debug(f"Table position: ({x_start}, {y_start}), Width: {table_width}px, Height: {table_height}px")
-
-    # Draw semi-transparent table background
-    overlay = image.copy()
-    cv2.rectangle(overlay, (x_start, y_start),
-                  (x_start + table_width, y_start + table_height),
-                  (255, 255, 255), -1)  # White background
-    alpha = 0.8  # Transparency factor
-    cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0, image)
-
-    # Draw table border
-    cv2.rectangle(image, (x_start, y_start),
-                  (x_start + table_width, y_start + table_height),
-                  (0, 0, 0), 2)  # Black border
-
-    # Define column widths
-    col1_width = int(table_width * 0.3)  # 30% for ID
-    col2_width = table_width - col1_width  # 70% for Area
-
-    # Add header
-    header = ("ID", "Area (mm²)")
-    for i, text in enumerate(header):
-        x_offset = 10 + i * col1_width
-        y_offset = y_start + margin + line_height
-        cv2.putText(image, text, (x_start + x_offset, y_start + margin + line_height),
-                    font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
-
-    # Add rows with alternating background colors for better readability
-    for idx, row in enumerate(table):
-        y = y_start + margin + (idx + 2) * line_height  # +2 to account for header
-        # Alternate row color
-        if idx % 2 == 0:
-            row_color = (240, 240, 240)  # Light gray
-            cv2.rectangle(image, (x_start, y - line_height + 5),
-                          (x_start + table_width, y + 5),
-                          row_color, -1)
-        for col_idx, item in enumerate(row):
-            x_offset = 10 + col_idx * col1_width
-            cv2.putText(image, item, (x_start + x_offset, y),
-                        font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
-
-    # Draw vertical lines for column separators
-    cv2.line(image, (x_start + col1_width, y_start),
-             (x_start + col1_width, y_start + table_height),
-             (0, 0, 0), 2)
-
-    logger.debug("Added table to image with enhanced aesthetics.")
-    return image
-
-
 def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarray, pixels_per_mm: float,
                               config: Config, result_folder: str, filename: str,
                               top_offset: int, left_offset: int, stop_event: threading.Event) -> Tuple[int, float, List[Tuple[str, str]], List[Dict[str, Any]]]:
@@ -587,15 +447,16 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
         processed_image (np.ndarray): Binary image after preprocessing.
         cropped_cv (np.ndarray): Cropped original image for background.
         pixels_per_mm (float): Pixels per millimeter.
-        config (Config): Configuration dataclass.
-        result_folder (str): Path to save the final result image.
+        config (Config): Configuration object.
+        result_folder (str): Directory to save the final result image.
         filename (str): Name of the image file.
         top_offset (int): Top offset used during cropping.
         left_offset (int): Left offset used during cropping.
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Tuple[int, float, List[Tuple[str, str]], List[Dict[str, Any]]]: Total count, total area in mm², annotation table, list of leaf RGB stats.
+        Tuple[int, float, List[Tuple[str, str]], List[Dict[str, Any]]]: Total count, total area in mm²,
+        annotation table, list of leaf RGB stats.
     """
     if stop_event.is_set():
         logger.info("Processing was stopped before contour processing.")
@@ -707,6 +568,119 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
     return total_count, total_area_mm2, table, leaf_rgb_stats
 
 
+def create_annotation_table(annotations: List[Dict[str, Any]], areas_mm2: List[float]) -> List[Tuple[str, str]]:
+    """
+    Create a table of annotations with contour numbers and areas.
+
+    Args:
+        annotations (List[Dict[str, Any]]): List of annotation dictionaries.
+        areas_mm2 (List[float]): List of leaf areas in mm².
+
+    Returns:
+        List[Tuple[str, str]]: List of tuples representing table rows.
+    """
+    table = []
+    for ann, area in zip(annotations, areas_mm2):
+        table.append((ann['text'], f"{area:.2f} mm²"))
+    logger.debug("Created annotation table.")
+    return table
+
+
+def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_position: Tuple[int, int] = (50, 50)) -> np.ndarray:
+    """
+    Add a table to the image at the specified position with enhanced aesthetics.
+
+    Args:
+        image (np.ndarray): Image to draw the table on.
+        table (List[Tuple[str, str]]): List of tuples representing table rows.
+        table_position (Tuple[int, int], optional): (x, y) position to place the table.
+
+    Returns:
+        np.ndarray: Image with the table added.
+    """
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    base_font_scale = 0.6  # Base font scale for visibility
+    base_font_thickness = 2
+    base_line_height = 30
+    base_margin = 15
+
+    # Determine table size based on image width to ensure at least 10% width
+    image_height, image_width = image.shape[:2]
+    min_table_width = int(0.1 * image_width)
+    current_table_width = 300  # Increased width for better visibility
+    table_width = max(current_table_width, min_table_width)
+
+    # Calculate the number of rows and columns
+    num_rows = len(table) + 1  # Including header
+    num_cols = 2
+    table_height = num_rows * base_line_height + 2 * base_margin
+
+    x_start, y_start = table_position
+
+    # Dynamic Font Scaling based on image width
+    base_width = 1920  # Reference width for scaling
+    scale_factor = image_width / base_width
+    font_scale = base_font_scale * scale_factor
+    font_thickness = max(1, int(base_font_thickness * scale_factor))
+    line_height = int(base_line_height * scale_factor)
+    margin = int(base_margin * scale_factor)
+
+    # Adjust table position if it exceeds image boundaries
+    if x_start + table_width > image_width:
+        x_start = image_width - table_width - 20  # 20 pixels padding from the edge
+    if y_start + table_height > image_height:
+        y_start = image_height - table_height - 20  # 20 pixels padding from the edge
+
+    logger.debug(f"Table position: ({x_start}, {y_start}), Width: {table_width}px, Height: {table_height}px")
+
+    # Draw semi-transparent table background
+    overlay = image.copy()
+    cv2.rectangle(overlay, (x_start, y_start),
+                  (x_start + table_width, y_start + table_height),
+                  (255, 255, 255), -1)  # White background
+    alpha = 0.8  # Transparency factor
+    cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0, image)
+
+    # Draw table border
+    cv2.rectangle(image, (x_start, y_start),
+                  (x_start + table_width, y_start + table_height),
+                  (0, 0, 0), 2)  # Black border
+
+    # Define column widths
+    col1_width = int(table_width * 0.3)  # 30% for ID
+    col2_width = table_width - col1_width  # 70% for Area
+
+    # Add header
+    header = ("ID", "Area (mm²)")
+    for i, text in enumerate(header):
+        x_offset = 10 + i * col1_width
+        y_offset = y_start + margin + line_height
+        cv2.putText(image, text, (x_start + x_offset, y_start + margin + line_height),
+                    font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
+
+    # Add rows with alternating background colors for better readability
+    for idx, row in enumerate(table):
+        y = y_start + margin + (idx + 2) * line_height  # +2 to account for header
+        # Alternate row color
+        if idx % 2 == 0:
+            row_color = (240, 240, 240)  # Light gray
+            cv2.rectangle(image, (x_start, y - line_height + 5),
+                          (x_start + table_width, y + 5),
+                          row_color, -1)
+        for col_idx, item in enumerate(row):
+            x_offset = 10 + col_idx * col1_width
+            cv2.putText(image, item, (x_start + x_offset, y),
+                        font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
+
+    # Draw vertical lines for column separators
+    cv2.line(image, (x_start + col1_width, y_start),
+             (x_start + col1_width, y_start + table_height),
+             (0, 0, 0), 2)
+
+    logger.debug("Added table to image with enhanced aesthetics.")
+    return image
+
+
 def save_results(results_list: List[Dict[str, Any]], csv_file_path: str) -> None:
     """
     Save the analysis results, including mean RGB values, to a CSV file.
@@ -756,7 +730,7 @@ def main(stop_event: Optional[threading.Event] = None) -> None:
     Main function to orchestrate the leaf classification process.
 
     Args:
-        stop_event (Optional[threading.Event], optional): Event to signal stopping of processing. Defaults to None.
+        stop_event (Optional[threading.Event], optional): Event to signal stopping of processing.
     """
     config = read_config()
     intermediate_folder, result_folder = create_directories(config)

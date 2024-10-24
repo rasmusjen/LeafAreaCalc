@@ -1,67 +1,40 @@
-# test/test_gui.py
+# src/gui_leaf_area_classification.py
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Module Name: Leaf Area Classification GUI
+Leaf Area Classification GUI with Enhanced Controls and Explanations
 
-Description:
-------------
-This module provides a graphical user interface (GUI) for the Leaf Area Classification
-application. It allows users to configure settings, select image directories, execute
-image processing tasks, and view logs and results within a user-friendly environment.
+This GUI allows users to adjust settings including adaptive thresholding parameters,
+kernel size for morphological closing, and logging level. It also features improved
+layout and explanations for each parameter.
 
 Features:
 ---------
 - Directory selection with real-time image list loading.
-- Configurable processing parameters via GUI inputs.
+- Configurable processing parameters via GUI inputs with explanations and default values.
 - Execution of image processing in a separate thread to keep the GUI responsive.
-- Display of processing logs within the application.
+- Display of processing logs within the application with adjustable log level.
 - Image preview functionality on double-clicking image entries.
 - Reset to default settings option.
 - Save and load configurations seamlessly.
 - Stop Processing functionality to terminate ongoing processing tasks.
-
-Usage:
-------
-1. Ensure all dependencies are installed as per `requirements.txt`.
-2. Configure initial settings in `config/config.ini` or via the GUI.
-3. Run the GUI:
-       python gui_leaf_area_classification.py
-
-Dependencies:
--------------
-- Python 3.6+
-- Tkinter
-- Pillow (`PIL`)
-- OpenCV (`cv2`)
-- NumPy
-- pandas
-- configparser
-- logging
-- threading
-
-Configuration:
---------------
-The GUI reads and writes configuration parameters from `config/config.ini`. Users can adjust
-settings directly through the interface, which will update the configuration file accordingly.
+- Enlarged output panel for better log visibility.
+- Improved button layout and appearance.
 
 Author:
 -------
 Rasmus Jensen
-raje at ecos.au.dk
+raje at ecos au dk
 
 Date:
 -----
-Refined on October 22, 2024
+October 23, 2024
 
 Version:
 --------
-0.2.0
+0.3.0
 
-License:
---------
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 """
 
 import tkinter as tk
@@ -72,14 +45,13 @@ import configparser
 import sys
 import threading
 import logging
-from typing import List, Tuple, Dict, Any, Optional
+from typing import List, Dict, Any
 
 # Adjust the system path to include the directory containing leaf_area_classification.py
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
-from test_leaf_area_classification import main as process_images_main  # Correct import
-
+from test_leaf_area_classification import main as process_images_main
 
 # Configure root logger
 logger = logging.getLogger(__name__)
@@ -112,11 +84,13 @@ class TextHandler(logging.Handler):
             record (logging.LogRecord): The log record to emit.
         """
         msg = self.format(record)
+
         def append():
             self.text_widget.configure(state='normal')
             self.text_widget.insert(tk.END, msg + '\n')
             self.text_widget.configure(state='disabled')
             self.text_widget.yview(tk.END)
+
         self.text_widget.after(0, append)
 
 
@@ -138,7 +112,7 @@ class LeafAreaGUI:
         """
         self.root = root
         self.root.title("Leaf Area Classification GUI")
-        self.root.geometry("1200x800")
+        self.root.geometry("1200x900")  # Increased height for larger output panel
         self.root.configure(bg="#f0f0f0")  # Light grey background for a professional look
 
         # Initialize Config
@@ -207,7 +181,7 @@ class LeafAreaGUI:
         title_label.pack(anchor='w', padx=20)
 
         # Subtitle
-        subtitle_label = tk.Label(header_frame, text="Comprehensive Leaf Area Calculator for ICOS Vegetation Data from Zackenberg Research Station",
+        subtitle_label = tk.Label(header_frame, text="Comprehensive Leaf Area Calculator",
                                   font=self.font_subtitle, bg="#f0f0f0")
         subtitle_label.pack(anchor='w', padx=20)
 
@@ -227,7 +201,7 @@ class LeafAreaGUI:
         self.right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
         # Bottom Frame: Log Output
-        self.bottom_frame = tk.Frame(self.root, height=400, bg="#f0f0f0")
+        self.bottom_frame = tk.Frame(self.root, height=500, bg="#f0f0f0")  # Increased height
         self.bottom_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, padx=20, pady=(0, 10))
 
     def create_controls(self, parent: tk.Frame) -> None:
@@ -238,77 +212,92 @@ class LeafAreaGUI:
             parent (tk.Frame): The parent frame where controls will be placed.
         """
         control_frame = tk.Frame(parent, bg="#ffffff")
-        control_frame.pack(pady=10, padx=10, fill=tk.X)
+        control_frame.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
 
         # Directory Selection
         dir_button = tk.Button(control_frame, text="Select Image Directory", command=self.select_directory,
-                               font=self.font_buttons, bg="#4CAF50", fg="white", padx=10, pady=5)
-        dir_button.grid(row=0, column=0, pady=5, sticky='w')
+                               font=self.font_buttons, bg="#2196F3", fg="white", padx=10, pady=5)
+        dir_button.grid(row=0, column=0, pady=5, sticky='w', columnspan=3)
 
         initial_dir = self.config.get("DEFAULT", "image_directory", fallback="No directory selected")
         self.dir_label = tk.Label(control_frame, text=initial_dir, font=self.font_labels, bg="#ffffff")
-        self.dir_label.grid(row=0, column=1, pady=5, sticky='w')
+        self.dir_label.grid(row=1, column=0, pady=5, sticky='w', columnspan=3)
 
         # Settings Inputs
         settings = [
-            ("Area Threshold (mm²)", "area_threshold"),
-            ("Skip Contrast Adjustment", "skip_contrast_adjustment"),
-            ("Image Debug", "img_debug"),
-            ("Crop Left (%)", "crop_left"),
-            ("Crop Right (%)", "crop_right"),
-            ("Crop Top (%)", "crop_top"),
-            ("Crop Bottom (%)", "crop_bottom"),
-            ("Filename", "filename"),
-            ("Enable Adaptive Thresholding", "adaptive_threshold"),
-            ("Adaptive Window Size", "adaptive_window_size"),
-            ("Adaptive C Constant", "adaptive_C"),
-            ("Color Threshold (RGB)", "color_threshold")
+            ("Area Threshold (mm²)", "area_threshold", "Minimum leaf area to consider in mm². (default 10)"),
+            ("Skip Contrast Adjustment", "skip_contrast_adjustment", "Skip CLAHE contrast adjustment. (default False)"),
+            ("Image Debug", "img_debug", "Save intermediate images. (default False)"),
+            ("Crop Left (%)", "crop_left", "Percentage to crop from the left. (default 20)"),
+            ("Crop Right (%)", "crop_right", "Percentage to crop from the right. (default 3)"),
+            ("Crop Top (%)", "crop_top", "Percentage to crop from the top. (default 3)"),
+            ("Crop Bottom (%)", "crop_bottom", "Percentage to crop from the bottom. (default 3)"),
+            ("Filename", "filename", "Specific filename to process. Leave empty to process all images."),
+            ("Enable Adaptive Thresholding", "adaptive_threshold", "Enable adaptive thresholding in RGB space. (default True)"),
+            ("Adaptive Window Size", "adaptive_window_size", "Window size for adaptive thresholding. Must be an odd integer. (default 15)"),
+            ("Adaptive C Constant", "adaptive_C", "Constant subtracted from mean in adaptive thresholding. (default 2)"),
+            ("Color Threshold (RGB)", "color_threshold", "RGB value above which pixels are near-white. (default 240)"),
+            ("Kernel Size (width,height)", "kernel_size", "Kernel size for morphological closing. Must be a tuple of two integers, e.g., (5,5). (default (5,5))"),
+            ("Logging Level", "log_level", "Level of logging detail. (default DEBUG)")
         ]
 
         self.entries: Dict[str, Any] = {}
-        for i, (label_text, key) in enumerate(settings, start=1):
+        for i, (label_text, key, explanation) in enumerate(settings, start=2):
             label = tk.Label(control_frame, text=label_text + ":", font=self.font_labels, bg="#ffffff")
             label.grid(row=i, column=0, pady=5, sticky='w')
+
+            tooltip = tk.Label(control_frame, text=explanation, font=("Helvetica", 8), fg="grey", bg="#ffffff")
+            tooltip.grid(row=i, column=1, pady=5, sticky='w')
 
             if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold"]:
                 var = tk.BooleanVar()
                 var.set(self.config.getboolean("DEFAULT", key, fallback=False))
                 entry = tk.Checkbutton(control_frame, variable=var, bg="#ffffff")
-                entry.grid(row=i, column=1, pady=5, sticky='w')
+                entry.grid(row=i, column=2, pady=5, sticky='w')
                 self.entries[key] = var
-            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold"]:
-                entry = tk.Entry(control_frame, font=self.font_entries)
-                entry.grid(row=i, column=1, pady=5, sticky='w')
-                default_val = self.config.get("DEFAULT", key, fallback="")
-                entry.insert(0, default_val)
-                self.entries[key] = entry
+            elif key == "log_level":
+                options = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+                var = tk.StringVar()
+                var.set(self.config.get("DEFAULT", key, fallback="DEBUG"))
+                entry = tk.OptionMenu(control_frame, var, *options)
+                entry.config(font=self.font_entries)
+                entry.grid(row=i, column=2, pady=5, sticky='w')
+                self.entries[key] = var
             else:
                 entry = tk.Entry(control_frame, font=self.font_entries)
-                entry.grid(row=i, column=1, pady=5, sticky='w')
+                entry.grid(row=i, column=2, pady=5, sticky='w')
                 default_val = self.config.get("DEFAULT", key, fallback="")
                 entry.insert(0, default_val)
                 self.entries[key] = entry
 
-        # Save Config Button
-        save_button = tk.Button(control_frame, text="Save Configuration", command=self.save_config,
-                                font=self.font_buttons, bg="#2196F3", fg="white", padx=10, pady=5)
-        save_button.grid(row=len(settings)+1, column=0, columnspan=2, pady=10)
+        # Create a frame for buttons at the bottom right using grid
+        button_frame = tk.Frame(control_frame, bg="#ffffff")
+        button_frame.grid(row=len(settings) + 2, column=0, columnspan=3, pady=20, sticky='e')
 
-        # Reset to Default Button
-        reset_button = tk.Button(control_frame, text="Reset to Defaults", command=self.reset_to_defaults,
-                                 font=self.font_buttons, bg="#f44336", fg="white", padx=10, pady=5)
-        reset_button.grid(row=len(settings)+2, column=0, columnspan=2, pady=5)
+        # Adjust button style
+        button_style = {
+            'font': self.font_buttons,
+            'bg': "#2196F3",
+            'fg': "white",
+            'padx': 10,
+            'pady': 5,
+            'width': 20  # Equal width for all buttons
+        }
 
-        # Execute Processing Button
-        exec_button = tk.Button(control_frame, text="Execute Processing", command=self.execute_processing,
-                                font=self.font_buttons, bg="#FF9800", fg="white", padx=10, pady=5)
-        exec_button.grid(row=len(settings)+3, column=0, columnspan=2, pady=10)
+        # Place the buttons in the button_frame using grid
+        save_button = tk.Button(button_frame, text="Save Configuration", command=self.save_config, **button_style)
+        save_button.grid(row=0, column=0, padx=5)
+
+        reset_button = tk.Button(button_frame, text="Reset to Defaults", command=self.reset_to_defaults, **button_style)
+        reset_button.grid(row=0, column=1, padx=5)
+
+        exec_button = tk.Button(button_frame, text="Execute Processing", command=self.execute_processing, **button_style)
+        exec_button.grid(row=0, column=2, padx=5)
         self.exec_button = exec_button  # Reference for enabling/disabling
 
-        # Stop Processing Button
-        stop_button = tk.Button(control_frame, text="Stop Processing", command=self.stop_processing,
-                                font=self.font_buttons, bg="#f44336", fg="white", padx=10, pady=5, state='disabled')
-        stop_button.grid(row=len(settings)+4, column=0, columnspan=2, pady=10)
+        stop_button = tk.Button(button_frame, text="Stop Processing", command=self.stop_processing,
+                                **button_style, state='disabled')
+        stop_button.grid(row=0, column=3, padx=5)
         self.stop_button = stop_button  # Reference for enabling/disabling
 
     def create_image_list_panel(self, parent: tk.Frame) -> None:
@@ -372,8 +361,8 @@ class LeafAreaGUI:
         log_label = tk.Label(parent, text="Log Output:", font=self.font_labels, bg="#f0f0f0")
         log_label.pack(anchor='w', padx=10, pady=(10, 0))
 
-        self.log_text = scrolledtext.ScrolledText(parent, height=10, state='disabled',
-                                                 bg="#2e2e2e", fg="#ffffff", font=self.font_log)
+        self.log_text = scrolledtext.ScrolledText(parent, height=20, state='disabled',  # Increased height
+                                                  bg="#2e2e2e", fg="#ffffff", font=self.font_log)
         self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
 
     def setup_logging(self) -> None:
@@ -384,7 +373,10 @@ class LeafAreaGUI:
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)  # Capture all levels
+        # Set the logging level based on config
+        log_level_str = self.config.get("DEFAULT", "log_level", fallback="DEBUG")
+        log_level = getattr(logging, log_level_str.upper(), logging.DEBUG)
+        logger.setLevel(log_level)
 
     def select_directory(self) -> None:
         """
@@ -421,7 +413,7 @@ class LeafAreaGUI:
         Save the current settings to config.ini.
 
         Args:
-            save_without_message (bool, optional): If True, saves without showing a message. Defaults to False.
+            save_without_message (bool, optional): If True, saves without showing a message.
         """
         directory = self.dir_label.cget("text")
         self.config.set("DEFAULT", "image_directory", directory)
@@ -437,6 +429,23 @@ class LeafAreaGUI:
                     logger.error(f"Invalid value for {key}. It must be an integer.")
                     messagebox.showerror("Invalid Input", f"Invalid value for {key}. It must be an integer.")
                     return
+            elif key == "kernel_size":
+                # Ensure that the entry is a tuple of integers
+                value = entry.get().strip()
+                try:
+                    # Validate the tuple format
+                    if not (value.startswith('(') and value.endswith(')')):
+                        raise ValueError
+                    kernel_size = tuple(map(int, value[1:-1].split(',')))
+                    if len(kernel_size) != 2:
+                        raise ValueError
+                    self.config.set("DEFAULT", key, str(kernel_size))
+                except:
+                    logger.error(f"Invalid value for {key}. It must be a tuple of two integers, e.g., (5,5).")
+                    messagebox.showerror("Invalid Input", f"Invalid value for {key}. It must be a tuple of two integers, e.g., (5,5).")
+                    return
+            elif key == "log_level":
+                self.config.set("DEFAULT", key, entry.get())
             else:
                 self.config.set("DEFAULT", key, entry.get())
 
@@ -446,6 +455,11 @@ class LeafAreaGUI:
         if not save_without_message:
             logger.info("Configuration saved successfully!")
             messagebox.showinfo("Success", "Configuration saved successfully!")
+
+        # Update logging level
+        log_level_str = self.config.get("DEFAULT", "log_level", fallback="DEBUG")
+        log_level = getattr(logging, log_level_str.upper(), logging.DEBUG)
+        logger.setLevel(log_level)
 
     def reset_to_defaults(self) -> None:
         """
@@ -465,7 +479,9 @@ class LeafAreaGUI:
             "adaptive_threshold": "True",
             "adaptive_window_size": "15",
             "adaptive_C": "2",
-            "color_threshold": "240"
+            "color_threshold": "240",
+            "kernel_size": "(5, 5)",
+            "log_level": "DEBUG"
         }
 
         # Reset entries
@@ -473,9 +489,11 @@ class LeafAreaGUI:
         for key, default_val in defaults.items():
             if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold"]:
                 self.entries[key].set(default_val == "True")
-            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold"]:
+            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "kernel_size"]:
                 self.entries[key].delete(0, tk.END)
                 self.entries[key].insert(0, default_val)
+            elif key == "log_level":
+                self.entries[key].set(default_val)
             else:
                 self.entries[key].delete(0, tk.END)
                 self.entries[key].insert(0, default_val)
@@ -491,6 +509,9 @@ class LeafAreaGUI:
         self.image_listbox.delete(0, tk.END)
         logger.info("Settings reset to default values.")
         messagebox.showinfo("Reset", "Settings have been reset to default values.")
+
+        # Update logging level
+        logger.setLevel(logging.DEBUG)
 
     def execute_processing(self) -> None:
         """
@@ -551,7 +572,7 @@ class LeafAreaGUI:
         logger.info("Stop signal sent to processing thread.")
         messagebox.showinfo("Stopping", "Stopping image processing...")
 
-        # Optionally, disable Stop button to prevent multiple signals
+        # Disable Stop button to prevent multiple signals
         self.stop_button.config(state='disabled')
 
 
