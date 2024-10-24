@@ -82,6 +82,7 @@ Ensure that all dependencies are installed correctly by running:
 LeafAreaCalc uses a configuration file (config/config.ini) to manage processing parameters. This file allows you to customize various aspects of the image processing pipeline.
 
 ### Configuration File Structure
+    
     ```
     [DEFAULT]
     # Directory containing leaf images
@@ -162,7 +163,7 @@ LeafAreaCalc offers both a Graphical User Interface (GUI) and a Command-Line Int
 ### Graphical User Interface (GUI)
 1. Launch the GUI
 
-    ```bash
+    ```
     python src/gui_leaf_area_classification.py
     ```
 
@@ -188,7 +189,7 @@ LeafAreaCalc offers both a Graphical User Interface (GUI) and a Command-Line Int
 ### Command-Line Interface (CLI)
 For users who prefer command-line operations, LeafAreaCalc can be executed directly:
 
-    ```bash
+    ```
     python src/leaf_area_classification.py
     ```
 Note: Ensure that all necessary parameters are set in the `config/config.ini` file before running the CLI.
@@ -216,7 +217,7 @@ Click the "Fork" button at the top-right corner of the repository page.
 
 2. Create a New Branch
 
-```bash
+```
 git checkout -b feature/YourFeatureName
 ```
 
@@ -225,13 +226,13 @@ Implement your feature or fix.
 
 3. Commit Your Changes
 
-```bash
+```
 git commit -m "Add your descriptive commit message here"
 ```
 
 4. Push to Your Fork
 
-```bash
+```
 git push origin feature/YourFeatureName
 ```
 
