@@ -1,6 +1,6 @@
 # LeafAreaCalc
 
-![LeafAreaCalc Logo](src/assets/logo_new.png)
+![LeafAreaCalc Logo](src/assets/icon_new.png)
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -15,7 +15,7 @@
 
 ## Introduction
 
-**LeafAreaCalc** is a comprehensive tool designed for accurate leaf area classification from digital images. Whether you're a botanist, researcher, or hobbyist, LeafAreaCalc provides an intuitive interface and powerful processing capabilities to streamline your leaf analysis workflow.
+**LeafAreaCalc** is a comprehensive tool designed for accurate leaf area classification from digital images. LeafAreaCalc provides an intuitive interface and powerful processing capabilities to streamline your leaf analysis workflow, whether you're a botanist, researcher, or hobbyist.
 
 ![Sample Leaf Image](sample_leaf.jpg)
 
@@ -77,11 +77,11 @@ Ensure that all dependencies are installed correctly by running:
     python src/gui_leaf_area_classification.py
     ```
 
-[Configuration]
+## Configuration
 
 LeafAreaCalc uses a configuration file (config/config.ini) to manage processing parameters. This file allows you to customize various aspects of the image processing pipeline.
 
-## Configuration File Structure
+### Configuration File Structure
     ```
     [DEFAULT]
     # Directory containing leaf images
@@ -135,12 +135,12 @@ LeafAreaCalc uses a configuration file (config/config.ini) to manage processing 
     log_level = DEBUG
     ```
 
-## Editing Configuration
+### Editing Configuration
 
 **Manual Editing:** You can manually edit config/config.ini using any text editor to adjust parameters.
 **GUI Configuration:** The GUI provides options to modify these settings with explanations and default values.
 
-## Parameter Explanations
+### Parameter Explanations
 
 - **image_directory:** Path to the folder containing your leaf images.
 - **area_threshold:** Minimum area (in mm²) for a contour to be considered a valid leaf.
@@ -155,11 +155,11 @@ LeafAreaCalc uses a configuration file (config/config.ini) to manage processing 
 - **kernel_size:** Size of the structuring element for morphological closing. Must be a tuple of two integers, e.g., (5,5).
 - **log_level:** Sets the verbosity of logging output. Options include `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`.
 
-[Usage]
+## Usage
 
 LeafAreaCalc offers both a Graphical User Interface (GUI) and a Command-Line Interface (CLI) for flexibility.
 
-## Graphical User Interface (GUI)
+### Graphical User Interface (GUI)
 1. Launch the GUI
 
     ```bash
@@ -185,7 +185,7 @@ LeafAreaCalc offers both a Graphical User Interface (GUI) and a Command-Line Int
 6. Stop Processing
 - Click on the "Stop Processing" button to terminate an ongoing analysis.
 
-## Command-Line Interface (CLI)
+### Command-Line Interface (CLI)
 For users who prefer command-line operations, LeafAreaCalc can be executed directly:
 
     ```bash
@@ -193,10 +193,10 @@ For users who prefer command-line operations, LeafAreaCalc can be executed direc
     ```
 Note: Ensure that all necessary parameters are set in the `config/config.ini` file before running the CLI.
 
-## Logging
+### Logging
 LeafAreaCalc provides detailed logging to help monitor processing and debug issues.
 
-### Adjusting Logging Level
+#### Adjusting Logging Level
 - Via GUI: Use the "Logging Level" dropdown menu to select the desired verbosity.
 - Via Configuration File: Edit the log_level parameter in config/config.ini to one of the following:
     - `DEBUG`
@@ -205,10 +205,10 @@ LeafAreaCalc provides detailed logging to help monitor processing and debug issu
     - `ERROR`
     - `CRITICAL`
 
-### Log Output
+#### Log Output
 Logs are displayed in the GUI's log output panel and saved to `leaf_analysis.log` in the image directory.
 
-[Contributing]
+## Contributing
 Contributions are welcome! If you'd like to contribute to **LeafAreaCalc**, please follow these steps:
 
 1. Fork the Repository
