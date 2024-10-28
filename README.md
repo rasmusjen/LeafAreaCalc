@@ -17,7 +17,7 @@
 
 **LeafAreaCalc** is a comprehensive tool designed for accurate leaf area classification from digital images. LeafAreaCalc provides an intuitive interface and powerful processing capabilities to streamline your leaf analysis workflow, whether you're a botanist, researcher, or hobbyist.
 
-![Sample Leaf Image](sample_leaf.jpg)
+![Sample Leaf Image](sample_leaf.jpg) 
 
 ## Features
 

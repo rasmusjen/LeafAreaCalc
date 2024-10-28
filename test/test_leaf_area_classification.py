@@ -19,6 +19,11 @@ Features:
 - Configurable via 'config.ini' file.
 - Supports processing of individual files or entire directories.
 - Graceful termination using threading events.
+- Annotated result images with contours and a metrics table including average RGB values.
+- Semi-transparent background for annotations to enhance readability.
+- Additional filtering based on average RGB values.
+- Dynamic table column width adjustment.
+- Option to remove "mm²" from the area column.
 
 Author:
 -------
@@ -27,11 +32,11 @@ raje at ecos au dk
 
 Date:
 -----
-October 23, 2024
+October 28, 2024
 
 Version:
 --------
-0.3.0
+0.4.0
 
 """
 
@@ -45,7 +50,9 @@ from typing import List, Tuple, Dict, Optional, Any
 import cv2
 import numpy as np
 import pandas as pd
-from PIL import Image
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+from PIL import Image, ImageDraw, ImageFont
 import re
 import threading
 import ast
@@ -53,6 +60,11 @@ import ast
 # Configure logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 @dataclass
@@ -74,6 +86,11 @@ class Config:
         adaptive_window_size (int): Window size for adaptive thresholding.
         adaptive_C (int): Constant subtracted from mean in adaptive thresholding.
         color_threshold (int): Threshold to define near-white pixels.
+        kernel_size (Tuple[int, int]): Kernel size for morphological operations.
+        filter_rgb (bool): Flag to enable additional RGB-based filtering.
+        r_threshold (int): Threshold for Red channel.
+        g_threshold (int): Threshold for Green channel.
+        b_threshold (int): Threshold for Blue channel.
     """
     image_directory: str
     area_threshold: float
@@ -89,6 +106,10 @@ class Config:
     adaptive_C: int
     color_threshold: int
     kernel_size: Tuple[int, int]
+    filter_rgb: bool
+    r_threshold: int
+    g_threshold: int
+    b_threshold: int
 
 
 def read_config(config_file: str = 'config.ini') -> Config:
@@ -109,7 +130,13 @@ def read_config(config_file: str = 'config.ini') -> Config:
     config_parser.read(config_path)
     config = config_parser['DEFAULT']
     kernel_size_str = config.get('kernel_size', fallback='(5, 5)')
-    kernel_size = ast.literal_eval(kernel_size_str)
+    try:
+        kernel_size = ast.literal_eval(kernel_size_str)
+        if not (isinstance(kernel_size, tuple) and len(kernel_size) == 2 and all(isinstance(x, int) for x in kernel_size)):
+            raise ValueError
+    except:
+        logger.error(f"Invalid kernel_size format in config.ini. Using default (5, 5).")
+        kernel_size = (5, 5)
 
     return Config(
         image_directory=config.get('image_directory', ''),
@@ -125,7 +152,11 @@ def read_config(config_file: str = 'config.ini') -> Config:
         adaptive_window_size=config.getint('adaptive_window_size', fallback=15),
         adaptive_C=config.getint('adaptive_C', fallback=2),
         color_threshold=config.getint('color_threshold', fallback=200),
-        kernel_size=kernel_size
+        kernel_size=kernel_size,
+        filter_rgb=config.getboolean('filter_rgb', fallback=True),
+        r_threshold=config.getint('r_threshold', fallback=200),
+        g_threshold=config.getint('g_threshold', fallback=200),
+        b_threshold=config.getint('b_threshold', fallback=200)
     )
 
 
@@ -139,11 +170,17 @@ def create_directories(config: Config) -> Tuple[str, str]:
     Returns:
         Tuple[str, str]: Paths to the intermediate and result image directories.
     """
-    intermediate_folder = os.path.join(config.image_directory, 'intermediate_img')
+    
     result_folder = os.path.join(config.image_directory, 'result_img')
-    os.makedirs(intermediate_folder, exist_ok=True)
+    intermediate_folder = os.path.join(result_folder, 'intermediate_img')
+    
     os.makedirs(result_folder, exist_ok=True)
-    logger.debug(f"Intermediate folder: {intermediate_folder}, Result folder: {result_folder}")
+    
+    if config.img_debug:
+        os.makedirs(intermediate_folder, exist_ok=True)
+        logger.debug(f"Created intermediate folder at: {intermediate_folder}")
+    
+    
     return intermediate_folder, result_folder
 
 
@@ -169,7 +206,7 @@ def get_image_files(config: Config) -> List[str]:
 
 
 def process_image(image_path: str, config: Config, intermediate_folder: str, result_folder: str,
-                  stop_event: threading.Event) -> Optional[Dict[str, Any]]:
+                 stop_event: threading.Event) -> Optional[Dict[str, Any]]:
     """
     Process a single image and return the analysis results along with RGB statistics.
 
@@ -236,9 +273,9 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         # Print table content to console
         if table:
             print(f"\n--- Leaf Analysis Table for {filename} ---")
-            print(f"{'ID':<10}{'Area (mm²)':<15}")
+            print(f"{'ID':<10}{'Area':<15}{'Average RGB':<15}")
             for row in table:
-                print(f"{row[0]:<10}{row[1]:<15}")
+                print(f"{row[0]:<10}{row[1]:<15}{row[2]:<15}")
             print(f"---------------------------------------------\n")
         else:
             print(f"No leaves detected in {filename}.")
@@ -260,7 +297,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
 
 
 def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: str, filename: str,
-                     pixels_per_mm: float, stop_event: threading.Event) -> Tuple[np.ndarray, np.ndarray, int, int]:
+                    pixels_per_mm: float, stop_event: threading.Event) -> Tuple[np.ndarray, np.ndarray, int, int]:
     """
     Apply preprocessing steps to the image, including adaptive thresholding in RGB space
     immediately after cropping, before converting to grayscale.
@@ -368,7 +405,7 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         return None, None, 0, 0
 
     # Step 7: Morphological Closing to close small gaps
-    kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, config.kernel_size)
     closed_image = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel_close, iterations=2)
     save_image(closed_image, intermediate_folder, filename, '6_closed_image', config.img_debug)
 
@@ -439,7 +476,7 @@ def save_image(image: np.ndarray, folder: str, filename: str, step_name: str, im
 
 def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarray, pixels_per_mm: float,
                               config: Config, result_folder: str, filename: str,
-                              top_offset: int, left_offset: int, stop_event: threading.Event) -> Tuple[int, float, List[Tuple[str, str]], List[Dict[str, Any]]]:
+                              top_offset: int, left_offset: int, stop_event: threading.Event) -> Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
     """
     Find contours, calculate leaf areas, annotate the image, and compute mean RGB values within contours.
 
@@ -455,8 +492,8 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Tuple[int, float, List[Tuple[str, str]], List[Dict[str, Any]]]: Total count, total area in mm²,
-        annotation table, list of leaf RGB stats.
+        Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]: Total count, total area in mm²,
+        annotation table with average RGB, list of leaf RGB stats.
     """
     if stop_event.is_set():
         logger.info("Processing was stopped before contour processing.")
@@ -470,7 +507,6 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
     contours, _ = cv2.findContours(processed_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     logger.debug(f"Found {len(contours)} total contours.")
 
-    areas_mm2 = []
     total_count = 0
     pixels_per_mm2 = pixels_per_mm ** 2
 
@@ -484,7 +520,7 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
     leaf_rgb_stats = []
 
     # Iterate through each contour to calculate area, annotate, and compute mean RGB
-    for idx, contour in enumerate(contours, 1):
+    for idx, contour in enumerate(contours, start=1):
         if stop_event.is_set():
             logger.info("Processing was stopped during contour iteration.")
             break
@@ -492,8 +528,20 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
         area_pixels = cv2.contourArea(contour)
         area_mm2 = area_pixels / pixels_per_mm2
 
+        if config.filter_rgb:
+            # Compute average RGB values for the contour
+            average_rgb = compute_average_rgb(cropped_cv, contour)
+            mean_r, mean_g, mean_b = average_rgb
+
+            # Apply RGB filtering: include only if all averages are below thresholds
+            if (mean_r >= config.r_threshold or
+                mean_g >= config.g_threshold or
+                mean_b >= config.b_threshold):
+                logger.debug(f"Contour {idx} excluded due to high RGB values: R={mean_r}, G={mean_g}, B={mean_b}")
+                continue  # Skip this contour
+
+        # Apply area threshold
         if area_mm2 >= config.area_threshold:
-            areas_mm2.append(area_mm2)
             total_count += 1
 
             # Draw contour with unique color
@@ -519,28 +567,25 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
                 'color': color
             })
 
-            # Create a mask for the current contour
-            contour_mask = np.zeros(processed_image.shape, dtype=np.uint8)
-            cv2.drawContours(contour_mask, [contour], -1, 255, -1)  # Filled contour
-
             # Extract RGB values within the contour
-            image_rgb = cv2.cvtColor(cropped_cv, cv2.COLOR_BGR2RGB)
-            masked_rgb = cv2.bitwise_and(image_rgb, image_rgb, mask=contour_mask)
+            masked_rgb = extract_rgb_within_contour(cropped_cv, contour)
 
-            # Calculate mean R, G, B values, ignoring zero pixels
-            mean_r = cv2.mean(masked_rgb[:, :, 0], mask=contour_mask)[0]
-            mean_g = cv2.mean(masked_rgb[:, :, 1], mask=contour_mask)[0]
-            mean_b = cv2.mean(masked_rgb[:, :, 2], mask=contour_mask)[0]
+            # Calculate mean R, G, B values within the contour
+            mean_r = cv2.mean(masked_rgb[:, :, 0], mask=cv2.drawContours(np.zeros_like(processed_image), [contour], -1, 255, -1))[0]
+            mean_g = cv2.mean(masked_rgb[:, :, 1], mask=cv2.drawContours(np.zeros_like(processed_image), [contour], -1, 255, -1))[0]
+            mean_b = cv2.mean(masked_rgb[:, :, 2], mask=cv2.drawContours(np.zeros_like(processed_image), [contour], -1, 255, -1))[0]
 
+            # Append to leaf_rgb_stats with Leaf Area
             leaf_rgb_stats.append({
                 'Leaf ID': total_count,
-                'Mean R': round(mean_r, 2),
-                'Mean G': round(mean_g, 2),
-                'Mean B': round(mean_b, 2)
+                'Leaf Area': area_mm2,  # Transfer area_mm2 directly
+                'Mean R': mean_r,
+                'Mean G': mean_g,
+                'Mean B': mean_b
             })
 
     if not annotations and not stop_event.is_set():
-        logger.warning("No valid contours detected after applying area threshold.")
+        logger.warning("No valid contours detected after applying filters.")
 
     # Annotate the leaves with numbers, adding a white background behind each number
     for ann in annotations:
@@ -555,7 +600,7 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
                     cv2.FONT_HERSHEY_SIMPLEX, 1.5, ann['color'], 2, cv2.LINE_AA)  # Bigger font size
 
     # Create a table/list on the image
-    table = create_annotation_table(annotations, areas_mm2)
+    table = create_annotation_table(annotations, [leaf['Leaf Area'] for leaf in leaf_rgb_stats], leaf_rgb_stats)
     table_position = (50, 50)  # Initial table position; will adjust dynamically
     output_image = add_table_to_image(output_image, table, table_position)
 
@@ -564,35 +609,89 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
     cv2.imwrite(result_image_path, output_image)
     logger.debug(f"Saved final annotated image: {result_image_path}")
 
-    total_area_mm2 = sum(areas_mm2)
+    # Calculate total area from areas_mm2
+    total_area_mm2 = sum([leaf['Leaf Area'] for leaf in leaf_rgb_stats])
     return total_count, total_area_mm2, table, leaf_rgb_stats
 
 
-def create_annotation_table(annotations: List[Dict[str, Any]], areas_mm2: List[float]) -> List[Tuple[str, str]]:
+def compute_average_rgb(image_cv: np.ndarray, contour: np.ndarray) -> Tuple[int, int, int]:
     """
-    Create a table of annotations with contour numbers and areas.
+    Compute the average RGB values within a given contour.
+
+    Args:
+        image_cv (np.ndarray): Cropped OpenCV image in BGR format.
+        contour (np.ndarray): Contour of the leaf.
+
+    Returns:
+        Tuple[int, int, int]: Average (R, G, B) values.
+    """
+    # Create a mask for the contour
+    mask = np.zeros(image_cv.shape[:2], dtype=np.uint8)
+    cv2.drawContours(mask, [contour], -1, 255, -1)  # Filled contour
+
+    # Convert image to RGB
+    image_rgb = cv2.cvtColor(image_cv, cv2.COLOR_BGR2RGB)
+
+    # Calculate mean R, G, B values within the mask
+    mean_r = cv2.mean(image_rgb[:, :, 0], mask=mask)[0]
+    mean_g = cv2.mean(image_rgb[:, :, 1], mask=mask)[0]
+    mean_b = cv2.mean(image_rgb[:, :, 2], mask=mask)[0]
+
+    return int(mean_r), int(mean_g), int(mean_b)
+
+
+def extract_rgb_within_contour(image_cv: np.ndarray, contour: np.ndarray) -> np.ndarray:
+    """
+    Extract RGB values within a given contour.
+
+    Args:
+        image_cv (np.ndarray): Cropped OpenCV image in BGR format.
+        contour (np.ndarray): Contour of the leaf.
+
+    Returns:
+        np.ndarray: RGB image masked by the contour.
+    """
+    # Create a mask for the contour
+    mask = np.zeros(image_cv.shape[:2], dtype=np.uint8)
+    cv2.drawContours(mask, [contour], -1, 255, -1)  # Filled contour
+
+    # Convert image to RGB
+    image_rgb = cv2.cvtColor(image_cv, cv2.COLOR_BGR2RGB)
+
+    # Apply mask
+    masked_rgb = cv2.bitwise_and(image_rgb, image_rgb, mask=mask)
+
+    return masked_rgb
+
+
+def create_annotation_table(annotations: List[Dict[str, Any]], areas_mm2: List[float],
+                            leaf_rgb_stats: List[Dict[str, Any]]) -> List[Tuple[str, str, str]]:
+    """
+    Create a table of annotations with contour numbers, areas, and average RGB values.
 
     Args:
         annotations (List[Dict[str, Any]]): List of annotation dictionaries.
         areas_mm2 (List[float]): List of leaf areas in mm².
+        leaf_rgb_stats (List[Dict[str, Any]]): List of RGB statistics dictionaries.
 
     Returns:
-        List[Tuple[str, str]]: List of tuples representing table rows.
+        List[Tuple[str, str, str]]: List of tuples representing table rows.
     """
     table = []
-    for ann, area in zip(annotations, areas_mm2):
-        table.append((ann['text'], f"{area:.2f} mm²"))
-    logger.debug("Created annotation table.")
+    for ann, area, rgb_stat in zip(annotations, areas_mm2, leaf_rgb_stats):
+        average_rgb = f"{int(rgb_stat['Mean R'])}/{int(rgb_stat['Mean G'])}/{int(rgb_stat['Mean B'])}"
+        table.append((ann['text'], f"{area:.2f}", average_rgb))
+    logger.debug("Created annotation table with average RGB values.")
     return table
 
 
-def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_position: Tuple[int, int] = (50, 50)) -> np.ndarray:
+def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str, str]], table_position: Tuple[int, int] = (50, 50)) -> np.ndarray:
     """
     Add a table to the image at the specified position with enhanced aesthetics.
 
     Args:
         image (np.ndarray): Image to draw the table on.
-        table (List[Tuple[str, str]]): List of tuples representing table rows.
+        table (List[Tuple[str, str, str]]): List of tuples representing table rows.
         table_position (Tuple[int, int], optional): (x, y) position to place the table.
 
     Returns:
@@ -607,12 +706,12 @@ def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_po
     # Determine table size based on image width to ensure at least 10% width
     image_height, image_width = image.shape[:2]
     min_table_width = int(0.1 * image_width)
-    current_table_width = 300  # Increased width for better visibility
+    current_table_width = 450  # Increased width for better visibility
     table_width = max(current_table_width, min_table_width)
 
     # Calculate the number of rows and columns
     num_rows = len(table) + 1  # Including header
-    num_cols = 2
+    num_cols = 3  # ID, Area, Average RGB
     table_height = num_rows * base_line_height + 2 * base_margin
 
     x_start, y_start = table_position
@@ -638,7 +737,7 @@ def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_po
     cv2.rectangle(overlay, (x_start, y_start),
                   (x_start + table_width, y_start + table_height),
                   (255, 255, 255), -1)  # White background
-    alpha = 0.8  # Transparency factor
+    alpha = 0.6  # Transparency factor
     cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0, image)
 
     # Draw table border
@@ -646,14 +745,51 @@ def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_po
                   (x_start + table_width, y_start + table_height),
                   (0, 0, 0), 2)  # Black border
 
-    # Define column widths
-    col1_width = int(table_width * 0.3)  # 30% for ID
-    col2_width = table_width - col1_width  # 70% for Area
+    # Define column headers
+    headers = ["ID", "Area", "Average RGB"]
+
+    # Initialize lists to store maximum text widths for each column
+    max_text_widths = [0, 0, 0]
+
+    # Calculate maximum text width for each column based on headers and data
+    for i in range(num_cols):
+        header_text = headers[i]
+        (header_width, _), _ = cv2.getTextSize(header_text, font, font_scale, font_thickness)
+        max_text_widths[i] = header_width + 20  # Adding padding
+
+    for row in table:
+        for i in range(num_cols):
+            (text_width, _), _ = cv2.getTextSize(row[i], font, font_scale, font_thickness)
+            if text_width + 20 > max_text_widths[i]:
+                max_text_widths[i] = text_width + 20  # Update if current text is wider
+
+    # Calculate total required table width
+    required_table_width = sum(max_text_widths)
+    if required_table_width > table_width:
+        table_width = required_table_width
+        # Redraw semi-transparent background and border with updated table width
+        overlay = image.copy()
+        cv2.rectangle(overlay, (x_start, y_start),
+                      (x_start + table_width, y_start + table_height),
+                      (255, 255, 255), -1)  # White background
+        alpha = 0.6  # Transparency factor
+        cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0, image)
+        cv2.rectangle(image, (x_start, y_start),
+                      (x_start + table_width, y_start + table_height),
+                      (0, 0, 0), 2)  # Black border
+
+    # Recalculate column widths if necessary
+    col_widths = max_text_widths
+    total_col_width = sum(col_widths)
+
+    # Adjust column widths proportionally if they exceed the table width
+    if total_col_width > table_width:
+        scale = table_width / total_col_width
+        col_widths = [int(width * scale) for width in col_widths]
 
     # Add header
-    header = ("ID", "Area (mm²)")
-    for i, text in enumerate(header):
-        x_offset = 10 + i * col1_width
+    for i, text in enumerate(headers):
+        x_offset = sum(col_widths[:i]) + 10  # Adding padding
         y_offset = y_start + margin + line_height
         cv2.putText(image, text, (x_start + x_offset, y_start + margin + line_height),
                     font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
@@ -667,15 +803,19 @@ def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_po
             cv2.rectangle(image, (x_start, y - line_height + 5),
                           (x_start + table_width, y + 5),
                           row_color, -1)
-        for col_idx, item in enumerate(row):
-            x_offset = 10 + col_idx * col1_width
-            cv2.putText(image, item, (x_start + x_offset, y),
+        for col_idx in range(num_cols):
+            x_offset = sum(col_widths[:col_idx]) + 10  # Adding padding
+            display_text = row[col_idx]
+            cv2.putText(image, display_text, (x_start + x_offset, y),
                         font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
 
     # Draw vertical lines for column separators
-    cv2.line(image, (x_start + col1_width, y_start),
-             (x_start + col1_width, y_start + table_height),
-             (0, 0, 0), 2)
+    current_x = x_start
+    for width in col_widths[:-1]:  # No line after the last column
+        current_x += width
+        cv2.line(image, (current_x, y_start),
+                 (current_x, y_start + table_height),
+                 (0, 0, 0), 2)
 
     logger.debug("Added table to image with enhanced aesthetics.")
     return image
@@ -683,8 +823,8 @@ def add_table_to_image(image: np.ndarray, table: List[Tuple[str, str]], table_po
 
 def save_results(results_list: List[Dict[str, Any]], csv_file_path: str) -> None:
     """
-    Save the analysis results, including mean RGB values, to a CSV file.
-
+    Save the analysis results, including mean RGB values, to a CSV file and an Excel file.
+    
     Args:
         results_list (List[Dict[str, Any]]): List of dictionaries with analysis results.
         csv_file_path (str): Path to the CSV file.
@@ -705,24 +845,103 @@ def save_results(results_list: List[Dict[str, Any]], csv_file_path: str) -> None
         for leaf_stat in result.get('Leaf RGB Stats', []):
             row = base_info.copy()
             row['Leaf ID'] = leaf_stat['Leaf ID']
-            row['Mean R'] = leaf_stat['Mean R']
-            row['Mean G'] = leaf_stat['Mean G']
-            row['Mean B'] = leaf_stat['Mean B']
+            row['Leaf Area'] = leaf_stat['Leaf Area']
+            row['Average R'] = leaf_stat['Mean R']
+            row['Average G'] = leaf_stat['Mean G']
+            row['Average B'] = leaf_stat['Mean B']
+            row['Average RGB'] = f"{leaf_stat['Mean R']}/{leaf_stat['Mean G']}/{leaf_stat['Mean B']}"
             rows.append(row)
 
-    df_new = pd.DataFrame(rows)
+    df_csv = pd.DataFrame(rows)
 
     if os.path.exists(csv_file_path):
         try:
             df_existing = pd.read_csv(csv_file_path)
-            df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+            df_combined = pd.concat([df_existing, df_csv], ignore_index=True)
         except pd.errors.EmptyDataError:
-            df_combined = df_new
+            df_combined = df_csv
     else:
-        df_combined = df_new
+        df_combined = df_csv
 
     df_combined.to_csv(csv_file_path, index=False)
-    logger.info(f"Results saved to {csv_file_path}")
+    logger.info(f"Results saved to CSV: {csv_file_path}")
+
+     # Define the Excel file path
+    excel_file_path = os.path.splitext(csv_file_path)[0] + '.xlsx'
+
+    # Prepare data for "Raw_output" sheet
+    raw_rows = []
+    for result in results_list:
+        filename = result.get('Filename')
+        pct = result.get('PCT')
+        leaf_stem = result.get('Leaf_stem')
+        # Iterate through each leaf's stats
+        for leaf_stat in result.get('Leaf RGB Stats', []):
+            row = {
+                'Filename': filename,
+                'PCT': pct,
+                'Leaf_stem': leaf_stem,
+                'Leaf ID': leaf_stat['Leaf ID'],
+                'Leaf Area': leaf_stat['Leaf Area'],  # Use exact Leaf Area from stats
+                'Average R': leaf_stat['Mean R'],
+                'Average G': leaf_stat['Mean G'],
+                'Average B': leaf_stat['Mean B']
+            }
+            raw_rows.append(row)
+    df_raw = pd.DataFrame(raw_rows)
+
+    # Write "Raw_output" and "Summary" sheets to Excel
+    with pd.ExcelWriter(excel_file_path, engine='openpyxl') as writer:
+        # Write Raw_output sheet
+        df_raw.to_excel(writer, sheet_name='Raw_output', index=False)
+
+        # Create Summary sheet with headers
+        summary_headers = ['Filename', 'PCT', 'Leaf_stem', 'Total Leaf Area', 'Average R', 'Average G', 'Average B']
+        df_summary = pd.DataFrame(columns=summary_headers)
+        df_summary.to_excel(writer, sheet_name='Summary', index=False)
+
+        # Access the workbook and sheets
+        workbook = writer.book
+        raw_sheet = writer.sheets['Raw_output']
+        summary_sheet = writer.sheets['Summary']
+
+        # Get unique combinations of Filename, PCT, Leaf_stem
+        unique_images = df_raw[['Filename', 'PCT', 'Leaf_stem']].drop_duplicates().reset_index(drop=True)
+
+        for idx, row in unique_images.iterrows():
+            excel_row = idx + 2  # Excel rows start at 1, header is row 1
+            filename = row['Filename']
+            pct = row['PCT']
+            leaf_stem = row['Leaf_stem']
+
+            # Write Filename, PCT, Leaf_stem to Summary sheet
+            summary_sheet.cell(row=excel_row, column=1, value=filename)
+            summary_sheet.cell(row=excel_row, column=2, value=pct)
+            summary_sheet.cell(row=excel_row, column=3, value=leaf_stem)
+
+            # Define the range for SUMIF and SUMPRODUCT
+            # Raw_output sheet columns:
+            # A: Filename, B: PCT, C: Leaf_stem, D: Leaf ID, E: Leaf Area, F: Average R, G: Average G, H: Average B
+            total_leaf_area_formula = f"=SUMIF(Raw_output!A:A, Summary!A{excel_row}, Raw_output!E:E)"
+            average_r_formula = f"=SUMPRODUCT(--(Raw_output!A2:A1000=Summary!A{excel_row}), Raw_output!E2:E1000, Raw_output!F2:F1000) / Summary!D{excel_row}"
+            average_g_formula = f"=SUMPRODUCT(--(Raw_output!A2:A1000=Summary!A{excel_row}), Raw_output!E2:E1000, Raw_output!G2:G1000) / Summary!D{excel_row}"
+            average_b_formula = f"=SUMPRODUCT(--(Raw_output!A2:A1000=Summary!A{excel_row}), Raw_output!E2:E1000, Raw_output!H2:H1000) / Summary!D{excel_row}"
+
+            # Write formulas to Summary sheet
+            summary_sheet.cell(row=excel_row, column=4, value=total_leaf_area_formula)
+            summary_sheet.cell(row=excel_row, column=5, value=average_r_formula)
+            summary_sheet.cell(row=excel_row, column=6, value=average_g_formula)
+            summary_sheet.cell(row=excel_row, column=7, value=average_b_formula)
+
+        # Adjust column widths for better readability
+        for sheet_name in ['Raw_output', 'Summary']:
+            sheet = writer.sheets[sheet_name]
+            for column_cells in sheet.columns:
+                length = max(len(str(cell.value)) for cell in column_cells)
+                adjusted_width = (length + 2)
+                sheet.column_dimensions[get_column_letter(column_cells[0].column)].width = adjusted_width
+
+    logger.info(f"Results saved to Excel: {excel_file_path}")
 
 
 def main(stop_event: Optional[threading.Event] = None) -> None:

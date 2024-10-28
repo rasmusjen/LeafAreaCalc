@@ -3,24 +3,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Leaf Area Classification GUI with Enhanced Controls and Explanations
+Leaf Area Classification GUI with Enhanced Crop Visualization and RGB Filtering
 
 This GUI allows users to adjust settings including adaptive thresholding parameters,
-kernel size for morphological closing, and logging level. It also features improved
-layout and explanations for each parameter.
+kernel size for morphological closing, RGB-based filtering options, and logging level.
+Additionally, it features an enhanced image preview that displays a red outline indicating
+the crop area based on current crop settings.
 
 Features:
----------
+--------
 - Directory selection with real-time image list loading.
 - Configurable processing parameters via GUI inputs with explanations and default values.
 - Execution of image processing in a separate thread to keep the GUI responsive.
 - Display of processing logs within the application with adjustable log level.
-- Image preview functionality on double-clicking image entries.
+- Image preview functionality on double-clicking image entries, with crop area visualization.
 - Reset to default settings option.
 - Save and load configurations seamlessly.
 - Stop Processing functionality to terminate ongoing processing tasks.
 - Enlarged output panel for better log visibility.
 - Improved button layout and appearance.
+- Additional RGB-based filtering options.
 
 Author:
 -------
@@ -29,17 +31,17 @@ raje at ecos au dk
 
 Date:
 -----
-October 23, 2024
+October 28, 2024
 
 Version:
 --------
-0.3.0
+0.4.0
 
 """
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw
 import os
 import configparser
 import sys
@@ -51,7 +53,8 @@ from typing import List, Dict, Any
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
-from test_leaf_area_classification import main as process_images_main
+from test_leaf_area_classification import main as process_images_main  # Updated import
+
 
 # Configure root logger
 logger = logging.getLogger(__name__)
@@ -238,6 +241,10 @@ class LeafAreaGUI:
             ("Adaptive C Constant", "adaptive_C", "Constant subtracted from mean in adaptive thresholding. (default 2)"),
             ("Color Threshold (RGB)", "color_threshold", "RGB value above which pixels are near-white. (default 240)"),
             ("Kernel Size (width,height)", "kernel_size", "Kernel size for morphological closing. Must be a tuple of two integers, e.g., (5,5). (default (5,5))"),
+            ("Enable RGB Filter", "filter_rgb", "Enable additional RGB-based filtering. (default True)"),
+            ("R Threshold", "r_threshold", "Threshold for Red channel. (default 200)"),
+            ("G Threshold", "g_threshold", "Threshold for Green channel. (default 200)"),
+            ("B Threshold", "b_threshold", "Threshold for Blue channel. (default 200)"),
             ("Logging Level", "log_level", "Level of logging detail. (default DEBUG)")
         ]
 
@@ -249,10 +256,11 @@ class LeafAreaGUI:
             tooltip = tk.Label(control_frame, text=explanation, font=("Helvetica", 8), fg="grey", bg="#ffffff")
             tooltip.grid(row=i, column=1, pady=5, sticky='w')
 
-            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold"]:
+            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold", "filter_rgb"]:
                 var = tk.BooleanVar()
                 var.set(self.config.getboolean("DEFAULT", key, fallback=False))
-                entry = tk.Checkbutton(control_frame, variable=var, bg="#ffffff")
+                entry = tk.Checkbutton(control_frame, variable=var, bg="#ffffff",
+                                       command=lambda k=key, v=var: self.toggle_rgb_thresholds(k, v))
                 entry.grid(row=i, column=2, pady=5, sticky='w')
                 self.entries[key] = var
             elif key == "log_level":
@@ -300,6 +308,34 @@ class LeafAreaGUI:
         stop_button.grid(row=0, column=3, padx=5)
         self.stop_button = stop_button  # Reference for enabling/disabling
 
+        # Initially disable RGB threshold entries if filter_rgb is False
+        filter_rgb_var = self.entries.get("filter_rgb")
+        if filter_rgb_var and not filter_rgb_var.get():
+            self.set_rgb_thresholds_state("disabled")
+
+    def toggle_rgb_thresholds(self, key: str, var: tk.BooleanVar) -> None:
+        """
+        Enable or disable RGB threshold entries based on the RGB filter checkbox.
+
+        Args:
+            key (str): The key corresponding to the RGB filter.
+            var (tk.BooleanVar): The BooleanVar linked to the RGB filter checkbox.
+        """
+        state = "normal" if var.get() else "disabled"
+        self.set_rgb_thresholds_state(state)
+
+    def set_rgb_thresholds_state(self, state: str) -> None:
+        """
+        Set the state of RGB threshold entry fields.
+
+        Args:
+            state (str): The state to set ('normal' or 'disabled').
+        """
+        for key in ["r_threshold", "g_threshold", "b_threshold"]:
+            widget = self.entries.get(key)
+            if isinstance(widget, tk.Entry):
+                widget.config(state=state)
+
     def create_image_list_panel(self, parent: tk.Frame) -> None:
         """
         Create the image file list in the left frame.
@@ -333,23 +369,86 @@ class LeafAreaGUI:
 
     def show_image_popup(self, image_path: str) -> None:
         """
-        Show the selected image in a popup window.
+        Show the selected image in a popup window with a red outline indicating the crop area.
 
         Args:
             image_path (str): The path to the image file.
         """
         try:
             img = Image.open(image_path)
-            img.thumbnail((800, 800))
+            img_copy = img.copy()  # Make a copy to draw on
+            draw = ImageDraw.Draw(img_copy)
+
+            # Retrieve crop settings from GUI
+            crop_left = self.get_crop_percentage("crop_left")
+            crop_right = self.get_crop_percentage("crop_right")
+            crop_top = self.get_crop_percentage("crop_top")
+            crop_bottom = self.get_crop_percentage("crop_bottom")
+
+            # Calculate crop coordinates based on percentages
+            img_width, img_height = img_copy.size
+            left_px = int((crop_left / 100) * img_width)
+            right_px = int(img_width - (crop_right / 100) * img_width)
+            top_px = int((crop_top / 100) * img_height)
+            bottom_px = int(img_height - (crop_bottom / 100) * img_height)
+
+            # Draw red rectangle outlining the crop area
+            draw.rectangle([(left_px, top_px), (right_px, bottom_px)], outline="red", width=3)
+
+            # Optionally, draw lines or markers at crop boundaries
+            # draw.line([(left_px, 0), (left_px, img_height)], fill="red", width=1)
+            # draw.line([(right_px, 0), (right_px, img_height)], fill="red", width=1)
+            # draw.line([(0, top_px), (img_width, top_px)], fill="red", width=1)
+            # draw.line([(0, bottom_px), (img_width, bottom_px)], fill="red", width=1)
+
+            # Resize image for display if it's too large
+            max_size = (800, 800)
+            try:
+                resample_filter = Image.Resampling.LANCZOS
+            except AttributeError:
+                resample_filter = Image.ANTIALIAS  # Fallback for older Pillow versions
+
+            img_copy.thumbnail(max_size, resample=resample_filter)
+
+
             popup = tk.Toplevel(self.root)
-            popup.title(f"Viewing: {os.path.basename(image_path)}")
-            popup.geometry("820x820")
-            img_photo = ImageTk.PhotoImage(img)
+            popup.title(f"Viewing: {os.path.basename(image_path)} with Crop Outline")
+            popup.geometry(f"{img_copy.width + 20}x{img_copy.height + 20}")  # Dynamic sizing
+
+            img_photo = ImageTk.PhotoImage(img_copy)
             img_label = tk.Label(popup, image=img_photo)
             img_label.image = img_photo  # Keep a reference
             img_label.pack()
+
+            logger.info(f"Displayed image with crop outline: {os.path.basename(image_path)}")
+
         except Exception as e:
+            logger.error(f"Failed to open image: {image_path}. Error: {e}")
             messagebox.showerror("Image Error", f"Failed to open image:\n{e}")
+
+    def get_crop_percentage(self, key: str) -> float:
+        """
+        Retrieve and validate crop percentage from the GUI entry.
+
+        Args:
+            key (str): The key corresponding to the crop setting.
+
+        Returns:
+            float: The validated crop percentage.
+
+        Raises:
+            ValueError: If the entry is not a valid float between 0 and 100.
+        """
+        try:
+            entry_widget = self.entries[key]
+            value = float(entry_widget.get())
+            if not (0 <= value <= 100):
+                raise ValueError
+            return value
+        except ValueError:
+            logger.error(f"Invalid value for {key}. Must be a number between 0 and 100.")
+            messagebox.showerror("Invalid Input", f"Invalid value for {key.replace('_', ' ').title()}. Must be a number between 0 and 100.")
+            return 0.0  # Default fallback
 
     def create_log_panel(self, parent: tk.Frame) -> None:
         """
@@ -418,16 +517,16 @@ class LeafAreaGUI:
         directory = self.dir_label.cget("text")
         self.config.set("DEFAULT", "image_directory", directory)
         for key, entry in self.entries.items():
-            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold"]:
+            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold", "filter_rgb"]:
                 self.config.set("DEFAULT", key, str(entry.get()))
-            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold"]:
+            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "r_threshold", "g_threshold", "b_threshold"]:
                 # Ensure that the entry is an integer
                 try:
                     value = int(entry.get())
                     self.config.set("DEFAULT", key, str(value))
                 except ValueError:
                     logger.error(f"Invalid value for {key}. It must be an integer.")
-                    messagebox.showerror("Invalid Input", f"Invalid value for {key}. It must be an integer.")
+                    messagebox.showerror("Invalid Input", f"Invalid value for {key.replace('_', ' ').title()}. It must be an integer.")
                     return
             elif key == "kernel_size":
                 # Ensure that the entry is a tuple of integers
@@ -442,7 +541,7 @@ class LeafAreaGUI:
                     self.config.set("DEFAULT", key, str(kernel_size))
                 except:
                     logger.error(f"Invalid value for {key}. It must be a tuple of two integers, e.g., (5,5).")
-                    messagebox.showerror("Invalid Input", f"Invalid value for {key}. It must be a tuple of two integers, e.g., (5,5).")
+                    messagebox.showerror("Invalid Input", f"Invalid value for {key.replace('_', ' ').title()}. It must be a tuple of two integers, e.g., (5,5).")
                     return
             elif key == "log_level":
                 self.config.set("DEFAULT", key, entry.get())
@@ -481,15 +580,19 @@ class LeafAreaGUI:
             "adaptive_C": "2",
             "color_threshold": "240",
             "kernel_size": "(5, 5)",
+            "filter_rgb": "True",
+            "r_threshold": "200",
+            "g_threshold": "200",
+            "b_threshold": "200",
             "log_level": "DEBUG"
         }
 
         # Reset entries
         self.dir_label.config(text=defaults["image_directory"])
         for key, default_val in defaults.items():
-            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold"]:
+            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold", "filter_rgb"]:
                 self.entries[key].set(default_val == "True")
-            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "kernel_size"]:
+            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "r_threshold", "g_threshold", "b_threshold", "kernel_size"]:
                 self.entries[key].delete(0, tk.END)
                 self.entries[key].insert(0, default_val)
             elif key == "log_level":
@@ -512,6 +615,13 @@ class LeafAreaGUI:
 
         # Update logging level
         logger.setLevel(logging.DEBUG)
+
+        # Disable RGB threshold entries if filter_rgb is False
+        filter_rgb_var = self.entries.get("filter_rgb")
+        if filter_rgb_var and not filter_rgb_var.get():
+            self.set_rgb_thresholds_state("disabled")
+        else:
+            self.set_rgb_thresholds_state("normal")
 
     def execute_processing(self) -> None:
         """
