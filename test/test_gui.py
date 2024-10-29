@@ -23,6 +23,7 @@ Features:
 - Enlarged output panel for better log visibility.
 - Improved button layout and appearance.
 - Additional RGB-based filtering options.
+- Option to select and process a single image file.
 
 Author:
 -------
@@ -31,11 +32,11 @@ raje at ecos au dk
 
 Date:
 -----
-October 28, 2024
+October 29, 2024
 
 Version:
 --------
-0.4.0
+0.5.0
 
 """
 
@@ -126,8 +127,11 @@ class LeafAreaGUI:
         # Set Font
         self.set_font()
 
+        # Initialize entries dictionary
+        self.entries: Dict[str, Any] = {}  # Initialize here
+
         # Layout frames
-        self.create_header()
+        self.header_frame = self.create_header()  # Capture header_frame
         self.create_main_frames()
 
         # Right Frame: Controls
@@ -150,6 +154,42 @@ class LeafAreaGUI:
         if initial_dir and os.path.isdir(initial_dir):
             self.load_image_list(initial_dir)
 
+        # Set Application Icon
+        try:
+            icon_path = os.path.join(current_dir, 'assets', 'LAC.ico')
+            self.root.iconbitmap(icon_path)
+            logger.info("Application icon set successfully.")
+        except Exception as e:
+            logger.error(f"Failed to set application icon: {e}")
+
+        # Optionally, use the larger icon image within the GUI (e.g., in the header)
+        try:
+            icon_image_path = os.path.join(current_dir, 'assets', 'icon_new.png')
+            icon_image = Image.open(icon_image_path)
+
+            # Resize the image to 10% of its original size
+            original_size = icon_image.size
+            new_size = (int(original_size[0] * 0.1), int(original_size[1] * 0.1))
+            try:
+                resample_filter = Image.LANCZOS
+            except AttributeError:
+                resample_filter = Image.ANTIALIAS  # Fallback for older versions of PIL
+
+            icon_image = icon_image.resize(new_size, resample=resample_filter)
+
+            icon_photo = ImageTk.PhotoImage(icon_image)
+            icon_label = tk.Label(self.header_frame, image=icon_photo, bg="#f0f0f0")
+            icon_label.image = icon_photo  # Keep a reference to prevent garbage collection
+
+            # Place the icon in the header_frame using grid
+            icon_label.grid(row=0, column=1, sticky='e', padx=20)
+            logger.info("Larger icon image added to the header successfully.")
+        except Exception as e:
+            logger.error(f"Failed to add larger icon image to the header: {e}")
+
+
+
+
     def set_font(self) -> None:
         """
         Set the font for the GUI elements.
@@ -163,7 +203,9 @@ class LeafAreaGUI:
             self.font_entries = ("Open Sans", 10)
             self.font_buttons = ("Open Sans", 10, "bold")
             self.font_log = ("Open Sans", 10)
-        except:
+            print("Fonts set successfully using 'Open Sans'.")
+            logger.info("Fonts set successfully using 'Open Sans'.")
+        except Exception as e:
             # Fallback fonts in case Open Sans is not available
             self.font_title = ("Helvetica", 24, "bold")
             self.font_subtitle = ("Helvetica", 12, "italic")
@@ -171,22 +213,38 @@ class LeafAreaGUI:
             self.font_entries = ("Helvetica", 10)
             self.font_buttons = ("Helvetica", 10, "bold")
             self.font_log = ("Helvetica", 10)
+            print(f"Fonts set using fallback 'Helvetica' due to error: {e}")
+            logger.error(f"Fonts set using fallback 'Helvetica' due to error: {e}")
 
-    def create_header(self) -> None:
+
+    def create_header(self) -> tk.Frame:
         """
         Create the header section with title and subtitle.
         """
         header_frame = tk.Frame(self.root, bg="#f0f0f0")
         header_frame.pack(side=tk.TOP, fill=tk.X, pady=10)
 
+        # Configure grid with two columns
+        header_frame.grid_columnconfigure(0, weight=1)
+        header_frame.grid_columnconfigure(1, weight=0)
+
+        # Left side: Title and Subtitle in a sub-frame
+        title_subtitle_frame = tk.Frame(header_frame, bg="#f0f0f0")
+        title_subtitle_frame.grid(row=0, column=0, sticky='w', padx=20)
+
         # Title
-        title_label = tk.Label(header_frame, text="LeafAreaCalc", font=self.font_title, bg="#f0f0f0")
-        title_label.pack(anchor='w', padx=20)
+        title_label = tk.Label(title_subtitle_frame, text="LeafAreaCalc", font=self.font_title, bg="#f0f0f0")
+        title_label.pack(anchor='w')
 
         # Subtitle
-        subtitle_label = tk.Label(header_frame, text="Comprehensive Leaf Area Calculator",
-                                  font=self.font_subtitle, bg="#f0f0f0")
-        subtitle_label.pack(anchor='w', padx=20)
+        subtitle_label = tk.Label(title_subtitle_frame, text="Comprehensive Leaf Area Calculator",
+                                font=self.font_subtitle, bg="#f0f0f0")
+        subtitle_label.pack(anchor='w')
+
+        # Return header_frame for external access
+        return header_frame
+
+
 
     def create_main_frames(self) -> None:
         """
@@ -217,72 +275,176 @@ class LeafAreaGUI:
         control_frame = tk.Frame(parent, bg="#ffffff")
         control_frame.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
 
-        # Directory Selection
-        dir_button = tk.Button(control_frame, text="Select Image Directory", command=self.select_directory,
-                               font=self.font_buttons, bg="#2196F3", fg="white", padx=10, pady=5)
-        dir_button.grid(row=0, column=0, pady=5, sticky='w', columnspan=3)
+        # Configure grid with 2 columns: 0 (main), 1 (top_right)
+        control_frame.grid_columnconfigure(0, weight=1)  # Main settings
+        control_frame.grid_columnconfigure(1, weight=0)  # Top right controls
 
+        # Initialize img_debug
+        if 'img_debug' not in self.entries:
+            self.entries['img_debug'] = tk.BooleanVar()
+            self.entries['img_debug'].set(self.config.getboolean("DEFAULT", "img_debug", fallback=False))
+
+        # Initialize log_level
+        if 'log_level' not in self.entries:
+            self.entries['log_level'] = tk.StringVar()
+            self.entries['log_level'].set(self.config.get("DEFAULT", "log_level", fallback="DEBUG"))
+
+        # Directory Selection Frame
+        dir_selection_frame = tk.Frame(control_frame, bg="#ffffff")
+        dir_selection_frame.grid(row=0, column=0, pady=5, sticky='w')
+
+        # Select Image Directory Button
+        dir_button = tk.Button(dir_selection_frame, text="Select Image Directory", command=self.select_directory,
+                            font=self.font_buttons, bg="#2196F3", fg="white", padx=10, pady=5)
+        dir_button.pack(side=tk.LEFT, padx=(0, 10))
+
+        # Select Single Image Button
+        single_image_button = tk.Button(dir_selection_frame, text="Select Single Image", command=self.select_single_image,
+                                        font=self.font_buttons, bg="#4CAF50", fg="white", padx=10, pady=5)
+        single_image_button.pack(side=tk.LEFT)
+
+        # Top Right Controls Frame
+        top_right_frame = tk.Frame(control_frame, bg="#ffffff")
+        top_right_frame.grid(row=0, column=1, padx=10, pady=5, sticky='ne')
+
+        # Image Debug Option
+        img_debug_var = self.entries.get("img_debug")
+        if img_debug_var:
+            img_debug_cb = tk.Checkbutton(top_right_frame, text="Image Debug", variable=img_debug_var, bg="#ffffff")
+            img_debug_cb.pack(anchor='e')
+
+        # Log Level Dropdown
+        log_level_label = tk.Label(top_right_frame, text="Logging Level:", font=self.font_labels, bg="#ffffff")
+        log_level_label.pack(anchor='e')
+        log_level_menu = self.entries.get("log_level")
+        if log_level_menu:
+            log_level_menu_widget = tk.OptionMenu(top_right_frame, log_level_menu, "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
+            log_level_menu_widget.pack(anchor='e')
         initial_dir = self.config.get("DEFAULT", "image_directory", fallback="No directory selected")
         self.dir_label = tk.Label(control_frame, text=initial_dir, font=self.font_labels, bg="#ffffff")
-        self.dir_label.grid(row=1, column=0, pady=5, sticky='w', columnspan=3)
+        self.dir_label.grid(row=1, column=0, columnspan=2, pady=5, sticky='w')  # Spanning both columns
 
-        # Settings Inputs
-        settings = [
-            ("Area Threshold (mm²)", "area_threshold", "Minimum leaf area to consider in mm². (default 10)"),
-            ("Skip Contrast Adjustment", "skip_contrast_adjustment", "Skip CLAHE contrast adjustment. (default False)"),
-            ("Image Debug", "img_debug", "Save intermediate images. (default False)"),
-            ("Crop Left (%)", "crop_left", "Percentage to crop from the left. (default 20)"),
-            ("Crop Right (%)", "crop_right", "Percentage to crop from the right. (default 3)"),
-            ("Crop Top (%)", "crop_top", "Percentage to crop from the top. (default 3)"),
-            ("Crop Bottom (%)", "crop_bottom", "Percentage to crop from the bottom. (default 3)"),
-            ("Filename", "filename", "Specific filename to process. Leave empty to process all images."),
-            ("Enable Adaptive Thresholding", "adaptive_threshold", "Enable adaptive thresholding in RGB space. (default True)"),
-            ("Adaptive Window Size", "adaptive_window_size", "Window size for adaptive thresholding. Must be an odd integer. (default 15)"),
-            ("Adaptive C Constant", "adaptive_C", "Constant subtracted from mean in adaptive thresholding. (default 2)"),
-            ("Color Threshold (RGB)", "color_threshold", "RGB value above which pixels are near-white. (default 240)"),
-            ("Kernel Size (width,height)", "kernel_size", "Kernel size for morphological closing. Must be a tuple of two integers, e.g., (5,5). (default (5,5))"),
-            ("Enable RGB Filter", "filter_rgb", "Enable additional RGB-based filtering. (default True)"),
-            ("R Threshold", "r_threshold", "Threshold for Red channel. (default 200)"),
-            ("G Threshold", "g_threshold", "Threshold for Green channel. (default 200)"),
-            ("B Threshold", "b_threshold", "Threshold for Blue channel. (default 200)"),
-            ("Logging Level", "log_level", "Level of logging detail. (default DEBUG)")
+        # Image Cropping Section
+        cropping_frame = tk.LabelFrame(control_frame, text="Image Cropping", font=self.font_subtitle,
+                                    bg="#ffffff", padx=10, pady=10)
+        cropping_frame.grid(row=2, column=0, columnspan=2, pady=5, sticky='we')  # Spanning both columns
+
+        # Adaptive Thresholding Section
+        adaptive_frame = tk.LabelFrame(control_frame, text="Adaptive Thresholding", font=self.font_subtitle,
+                                    bg="#ffffff", padx=10, pady=10)
+        adaptive_frame.grid(row=3, column=0, columnspan=2, pady=5, sticky='we')  # Spanning both columns
+
+        # Color Threshold Section
+        color_threshold_frame = tk.LabelFrame(control_frame, text="Color Threshold", font=self.font_subtitle,
+                                            bg="#ffffff", padx=10, pady=10)
+        color_threshold_frame.grid(row=4, column=0, columnspan=2, pady=5, sticky='we')  # Spanning both columns
+
+        # RGB Filtering Section
+        rgb_filter_frame = tk.LabelFrame(control_frame, text="RGB Filtering", font=self.font_subtitle,
+                                        bg="#ffffff", padx=10, pady=10)
+        rgb_filter_frame.grid(row=5, column=0, columnspan=2, pady=5, sticky='we')  # Spanning both columns
+
+        # Image Cropping Section
+        cropping_settings = [
+            ("Crop Left (%)", "crop_left"),
+            ("Crop Right (%)", "crop_right"),
+            ("Crop Top (%)", "crop_top"),
+            ("Crop Bottom (%)", "crop_bottom")
         ]
 
-        self.entries: Dict[str, Any] = {}
-        for i, (label_text, key, explanation) in enumerate(settings, start=2):
-            label = tk.Label(control_frame, text=label_text + ":", font=self.font_labels, bg="#ffffff")
-            label.grid(row=i, column=0, pady=5, sticky='w')
+        for idx, (label_text, key) in enumerate(cropping_settings):
+            label = tk.Label(cropping_frame, text=label_text + ":", font=self.font_labels, bg="#ffffff")
+            label.grid(row=idx, column=0, sticky='w', padx=5, pady=2)
 
-            tooltip = tk.Label(control_frame, text=explanation, font=("Helvetica", 8), fg="grey", bg="#ffffff")
-            tooltip.grid(row=i, column=1, pady=5, sticky='w')
+            entry = tk.Entry(cropping_frame, font=self.font_entries)
+            entry.grid(row=idx, column=1, sticky='w', padx=5, pady=2)
+            default_val = self.config.get("DEFAULT", key, fallback="")
+            entry.insert(0, default_val)
+            self.entries[key] = entry
 
-            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold", "filter_rgb"]:
-                var = tk.BooleanVar()
-                var.set(self.config.getboolean("DEFAULT", key, fallback=False))
-                entry = tk.Checkbutton(control_frame, variable=var, bg="#ffffff",
-                                       command=lambda k=key, v=var: self.toggle_rgb_thresholds(k, v))
-                entry.grid(row=i, column=2, pady=5, sticky='w')
-                self.entries[key] = var
-            elif key == "log_level":
-                options = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-                var = tk.StringVar()
-                var.set(self.config.get("DEFAULT", key, fallback="DEBUG"))
-                entry = tk.OptionMenu(control_frame, var, *options)
-                entry.config(font=self.font_entries)
-                entry.grid(row=i, column=2, pady=5, sticky='w')
-                self.entries[key] = var
+        # Adaptive Thresholding Section
+        adaptive_settings = [
+            ("Enable Adaptive Thresholding", "adaptive_threshold"),
+            ("Adaptive Window Size", "adaptive_window_size"),
+            ("Adaptive C Constant", "adaptive_C")
+        ]
+
+        for idx, (label_text, key) in enumerate(adaptive_settings):
+            if key == "adaptive_threshold":
+                label = tk.Label(adaptive_frame, text=label_text + ":", font=self.font_labels, bg="#ffffff")
+                label.grid(row=idx, column=0, sticky='w', padx=5, pady=2)
+
+                var = self.entries.get(key)
+                if not var:
+                    var = tk.BooleanVar()
+                    var.set(self.config.getboolean("DEFAULT", key, fallback=False))
+                    self.entries[key] = var
+
+                cb = tk.Checkbutton(adaptive_frame, variable=var, bg="#ffffff",
+                                    command=lambda k=key, v=var: self.toggle_rgb_thresholds(k, v))
+                cb.grid(row=idx, column=1, sticky='w', padx=5, pady=2)
             else:
-                entry = tk.Entry(control_frame, font=self.font_entries)
-                entry.grid(row=i, column=2, pady=5, sticky='w')
+                label = tk.Label(adaptive_frame, text=label_text + ":", font=self.font_labels, bg="#ffffff")
+                label.grid(row=idx, column=0, sticky='w', padx=5, pady=2)
+
+                entry = tk.Entry(adaptive_frame, font=self.font_entries)
+                entry.grid(row=idx, column=1, sticky='w', padx=5, pady=2)
                 default_val = self.config.get("DEFAULT", key, fallback="")
                 entry.insert(0, default_val)
                 self.entries[key] = entry
 
-        # Create a frame for buttons at the bottom right using grid
-        button_frame = tk.Frame(control_frame, bg="#ffffff")
-        button_frame.grid(row=len(settings) + 2, column=0, columnspan=3, pady=20, sticky='e')
+        # Color Threshold Section
+        color_threshold_settings = [
+            ("Color Threshold (RGB):", "color_threshold")
+        ]
 
-        # Adjust button style
+        for idx, (label_text, key) in enumerate(color_threshold_settings):
+            label = tk.Label(color_threshold_frame, text=label_text, font=self.font_labels, bg="#ffffff")
+            label.grid(row=idx, column=0, sticky='w', padx=5, pady=2)
+
+            entry = tk.Entry(color_threshold_frame, font=self.font_entries)
+            entry.grid(row=idx, column=1, sticky='w', padx=5, pady=2)
+            default_val = self.config.get("DEFAULT", key, fallback="")
+            entry.insert(0, default_val)
+            self.entries[key] = entry
+
+        # RGB Filtering Section
+        rgb_filter_settings = [
+            ("Enable RGB Filter", "filter_rgb"),
+            ("R Threshold", "r_threshold"),
+            ("G Threshold", "g_threshold"),
+            ("B Threshold", "b_threshold")
+        ]
+
+        for idx, (label_text, key) in enumerate(rgb_filter_settings):
+            if key == "filter_rgb":
+                label = tk.Label(rgb_filter_frame, text=label_text + ":", font=self.font_labels, bg="#ffffff")
+                label.grid(row=idx, column=0, sticky='w', padx=5, pady=2)
+
+                var = self.entries.get(key)
+                if not var:
+                    var = tk.BooleanVar()
+                    var.set(self.config.getboolean("DEFAULT", key, fallback=False))
+                    self.entries[key] = var
+
+                cb = tk.Checkbutton(rgb_filter_frame, text=label_text, variable=var, bg="#ffffff",
+                                    command=lambda k=key, v=var: self.toggle_rgb_thresholds(k, v))
+                cb.grid(row=idx, column=1, sticky='w', padx=5, pady=2)
+            else:
+                label = tk.Label(rgb_filter_frame, text=label_text + ":", font=self.font_labels, bg="#ffffff")
+                label.grid(row=idx, column=0, sticky='w', padx=5, pady=2)
+
+                entry = tk.Entry(rgb_filter_frame, font=self.font_entries)
+                entry.grid(row=idx, column=1, sticky='w', padx=5, pady=2)
+                default_val = self.config.get("DEFAULT", key, fallback="")
+                entry.insert(0, default_val)
+                self.entries[key] = entry
+
+        # Create a frame for action buttons at the bottom of control_frame
+        buttons_frame = tk.Frame(control_frame, bg="#ffffff")
+        buttons_frame.grid(row=6, column=0, columnspan=2, pady=20, sticky='w')  # Aligned to left
+
+        # Define button style parameters
         button_style = {
             'font': self.font_buttons,
             'bg': "#2196F3",
@@ -292,18 +454,21 @@ class LeafAreaGUI:
             'width': 20  # Equal width for all buttons
         }
 
-        # Place the buttons in the button_frame using grid
-        save_button = tk.Button(button_frame, text="Save Configuration", command=self.save_config, **button_style)
+        # Save Configuration Button
+        save_button = tk.Button(buttons_frame, text="Save Configuration", command=self.save_config, **button_style)
         save_button.grid(row=0, column=0, padx=5)
 
-        reset_button = tk.Button(button_frame, text="Reset to Defaults", command=self.reset_to_defaults, **button_style)
+        # Reset to Defaults Button
+        reset_button = tk.Button(buttons_frame, text="Reset to Defaults", command=self.reset_to_defaults, **button_style)
         reset_button.grid(row=0, column=1, padx=5)
 
-        exec_button = tk.Button(button_frame, text="Execute Processing", command=self.execute_processing, **button_style)
+        # Execute Processing Button
+        exec_button = tk.Button(buttons_frame, text="Execute Processing", command=self.execute_processing, **button_style)
         exec_button.grid(row=0, column=2, padx=5)
         self.exec_button = exec_button  # Reference for enabling/disabling
 
-        stop_button = tk.Button(button_frame, text="Stop Processing", command=self.stop_processing,
+        # Stop Processing Button
+        stop_button = tk.Button(buttons_frame, text="Stop Processing", command=self.stop_processing,
                                 **button_style, state='disabled')
         stop_button.grid(row=0, column=3, padx=5)
         self.stop_button = stop_button  # Reference for enabling/disabling
@@ -312,6 +477,67 @@ class LeafAreaGUI:
         filter_rgb_var = self.entries.get("filter_rgb")
         if filter_rgb_var and not filter_rgb_var.get():
             self.set_rgb_thresholds_state("disabled")
+
+        # Configure grid weights for responsive design
+        control_frame.grid_columnconfigure(0, weight=1)
+        control_frame.grid_columnconfigure(1, weight=0)
+
+    def reset_to_defaults(self) -> None:
+        """
+        Reset all settings to default values.
+        """
+        # Define default values
+        defaults = {
+            "image_directory": "",
+            "area_threshold": "10",
+            "adaptive_threshold": "True",
+            "adaptive_window_size": "15",
+            "adaptive_C": "2",
+            "color_threshold": "240",
+            "kernel_size": "(5, 5)",
+            "filter_rgb": "True",
+            "r_threshold": "200",
+            "g_threshold": "200",
+            "b_threshold": "200",
+            "log_level": "DEBUG"
+        }
+
+        # Reset entries
+        self.dir_label.config(text=defaults["image_directory"])
+        for key, default_val in defaults.items():
+            if key in ["adaptive_threshold", "filter_rgb"]:
+                self.entries[key].set(default_val == "True")
+            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "r_threshold", "g_threshold", "b_threshold", "kernel_size"]:
+                self.entries[key].delete(0, tk.END)
+                self.entries[key].insert(0, default_val)
+            elif key == "log_level":
+                self.entries[key].set(default_val)
+            else:
+                self.entries[key].delete(0, tk.END)
+                self.entries[key].insert(0, default_val)
+
+        # Update config
+        for key, default_val in defaults.items():
+            self.config.set("DEFAULT", key, default_val)
+
+        with open(self.config_file, 'w') as configfile:
+            self.config.write(configfile)
+
+        # Clear image list
+        self.image_listbox.delete(0, tk.END)
+        logger.info("Settings reset to default values.")
+        messagebox.showinfo("Reset", "Settings have been reset to default values.")
+
+        # Update logging level
+        logger.setLevel(logging.DEBUG)
+
+        # Disable RGB threshold entries if filter_rgb is False
+        filter_rgb_var = self.entries.get("filter_rgb")
+        if filter_rgb_var and not filter_rgb_var.get():
+            self.set_rgb_thresholds_state("disabled")
+        else:
+            self.set_rgb_thresholds_state("normal")
+
 
     def toggle_rgb_thresholds(self, key: str, var: tk.BooleanVar) -> None:
         """
@@ -488,6 +714,29 @@ class LeafAreaGUI:
             self.save_config(save_without_message=True)  # Save without showing message
             self.load_image_list(directory)
 
+    def select_single_image(self) -> None:
+        """
+        Handle single image selection and add it to the image list.
+        """
+        filetypes = [
+            ("Image Files", "*.png;*.jpg;*.jpeg;*.tif;*.tiff;*.bmp"),
+            ("All Files", "*.*")
+        ]
+        image_path = filedialog.askopenfilename(title="Select Single Image", filetypes=filetypes)
+        if image_path:
+            directory = os.path.dirname(image_path)
+            filename = os.path.basename(image_path)
+            # Update directory label to the directory of the selected image
+            self.dir_label.config(text=directory)
+            self.config.set("DEFAULT", "image_directory", directory)
+            self.save_config(save_without_message=True)  # Save without showing message
+            # Load image list from the directory
+            self.load_image_list(directory)
+            # Add the selected single image to the listbox if it's not already present
+            if filename not in self.images:
+                self.image_listbox.insert(tk.END, filename)
+                self.images.append(filename)
+
     def load_image_list(self, directory: str) -> None:
         """
         Load and display the list of image files in the selected directory.
@@ -517,7 +766,7 @@ class LeafAreaGUI:
         directory = self.dir_label.cget("text")
         self.config.set("DEFAULT", "image_directory", directory)
         for key, entry in self.entries.items():
-            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold", "filter_rgb"]:
+            if key in ["adaptive_threshold", "filter_rgb", "img_debug"]:  # Added "img_debug" here
                 self.config.set("DEFAULT", key, str(entry.get()))
             elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "r_threshold", "g_threshold", "b_threshold"]:
                 # Ensure that the entry is an integer
@@ -546,7 +795,8 @@ class LeafAreaGUI:
             elif key == "log_level":
                 self.config.set("DEFAULT", key, entry.get())
             else:
-                self.config.set("DEFAULT", key, entry.get())
+                # For any other keys, ensure they are strings
+                self.config.set("DEFAULT", key, str(entry.get()))  # Changed to str(entry.get())
 
         with open(self.config_file, 'w') as configfile:
             self.config.write(configfile)
@@ -560,61 +810,55 @@ class LeafAreaGUI:
         log_level = getattr(logging, log_level_str.upper(), logging.DEBUG)
         logger.setLevel(log_level)
 
-    def reset_to_defaults(self) -> None:
-        """
-        Reset all settings to default values.
-        """
-        # Define default values
-        defaults = {
-            "image_directory": "",
-            "area_threshold": "10",
-            "skip_contrast_adjustment": "False",
-            "img_debug": "False",
-            "crop_left": "20",
-            "crop_right": "3",
-            "crop_top": "3",
-            "crop_bottom": "3",
-            "filename": "",
-            "adaptive_threshold": "True",
-            "adaptive_window_size": "15",
-            "adaptive_C": "2",
-            "color_threshold": "240",
-            "kernel_size": "(5, 5)",
-            "filter_rgb": "True",
-            "r_threshold": "200",
-            "g_threshold": "200",
-            "b_threshold": "200",
-            "log_level": "DEBUG"
-        }
 
-        # Reset entries
-        self.dir_label.config(text=defaults["image_directory"])
-        for key, default_val in defaults.items():
-            if key in ["skip_contrast_adjustment", "img_debug", "adaptive_threshold", "filter_rgb"]:
-                self.entries[key].set(default_val == "True")
-            elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "r_threshold", "g_threshold", "b_threshold", "kernel_size"]:
-                self.entries[key].delete(0, tk.END)
-                self.entries[key].insert(0, default_val)
-            elif key == "log_level":
-                self.entries[key].set(default_val)
-            else:
-                self.entries[key].delete(0, tk.END)
-                self.entries[key].insert(0, default_val)
+        def reset_to_defaults(self) -> None:
+            """
+            Reset all settings to default values.
+            """
+            # Define default values
+            defaults = {
+                "image_directory": "",
+                "area_threshold": "10",
+                "adaptive_threshold": "True",
+                "adaptive_window_size": "15",
+                "adaptive_C": "2",
+                "color_threshold": "240",
+                "kernel_size": "(5, 5)",
+                "filter_rgb": "True",
+                "r_threshold": "200",
+                "g_threshold": "200",
+                "b_threshold": "200",
+                "log_level": "DEBUG"
+            }
 
-        # Update config
-        for key, default_val in defaults.items():
-            self.config.set("DEFAULT", key, default_val)
+            # Reset entries
+            self.dir_label.config(text=defaults["image_directory"])
+            for key, default_val in defaults.items():
+                if key in ["adaptive_threshold", "filter_rgb"]:
+                    self.entries[key].set(default_val == "True")
+                elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "r_threshold", "g_threshold", "b_threshold", "kernel_size"]:
+                    self.entries[key].delete(0, tk.END)
+                    self.entries[key].insert(0, default_val)
+                elif key == "log_level":
+                    self.entries[key].set(default_val)
+                else:
+                    self.entries[key].delete(0, tk.END)
+                    self.entries[key].insert(0, default_val)
 
-        with open(self.config_file, 'w') as configfile:
-            self.config.write(configfile)
+            # Update config
+            for key, default_val in defaults.items():
+                self.config.set("DEFAULT", key, default_val)
 
-        # Clear image list
-        self.image_listbox.delete(0, tk.END)
-        logger.info("Settings reset to default values.")
-        messagebox.showinfo("Reset", "Settings have been reset to default values.")
+            with open(self.config_file, 'w') as configfile:
+                self.config.write(configfile)
 
-        # Update logging level
-        logger.setLevel(logging.DEBUG)
+            # Clear image list
+            self.image_listbox.delete(0, tk.END)
+            logger.info("Settings reset to default values.")
+            messagebox.showinfo("Reset", "Settings have been reset to default values.")
+
+            # Update logging level
+            logger.setLevel(logging.DEBUG)
 
         # Disable RGB threshold entries if filter_rgb is False
         filter_rgb_var = self.entries.get("filter_rgb")
@@ -684,6 +928,38 @@ class LeafAreaGUI:
 
         # Disable Stop button to prevent multiple signals
         self.stop_button.config(state='disabled')
+
+    def select_single_image(self) -> None:
+        """
+        Handle single image selection and add it to the image list.
+        """
+        filetypes = [
+            ("Image Files", "*.png;*.jpg;*.jpeg;*.tif;*.tiff;*.bmp"),
+            ("All Files", "*.*")
+        ]
+        image_path = filedialog.askopenfilename(title="Select Single Image", filetypes=filetypes)
+        if image_path:
+            directory = os.path.dirname(image_path)
+            filename = os.path.basename(image_path)
+            # Update directory label to the directory of the selected image
+            self.dir_label.config(text=directory)
+            self.config.set("DEFAULT", "image_directory", directory)
+            self.save_config(save_without_message=True)  # Save without showing message
+            # Load image list from the directory
+            self.load_image_list(directory)
+            # Add the selected single image to the listbox if it's not already present
+            if filename not in self.images:
+                self.image_listbox.insert(tk.END, filename)
+                self.images.append(filename)
+    
+    def update_status(self, message: str) -> None:
+        """
+        Update the status bar with the given message.
+
+        Args:
+            message (str): The message to display in the status bar.
+        """
+        self.status_label.after(0, lambda: self.status_label.config(text=message))
 
 
 def main() -> None:

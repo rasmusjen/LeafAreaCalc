@@ -24,6 +24,7 @@ Features:
 - Additional filtering based on average RGB values.
 - Dynamic table column width adjustment.
 - Option to remove "mm²" from the area column.
+- Comprehensive logging to file and console.
 
 Author:
 -------
@@ -32,15 +33,16 @@ raje at ecos au dk
 
 Date:
 -----
-October 28, 2024
+October 29, 2024
 
 Version:
 --------
-0.4.0
+0.5.0
 
 """
 
 import os
+import sys
 import time
 import logging
 import configparser
@@ -57,15 +59,38 @@ import re
 import threading
 import ast
 
-# Configure logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-handler = logging.StreamHandler()
-handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+# ============================ Configuration and Logging Setup ============================
 
+# Initialize Config
+current_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(current_dir, '..', 'config', 'config.ini')  # Adjusted path based on directory structure
+config = configparser.ConfigParser()
+
+# Read configuration from config.ini
+if os.path.exists(config_path):
+    config.read(config_path)
+    print(f"Configuration loaded from {config_path}.")
+    logging.info(f"Configuration loaded from {config_path}.")
+else:
+    print(f"Configuration file not found at {config_path}. Using default settings.")
+    logging.warning(f"Configuration file not found at {config_path}. Using default settings.")
+    # Optionally, create a default config.ini here or handle as needed
+
+# Set up logging based on configuration
+log_level_str = config.get("DEFAULT", "log_level", fallback="DEBUG")
+log_level = getattr(logging, log_level_str.upper(), logging.DEBUG)
+
+# Configure logging to file and console
+logging.basicConfig(level=log_level,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler(os.path.join(current_dir, 'processing.log')),
+                        logging.StreamHandler(sys.stdout)
+                    ])
+logger = logging.getLogger(__name__)
+logger.debug("Logging is configured.")
+
+# ============================ Data Classes ============================
 
 @dataclass
 class Config:
@@ -75,7 +100,6 @@ class Config:
     Attributes:
         image_directory (str): Directory containing leaf images.
         area_threshold (float): Minimum leaf area in mm² to consider.
-        skip_contrast_adjustment (bool): Flag to skip contrast adjustment.
         crop_left_pct (float): Percentage to crop from the left.
         crop_right_pct (float): Percentage to crop from the right.
         crop_top_pct (float): Percentage to crop from the top.
@@ -94,7 +118,6 @@ class Config:
     """
     image_directory: str
     area_threshold: float
-    skip_contrast_adjustment: bool
     crop_left_pct: float
     crop_right_pct: float
     crop_top_pct: float
@@ -111,6 +134,7 @@ class Config:
     g_threshold: int
     b_threshold: int
 
+# ============================ Configuration Reader ============================
 
 def read_config(config_file: str = 'config.ini') -> Config:
     """
@@ -129,6 +153,8 @@ def read_config(config_file: str = 'config.ini') -> Config:
     config_parser = configparser.ConfigParser()
     config_parser.read(config_path)
     config = config_parser['DEFAULT']
+
+    # Parse kernel_size safely
     kernel_size_str = config.get('kernel_size', fallback='(5, 5)')
     try:
         kernel_size = ast.literal_eval(kernel_size_str)
@@ -141,7 +167,6 @@ def read_config(config_file: str = 'config.ini') -> Config:
     return Config(
         image_directory=config.get('image_directory', ''),
         area_threshold=config.getfloat('area_threshold', fallback=5.0),
-        skip_contrast_adjustment=config.getboolean('skip_contrast_adjustment', fallback=False),
         crop_left_pct=config.getfloat('crop_left', fallback=10.0) / 100.0,
         crop_right_pct=config.getfloat('crop_right', fallback=2.0) / 100.0,
         crop_top_pct=config.getfloat('crop_top', fallback=2.0) / 100.0,
@@ -159,6 +184,7 @@ def read_config(config_file: str = 'config.ini') -> Config:
         b_threshold=config.getint('b_threshold', fallback=200)
     )
 
+# ============================ Directory Setup ============================
 
 def create_directories(config: Config) -> Tuple[str, str]:
     """
@@ -170,19 +196,19 @@ def create_directories(config: Config) -> Tuple[str, str]:
     Returns:
         Tuple[str, str]: Paths to the intermediate and result image directories.
     """
-    
     result_folder = os.path.join(config.image_directory, 'result_img')
     intermediate_folder = os.path.join(result_folder, 'intermediate_img')
-    
+
     os.makedirs(result_folder, exist_ok=True)
-    
+    logger.debug(f"Created result folder at: {result_folder}")
+
     if config.img_debug:
         os.makedirs(intermediate_folder, exist_ok=True)
         logger.debug(f"Created intermediate folder at: {intermediate_folder}")
-    
-    
+
     return intermediate_folder, result_folder
 
+# ============================ Image File Retrieval ============================
 
 def get_image_files(config: Config) -> List[str]:
     """
@@ -204,6 +230,53 @@ def get_image_files(config: Config) -> List[str]:
         logger.debug(f"Found {len(image_files)} image files.")
         return image_files
 
+# ============================ Image Processing Functions ============================
+
+def process_images_main(stop_event: threading.Event) -> None:
+    """
+    Main function to process images based on configuration settings.
+
+    Args:
+        stop_event (threading.Event): Event to signal stopping of processing.
+    """
+    try:
+        # Read configuration
+        config = read_config()
+
+        # Create necessary directories
+        intermediate_folder, result_folder = create_directories(config)
+
+        # Get list of image files to process
+        image_files = get_image_files(config)
+
+        # Define paths for results
+        csv_file_path = os.path.join(config.image_directory, 'leaf_analysis_results.csv')
+
+        # Initialize list to hold results
+        results_list = []
+
+        # Iterate through each image file
+        for image_file in image_files:
+            if stop_event.is_set():
+                logger.info("Processing was stopped before processing all images.")
+                break
+
+            image_path = os.path.join(config.image_directory, image_file)
+            result = process_image(image_path, config, intermediate_folder, result_folder, stop_event)
+
+            if result:
+                results_list.append(result)
+
+        # Save results if processing wasn't interrupted
+        if results_list and not (stop_event.is_set()):
+            save_results(results_list, csv_file_path)
+        elif stop_event.is_set():
+            logger.info("Processing was interrupted. Partial results may not be saved.")
+
+    except Exception as e:
+        logger.error(f"An unexpected error occurred in process_images_main: {e}")
+    finally:
+        logger.info("Image processing completed.")
 
 def process_image(image_path: str, config: Config, intermediate_folder: str, result_folder: str,
                  stop_event: threading.Event) -> Optional[Dict[str, Any]]:
@@ -295,7 +368,6 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         logger.error(f"Error processing {filename}: {e}")
         return None
 
-
 def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: str, filename: str,
                     pixels_per_mm: float, stop_event: threading.Event) -> Tuple[np.ndarray, np.ndarray, int, int]:
     """
@@ -372,14 +444,10 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
     # Step 3: Convert to grayscale
     gray_image = cv2.cvtColor(masked_image, cv2.COLOR_BGR2GRAY)
 
-    # Step 4: Conditional Contrast Adjustment using CLAHE
-    if not config.skip_contrast_adjustment:
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        contrast_image = clahe.apply(gray_image)
-        logger.debug("Applied CLAHE for contrast adjustment.")
-    else:
-        contrast_image = gray_image
-        logger.debug("Skipped contrast adjustment as per configuration.")
+    # Step 4: Apply Contrast Adjustment using CLAHE unconditionally
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    contrast_image = clahe.apply(gray_image)
+    logger.debug("Applied CLAHE for contrast adjustment.")
 
     save_image(contrast_image, intermediate_folder, filename, '3_contrast_image', config.img_debug)
 
@@ -421,7 +489,6 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         return None, None, 0, 0
 
     return cleaned_image, cropped_image, top, left
-
 
 def remove_small_objects(closed_image: np.ndarray, area_threshold_pixels: float) -> np.ndarray:
     """
@@ -948,29 +1015,74 @@ def main(stop_event: Optional[threading.Event] = None) -> None:
     """
     Main function to orchestrate the leaf classification process.
 
+    This function performs the following steps:
+    1. Reads configuration settings from 'config.ini'.
+    2. Creates necessary directories for storing intermediate and result images.
+    3. Identifies image files to process based on configuration.
+    4. Iterates through each image file, processing them individually.
+    5. Accumulates results and saves them to CSV and Excel files.
+    6. Handles graceful termination if a stop event is signaled.
+
     Args:
-        stop_event (Optional[threading.Event], optional): Event to signal stopping of processing.
+        stop_event (Optional[threading.Event], optional):
+            Event to signal stopping of processing. If set, the function
+            will terminate processing after the current image.
     """
-    config = read_config()
-    intermediate_folder, result_folder = create_directories(config)
-    csv_file_path = os.path.join(config.image_directory, 'leaf_analysis_results.csv')
-    image_files = get_image_files(config)
-    results_list = []
+    try:
+        # Step 1: Read configuration settings
+        config = read_config()
+        logger.debug("Configuration settings loaded successfully.")
 
-    for image_file in image_files:
-        if stop_event and stop_event.is_set():
-            logger.info("Processing was stopped before processing all images.")
-            break
+        # Step 2: Create directories for intermediate and result images
+        intermediate_folder, result_folder = create_directories(config)
+        logger.debug(f"Intermediate images will be saved to: {intermediate_folder}")
+        logger.debug(f"Processed result images will be saved to: {result_folder}")
 
-        image_path = os.path.join(config.image_directory, image_file)
-        result = process_image(image_path, config, intermediate_folder, result_folder, stop_event)
-        if result:
-            results_list.append(result)
+        # Define the path for the CSV results file
+        csv_file_path = os.path.join(config.image_directory, 'leaf_analysis_results.csv')
+        logger.debug(f"Results will be saved to CSV file at: {csv_file_path}")
 
-    if results_list and not (stop_event and stop_event.is_set()):
-        save_results(results_list, csv_file_path)
-    elif stop_event and stop_event.is_set():
-        logger.info("Processing was interrupted. Partial results may not be saved.")
+        # Step 3: Get list of image files to process
+        image_files = get_image_files(config)
+        logger.info(f"Found {len(image_files)} image(s) to process.")
+
+        # Initialize a list to store results from each image
+        results_list = []
+
+        # Step 4: Iterate through each image file and process
+        for image_file in image_files:
+            # Check if a stop signal has been received
+            if stop_event and stop_event.is_set():
+                logger.info("Processing was stopped before processing all images.")
+                break
+
+            # Construct the full path to the image file
+            image_path = os.path.join(config.image_directory, image_file)
+            logger.debug(f"Starting processing for image: {image_path}")
+
+            # Process the individual image
+            result = process_image(image_path, config, intermediate_folder, result_folder, stop_event)
+
+            # If processing was successful, append the result to the results list
+            if result:
+                results_list.append(result)
+                logger.debug(f"Result appended for image: {image_file}")
+            else:
+                logger.warning(f"No result returned for image: {image_file}")
+
+        # Step 5: Save accumulated results if processing wasn't stopped
+        if results_list and not (stop_event and stop_event.is_set()):
+            save_results(results_list, csv_file_path)
+            logger.info("All results have been saved successfully.")
+        elif stop_event and stop_event.is_set():
+            logger.info("Processing was interrupted. Partial results may not be saved.")
+
+    except Exception as e:
+        # Catch any unexpected exceptions and log them
+        logger.error(f"An unexpected error occurred in main(): {e}", exc_info=True)
+    finally:
+        # Final log entry to indicate that the processing has concluded
+        logger.info("Leaf classification processing has concluded.")
 
 
 if __name__ == "__main__":
