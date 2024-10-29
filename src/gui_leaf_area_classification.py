@@ -36,7 +36,7 @@ October 29, 2024
 
 Version:
 --------
-0.5.0
+1.0.0
 
 """
 
@@ -54,7 +54,7 @@ from typing import List, Dict, Any
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
-from test_leaf_area_classification import main as process_images_main  # Updated import
+from leaf_area_classification import main as process_images_main  # Updated import
 
 
 # Configure root logger
