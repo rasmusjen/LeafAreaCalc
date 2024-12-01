@@ -33,11 +33,11 @@ raje at ecos au dk
 
 Date:
 -----
-October 29, 2024
+December 1, 2024
 
 Version:
 --------
-1.0.0
+1.1.0
 
 """
 
@@ -88,6 +88,7 @@ logging.basicConfig(level=log_level,
                         logging.StreamHandler(sys.stdout)
                     ])
 logger = logging.getLogger(__name__)
+logger.setLevel(log_level)
 logger.debug("Logging is configured.")
 
 # ============================ Data Classes ============================
@@ -166,7 +167,7 @@ def read_config(config_file: str = 'config.ini') -> Config:
 
     return Config(
         image_directory=config.get('image_directory', ''),
-        area_threshold=config.getfloat('area_threshold', fallback=5.0),
+        area_threshold=config.getfloat('area_threshold', fallback=2.0),
         crop_left_pct=config.getfloat('crop_left', fallback=10.0) / 100.0,
         crop_right_pct=config.getfloat('crop_right', fallback=2.0) / 100.0,
         crop_top_pct=config.getfloat('crop_top', fallback=2.0) / 100.0,

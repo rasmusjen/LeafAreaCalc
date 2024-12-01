@@ -188,8 +188,6 @@ class LeafAreaGUI:
             logger.error(f"Failed to add larger icon image to the header: {e}")
 
 
-
-
     def set_font(self) -> None:
         """
         Set the font for the GUI elements.
@@ -243,7 +241,6 @@ class LeafAreaGUI:
 
         # Return header_frame for external access
         return header_frame
-
 
 
     def create_main_frames(self) -> None:
@@ -489,11 +486,11 @@ class LeafAreaGUI:
         # Define default values
         defaults = {
             "image_directory": "",
-            "area_threshold": "10",
+            "area_threshold": "2",
             "adaptive_threshold": "True",
             "adaptive_window_size": "15",
             "adaptive_C": "2",
-            "color_threshold": "240",
+            "color_threshold": "200",
             "kernel_size": "(5, 5)",
             "filter_rgb": "True",
             "r_threshold": "200",
@@ -818,11 +815,11 @@ class LeafAreaGUI:
             # Define default values
             defaults = {
                 "image_directory": "",
-                "area_threshold": "10",
+                "area_threshold": "2",
                 "adaptive_threshold": "True",
                 "adaptive_window_size": "15",
                 "adaptive_C": "2",
-                "color_threshold": "240",
+                "color_threshold": "200",
                 "kernel_size": "(5, 5)",
                 "filter_rgb": "True",
                 "r_threshold": "200",
