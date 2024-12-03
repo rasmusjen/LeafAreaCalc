@@ -8,15 +8,8 @@ C:\Users\au710242\AppData\Local\anaconda3
 
 Things to do
 MAIN
-- Write only summed leaf area in csv
 
 GUI
-
-- Total time elapsed on screen
-- Progress bar + other suggestions in ChatGPT (https://chatgpt.com/share/67078287-97f0-8004-a9d9-7fc54f5edc45), search for Enhancements and Customizations
-- Open output dir in explorer when processing complete
-- Scroll trough images in left panel
-- Refine area snap to leaves
 
 Executable
 - Make executable (https://chatgpt.com/share/67078287-97f0-8004-a9d9-7fc54f5edc45)

@@ -29,26 +29,26 @@ Features:
 Author:
 -------
 Rasmus Jensen
-raje at ecos au dk
+raje [at] ecos [dot] au [dot] dk
 
 Date:
 -----
-December 1, 2024
+December 3, 2024
 
 Version:
 --------
-1.1.0
+1.2.0
 
 """
+
+from dataclasses import dataclass
+from typing import List, Tuple, Dict, Optional, Any
 
 import os
 import sys
 import time
 import logging
 import configparser
-from dataclasses import dataclass
-from typing import List, Tuple, Dict, Optional, Any
-
 import cv2
 import numpy as np
 import pandas as pd
@@ -70,7 +70,6 @@ config = configparser.ConfigParser()
 if os.path.exists(config_path):
     config.read(config_path)
     print(f"Configuration loaded from {config_path}.")
-    logging.info(f"Configuration loaded from {config_path}.")
 else:
     print(f"Configuration file not found at {config_path}. Using default settings.")
     logging.warning(f"Configuration file not found at {config_path}. Using default settings.")
@@ -116,6 +115,8 @@ class Config:
         r_threshold (int): Threshold for Red channel.
         g_threshold (int): Threshold for Green channel.
         b_threshold (int): Threshold for Blue channel.
+        canny_threshold1 (int): First threshold for the hysteresis in Canny edge detection.
+        canny_threshold2 (int): Second threshold for the hysteresis in Canny edge detection.
     """
     image_directory: str
     area_threshold: float
@@ -134,6 +135,8 @@ class Config:
     r_threshold: int
     g_threshold: int
     b_threshold: int
+    canny_threshold1: int
+    canny_threshold2: int
 
 # ============================ Configuration Reader ============================
 
@@ -156,14 +159,15 @@ def read_config(config_file: str = 'config.ini') -> Config:
     config = config_parser['DEFAULT']
 
     # Parse kernel_size safely
-    kernel_size_str = config.get('kernel_size', fallback='(5, 5)')
+    kernel_size_str = config.get('kernel_size', fallback='(3, 3)')
     try:
-        kernel_size = ast.literal_eval(kernel_size_str)
-        if not (isinstance(kernel_size, tuple) and len(kernel_size) == 2 and all(isinstance(x, int) for x in kernel_size)):
+        # Evaluate the string to convert it into a tuple
+        kernel_size = eval(kernel_size_str)
+        if not (isinstance(kernel_size, tuple) and len(kernel_size) == 2):
             raise ValueError
-    except:
-        logger.error(f"Invalid kernel_size format in config.ini. Using default (5, 5).")
-        kernel_size = (5, 5)
+    except (SyntaxError, ValueError):
+        logger.warning(f"Invalid kernel_size '{kernel_size_str}' in config. Using default (3, 3).")
+        kernel_size = (3, 3)
 
     return Config(
         image_directory=config.get('image_directory', ''),
@@ -182,7 +186,9 @@ def read_config(config_file: str = 'config.ini') -> Config:
         filter_rgb=config.getboolean('filter_rgb', fallback=True),
         r_threshold=config.getint('r_threshold', fallback=200),
         g_threshold=config.getint('g_threshold', fallback=200),
-        b_threshold=config.getint('b_threshold', fallback=200)
+        b_threshold=config.getint('b_threshold', fallback=200),
+        canny_threshold1=config.getint('canny_threshold1', fallback=100),  # Added line
+        canny_threshold2=config.getint('canny_threshold2', fallback=200)   # Added line
     )
 
 # ============================ Directory Setup ============================
@@ -199,15 +205,18 @@ def create_directories(config: Config) -> Tuple[str, str]:
     """
     result_folder = os.path.join(config.image_directory, 'result_img')
     intermediate_folder = os.path.join(result_folder, 'intermediate_img')
+    try:
+        os.makedirs(result_folder, exist_ok=True)
+        logger.debug(f"Created result folder at: {result_folder}")
 
-    os.makedirs(result_folder, exist_ok=True)
-    logger.debug(f"Created result folder at: {result_folder}")
+        if config.img_debug:
+            os.makedirs(intermediate_folder, exist_ok=True)
+            logger.debug(f"Created intermediate folder at: {intermediate_folder}")
 
-    if config.img_debug:
-        os.makedirs(intermediate_folder, exist_ok=True)
-        logger.debug(f"Created intermediate folder at: {intermediate_folder}")
-
-    return intermediate_folder, result_folder
+        return intermediate_folder, result_folder
+    except Exception as e:
+        logger.error(f"Error creating directories: {e}")
+        raise
 
 # ============================ Image File Retrieval ============================
 
@@ -292,7 +301,14 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Optional[Dict[str, Any]]: Dictionary with analysis results or None if stopped.
+        Optional[Dict[str, Any]]: Dictionary containing:
+            - filename (str): Name of the processed image.
+            - total_count (int): Number of detected leaves.
+            - total_area_mm2 (float): Total leaf area in square millimeters.
+            - processing_time_sec (float): Time taken to process the image.
+            - annotations (List[Dict[str, Any]]): Annotation details.
+            - leaf_rgb_stats (List[Dict[str, Any]]): RGB statistics for each leaf.
+        Returns None if processing was stopped.
     """
     if stop_event.is_set():
         logger.info("Processing was stopped before starting.")
@@ -384,8 +400,12 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Tuple[np.ndarray, np.ndarray, int, int]: Processed binary image, cropped OpenCV image,
-        top and left offsets used during cropping.
+        Tuple[np.ndarray, np.ndarray, int, int]:
+            - Processed binary image.
+            - Cropped OpenCV image.
+            - Top offset used during cropping.
+            - Left offset used during cropping.
+        Returns (None, None, top, left) if processing is stopped.
     """
     # Step 1: Cropping based on configured percentages
     height, width = image_cv.shape[:2]
@@ -428,14 +448,20 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         # Combine with near-white mask to exclude near-white regions
         combined_mask = cv2.bitwise_or(near_white_mask, adaptive_mask)
 
-        # Invert mask to get non-near-white regions
+        # Invert mask to set background to white
         combined_mask = cv2.bitwise_not(combined_mask)
 
-        # Apply the combined mask to the cropped image
-        masked_image = cv2.bitwise_and(cropped_image, cropped_image, mask=combined_mask)
+        # Create a white background image
+        white_background = np.full_like(cropped_image, 255)
 
-        logger.debug("Adaptive thresholding in RGB space applied.")
-        save_image(masked_image, intermediate_folder, filename, '2_adaptive_threshold', config.img_debug)
+        # Copy the leaf to the white background using the combined mask
+        cv2.copyTo(cropped_image, combined_mask, white_background)
+
+        # Assign the result to masked_image
+        masked_image = white_background
+
+        logger.debug("Adaptive thresholding in RGB space applied with white background.")
+        save_image(masked_image, intermediate_folder, filename, '2_adaptive_threshold_white_bg', config.img_debug)
     else:
         masked_image = cropped_image
 
@@ -455,20 +481,20 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
     if stop_event.is_set():
         return None, None, 0, 0
 
-    # Step 5: Apply Gaussian Blur to reduce noise
-    blurred_image = cv2.GaussianBlur(contrast_image, (5, 5), 0)
-    logger.debug("Applied Gaussian Blur.")
-    save_image(blurred_image, intermediate_folder, filename, '4_blurred_image', config.img_debug)
+    # Step 5: Apply Canny Edge Detection
+    edges = cv2.Canny(contrast_image, config.canny_threshold1, config.canny_threshold2)
+    save_image(edges, intermediate_folder, filename, '4_canny_edges', config.img_debug)
 
     if stop_event.is_set():
         return None, None, 0, 0
 
-    # Step 6: Adaptive Thresholding to binarize the image
-    binary_image = cv2.adaptiveThreshold(
-        blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    # Step 6: Combine Canny edges with adaptive thresholding
+    binary_adaptive = cv2.adaptiveThreshold(
+        contrast_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY_INV, 11, 2  # Adjusted blockSize and C
     )
-    save_image(binary_image, intermediate_folder, filename, '5_binary_image', config.img_debug)
+    binary_image = cv2.bitwise_or(binary_adaptive, edges)
+    save_image(binary_image, intermediate_folder, filename, '5_binary_image_with_canny', config.img_debug)
 
     if stop_event.is_set():
         return None, None, 0, 0
@@ -502,6 +528,11 @@ def remove_small_objects(closed_image: np.ndarray, area_threshold_pixels: float)
     Returns:
         np.ndarray: Cleaned binary image with small objects removed.
     """
+    if closed_image.dtype != np.uint8:
+        raise ValueError("closed_image must be of type np.uint8.")
+    if len(closed_image.shape) != 2:
+        raise ValueError("closed_image must be a 2D binary image.")
+
     # Find connected components
     num_labels, labels_im = cv2.connectedComponents(closed_image)
 
@@ -524,7 +555,7 @@ def remove_small_objects(closed_image: np.ndarray, area_threshold_pixels: float)
 
 def save_image(image: np.ndarray, folder: str, filename: str, step_name: str, img_debug: bool) -> None:
     """
-    Save intermediate images if img_debug is True.
+    Save intermediate images in the specified folder with step-based subdirectories.
 
     Args:
         image (np.ndarray): Image to save.
@@ -547,6 +578,7 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
                               top_offset: int, left_offset: int, stop_event: threading.Event) -> Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
     """
     Find contours, calculate leaf areas, annotate the image, and compute mean RGB values within contours.
+    Filters out contours smaller than the specified area threshold.
 
     Args:
         processed_image (np.ndarray): Binary image after preprocessing.
@@ -560,8 +592,11 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]: Total count, total area in mm²,
-        annotation table with average RGB, list of leaf RGB stats.
+        Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
+            - Total count of valid leaves.
+            - Total area in mm².
+            - List of annotations with leaf IDs and positions.
+            - List of RGB statistics for each leaf.
     """
     if stop_event.is_set():
         logger.info("Processing was stopped before contour processing.")
@@ -571,8 +606,13 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
     if processed_image.dtype != np.uint8:
         processed_image = processed_image.astype(np.uint8)
 
-    # Find contours using OpenCV
-    contours, _ = cv2.findContours(processed_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Find contours using OpenCV (corrected for OpenCV 4.x)
+    try:
+        contours, hierarchy = cv2.findContours(processed_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    except Exception as e:
+        logger.error(f"Error finding contours: {e}")
+        return 0, 0.0, [], []
+
     logger.debug(f"Found {len(contours)} total contours.")
 
     total_count = 0
@@ -619,13 +659,12 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
             # Calculate centroid for placing the annotation
             M = cv2.moments(contour)
             if M["m00"] != 0:
-                cX = int(M["m10"] / M["m00"])
-                cY = int(M["m01"] / M["m00"])
+                cX = int(M["m10"] / M["m00"]) + left_offset
+                cY = int(M["m01"] / M["m00"]) + top_offset
             else:
-                # Fallback if contour area is zero
                 x, y, w, h = cv2.boundingRect(contour)
-                cX = x + w // 2
-                cY = y + h // 2
+                cX = x + w // 2 + left_offset
+                cY = y + h // 2 + top_offset
 
             # Prepare the annotation text
             text = f"{total_count}"
@@ -717,7 +756,7 @@ def extract_rgb_within_contour(image_cv: np.ndarray, contour: np.ndarray) -> np.
         contour (np.ndarray): Contour of the leaf.
 
     Returns:
-        np.ndarray: RGB image masked by the contour.
+        np.ndarray: RGB image masked by the contour, with background pixels set to zero.
     """
     # Create a mask for the contour
     mask = np.zeros(image_cv.shape[:2], dtype=np.uint8)
@@ -743,7 +782,10 @@ def create_annotation_table(annotations: List[Dict[str, Any]], areas_mm2: List[f
         leaf_rgb_stats (List[Dict[str, Any]]): List of RGB statistics dictionaries.
 
     Returns:
-        List[Tuple[str, str, str]]: List of tuples representing table rows.
+        List[Tuple[str, str, str]]: Each tuple contains:
+            - Leaf ID (str)
+            - Leaf Area (str)
+            - Average RGB values (str)
     """
     table = []
     for ann, area, rgb_stat in zip(annotations, areas_mm2, leaf_rgb_stats):
@@ -1084,7 +1126,15 @@ def main(stop_event: Optional[threading.Event] = None) -> None:
     finally:
         # Final log entry to indicate that the processing has concluded
         logger.info("Leaf classification processing has concluded.")
+    
+    return result_folder
 
 
 if __name__ == "__main__":
-    main()
+    # Start the processing when the script is executed directly
+    try:
+        main()
+    except KeyboardInterrupt:
+        logger.info("Processing interrupted by user.")
+    except Exception as e:
+        logger.exception(f"An unexpected error occurred: {e}")
