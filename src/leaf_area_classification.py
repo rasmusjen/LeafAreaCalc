@@ -33,11 +33,11 @@ raje [at] ecos [dot] au [dot] dk
 
 Date:
 -----
-December 3, 2024
+December 5, 2024
 
 Version:
 --------
-1.2.0
+1.2.1
 
 """
 
@@ -181,7 +181,7 @@ def read_config(config_file: str = 'config.ini') -> Config:
         adaptive_threshold=config.getboolean('adaptive_threshold', fallback=True),
         adaptive_window_size=config.getint('adaptive_window_size', fallback=15),
         adaptive_C=config.getint('adaptive_C', fallback=2),
-        color_threshold=config.getint('color_threshold', fallback=200),
+        color_threshold=config.getint('color_threshold', fallback=180),
         kernel_size=kernel_size,
         filter_rgb=config.getboolean('filter_rgb', fallback=True),
         r_threshold=config.getint('r_threshold', fallback=200),
@@ -323,7 +323,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         # Open the image and get its properties
         pil_image = Image.open(image_path)
         width, height = pil_image.size
-        dpi = pil_image.info.get('dpi', (600, 600))
+        dpi = pil_image.info.get('dpi', (600, 600))  # Extract DPI
         x_dpi = dpi[0] if dpi else 600
         pixels_per_mm = x_dpi / 25.4  # Convert DPI to pixels per millimeter
 
@@ -333,8 +333,8 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         image_cv = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
 
         # Apply image preprocessing steps
-        processed_image, cropped_cv, top_offset, left_offset = preprocess_image(
-            image_cv, config, intermediate_folder, filename, pixels_per_mm, stop_event
+        processed_image, cropped_cv, top_offset, left_offset, dpi = preprocess_image(
+            image_cv, config, intermediate_folder, filename, pixels_per_mm, stop_event, dpi
         )
 
         if stop_event.is_set():
@@ -344,7 +344,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         # Find and process contours, including RGB stats
         total_count, total_area_mm2, table, leaf_rgb_stats = find_and_process_contours(
             processed_image, cropped_cv, pixels_per_mm, config, result_folder,
-            filename, top_offset, left_offset, stop_event
+            filename, top_offset, left_offset, stop_event, dpi
         )
 
         if stop_event.is_set():
@@ -386,7 +386,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         return None
 
 def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: str, filename: str,
-                    pixels_per_mm: float, stop_event: threading.Event) -> Tuple[np.ndarray, np.ndarray, int, int]:
+                    pixels_per_mm: float, stop_event: threading.Event, dpi: Tuple[int, int]) -> Tuple[np.ndarray, np.ndarray, int, int, Tuple[int, int]]:
     """
     Apply preprocessing steps to the image, including adaptive thresholding in RGB space
     immediately after cropping, before converting to grayscale.
@@ -398,14 +398,15 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         filename (str): Name of the image file.
         pixels_per_mm (float): Pixels per millimeter.
         stop_event (threading.Event): Event to signal stopping of processing.
+        dpi (Tuple[int, int]): DPI of the original image.
 
     Returns:
-        Tuple[np.ndarray, np.ndarray, int, int]:
+        Tuple[np.ndarray, np.ndarray, int, int, Tuple[int, int]]:
             - Processed binary image.
             - Cropped OpenCV image.
             - Top offset used during cropping.
             - Left offset used during cropping.
-        Returns (None, None, top, left) if processing is stopped.
+            - DPI tuple.
     """
     # Step 1: Cropping based on configured percentages
     height, width = image_cv.shape[:2]
@@ -417,10 +418,10 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
     cropped_image = image_cv[top:bottom, left:right]
     logger.debug(f"Cropped image dimensions: {cropped_image.shape}")
 
-    save_image(cropped_image, intermediate_folder, filename, '1_cropped_image', config.img_debug)
+    save_image(cropped_image, intermediate_folder, filename, '1_cropped_image', config.img_debug, dpi)
 
     if stop_event.is_set():
-        return None, None, 0, 0
+        return None, None, 0, 0, dpi
 
     # Step 2: Adaptive Thresholding in RGB Space
     if config.adaptive_threshold:
@@ -461,12 +462,12 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         masked_image = white_background
 
         logger.debug("Adaptive thresholding in RGB space applied with white background.")
-        save_image(masked_image, intermediate_folder, filename, '2_adaptive_threshold_white_bg', config.img_debug)
+        save_image(masked_image, intermediate_folder, filename, '2_adaptive_threshold_white_bg', config.img_debug, dpi)
     else:
         masked_image = cropped_image
 
     if stop_event.is_set():
-        return None, None, 0, 0
+        return None, None, 0, 0, dpi
 
     # Step 3: Convert to grayscale
     gray_image = cv2.cvtColor(masked_image, cv2.COLOR_BGR2GRAY)
@@ -476,17 +477,17 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
     contrast_image = clahe.apply(gray_image)
     logger.debug("Applied CLAHE for contrast adjustment.")
 
-    save_image(contrast_image, intermediate_folder, filename, '3_contrast_image', config.img_debug)
+    save_image(contrast_image, intermediate_folder, filename, '3_contrast_image', config.img_debug, dpi)
 
     if stop_event.is_set():
-        return None, None, 0, 0
+        return None, None, 0, 0, dpi
 
     # Step 5: Apply Canny Edge Detection
     edges = cv2.Canny(contrast_image, config.canny_threshold1, config.canny_threshold2)
-    save_image(edges, intermediate_folder, filename, '4_canny_edges', config.img_debug)
+    save_image(edges, intermediate_folder, filename, '4_canny_edges', config.img_debug, dpi)
 
     if stop_event.is_set():
-        return None, None, 0, 0
+        return None, None, 0, 0, dpi
 
     # Step 6: Combine Canny edges with adaptive thresholding
     binary_adaptive = cv2.adaptiveThreshold(
@@ -494,28 +495,28 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         cv2.THRESH_BINARY_INV, 11, 2  # Adjusted blockSize and C
     )
     binary_image = cv2.bitwise_or(binary_adaptive, edges)
-    save_image(binary_image, intermediate_folder, filename, '5_binary_image_with_canny', config.img_debug)
+    save_image(binary_image, intermediate_folder, filename, '5_binary_image_with_canny', config.img_debug, dpi)
 
     if stop_event.is_set():
-        return None, None, 0, 0
+        return None, None, 0, 0, dpi
 
     # Step 7: Morphological Closing to close small gaps
     kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, config.kernel_size)
     closed_image = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel_close, iterations=2)
-    save_image(closed_image, intermediate_folder, filename, '6_closed_image', config.img_debug)
+    save_image(closed_image, intermediate_folder, filename, '6_closed_image', config.img_debug, dpi)
 
     if stop_event.is_set():
-        return None, None, 0, 0
+        return None, None, 0, 0, dpi
 
     # Step 8: Remove Small Objects based on Area Threshold
     area_threshold_pixels = config.area_threshold * (pixels_per_mm ** 2)
     cleaned_image = remove_small_objects(closed_image, area_threshold_pixels)
-    save_image(cleaned_image, intermediate_folder, filename, '7_cleaned_image', config.img_debug)
+    save_image(cleaned_image, intermediate_folder, filename, '7_cleaned_image', config.img_debug, dpi)
 
     if stop_event.is_set():
-        return None, None, 0, 0
+        return None, None, 0, 0, dpi
 
-    return cleaned_image, cropped_image, top, left
+    return cleaned_image, cropped_image, top, left, dpi
 
 def remove_small_objects(closed_image: np.ndarray, area_threshold_pixels: float) -> np.ndarray:
     """
@@ -553,9 +554,9 @@ def remove_small_objects(closed_image: np.ndarray, area_threshold_pixels: float)
     return output_image
 
 
-def save_image(image: np.ndarray, folder: str, filename: str, step_name: str, img_debug: bool) -> None:
+def save_image(image: np.ndarray, folder: str, filename: str, step_name: str, img_debug: bool, dpi: Tuple[int, int]) -> None:
     """
-    Save intermediate images in the specified folder with step-based subdirectories.
+    Save intermediate images in the specified folder with step-based subdirectories, preserving DPI.
 
     Args:
         image (np.ndarray): Image to save.
@@ -563,19 +564,23 @@ def save_image(image: np.ndarray, folder: str, filename: str, step_name: str, im
         filename (str): Original filename.
         step_name (str): Step identifier for the image.
         img_debug (bool): Flag to control saving of intermediate images.
+        dpi (Tuple[int, int]): DPI to preserve in the saved image.
     """
     if img_debug:
         image_name = f"{os.path.splitext(filename)[0]}_{step_name}.png"
         image_path = os.path.join(folder, image_name)
-        cv2.imwrite(image_path, image)
-        logger.debug(f"Saved intermediate image: {image_path}")
+        # Convert BGR to RGB for PIL
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        pil_image = Image.fromarray(image_rgb)
+        pil_image.save(image_path, dpi=dpi)  # Preserve DPI
+        logger.debug(f"Saved intermediate image with DPI: {image_path}")
     else:
         logger.debug(f"Skipping saving intermediate image: {filename}_{step_name}.png")
 
 
 def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarray, pixels_per_mm: float,
                               config: Config, result_folder: str, filename: str,
-                              top_offset: int, left_offset: int, stop_event: threading.Event) -> Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
+                              top_offset: int, left_offset: int, stop_event: threading.Event, dpi: Tuple[int, int]) -> Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
     """
     Find contours, calculate leaf areas, annotate the image, and compute mean RGB values within contours.
     Filters out contours smaller than the specified area threshold.
@@ -659,12 +664,12 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
             # Calculate centroid for placing the annotation
             M = cv2.moments(contour)
             if M["m00"] != 0:
-                cX = int(M["m10"] / M["m00"]) + left_offset
-                cY = int(M["m01"] / M["m00"]) + top_offset
+                cX = int(M["m10"] / M["m00"])# + left_offset
+                cY = int(M["m01"] / M["m00"])# + top_offset
             else:
                 x, y, w, h = cv2.boundingRect(contour)
-                cX = x + w // 2 + left_offset
-                cY = y + h // 2 + top_offset
+                cX = x + w // 2# + left_offset
+                cY = y + h // 2# + top_offset
 
             # Prepare the annotation text
             text = f"{total_count}"
@@ -711,10 +716,12 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
     table_position = (50, 50)  # Initial table position; will adjust dynamically
     output_image = add_table_to_image(output_image, table, table_position)
 
-    # Save the final output image
+    # Save the final output image with DPI
     result_image_path = os.path.join(result_folder, filename)
-    cv2.imwrite(result_image_path, output_image)
-    logger.debug(f"Saved final annotated image: {result_image_path}")
+    image_rgb = cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB)
+    pil_result_image = Image.fromarray(image_rgb)
+    pil_result_image.save(result_image_path, dpi=dpi)  # Preserve DPI
+    logger.debug(f"Saved final annotated image with DPI: {result_image_path}")
 
     # Calculate total area from areas_mm2
     total_area_mm2 = sum([leaf['Leaf Area'] for leaf in leaf_rgb_stats])

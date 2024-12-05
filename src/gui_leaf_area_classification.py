@@ -32,11 +32,11 @@ raje [at] ecos [dot] au [dot] dk
 
 Date:
 -----
-December 3, 2024
+December 5, 2024
 
 Version:
 --------
-1.2.0
+1.2.1
 
 """
 
@@ -368,7 +368,7 @@ class LeafAreaGUI:
             ("Enable Adaptive Thresholding", "adaptive_threshold"),
             ("Adaptive Window Size", "adaptive_window_size"),
             ("Adaptive C Constant", "adaptive_C"),
-            ("Kernel Size (e.g., 3,3)", "kernel_size")  # Added Kernel Size
+            ("Kernel Size (e.g., (3,3)", "kernel_size")  # Added Kernel Size
         ]
 
         for idx, (label_text, key) in enumerate(adaptive_settings):
