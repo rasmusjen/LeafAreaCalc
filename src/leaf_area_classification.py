@@ -33,11 +33,11 @@ raje [at] ecos [dot] au [dot] dk
 
 Date:
 -----
-December 5, 2024
+December 6, 2024
 
 Version:
 --------
-1.2.1
+1.2.2
 
 """
 
@@ -342,7 +342,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
             return None
 
         # Find and process contours, including RGB stats
-        total_count, total_area_mm2, table, leaf_rgb_stats = find_and_process_contours(
+        total_count, total_area_mm2, bin_area_mm2, table, leaf_rgb_stats = find_and_process_contours(
             processed_image, cropped_cv, pixels_per_mm, config, result_folder,
             filename, top_offset, left_offset, stop_event, dpi
         )
@@ -354,7 +354,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         processing_time = time.time() - start_time
         logger.info(f"Finished processing {filename}. "
                     f"Leaf Count: {total_count}, Total Leaf Area: {total_area_mm2:.2f} mm², "
-                    f"Processing Time: {processing_time:.2f} s")
+                    f"Binary Area: {bin_area_mm2:.2f} mm², Processing Time: {processing_time:.2f} s")
 
         # Perform regex searches once and reuse
         pct_match = re.search(r"_(HF|CF)_", filename)
@@ -376,6 +376,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
             'Leaf_stem': leaf_stem_match.group(1) if leaf_stem_match else None,
             'Leaf Count': total_count,
             'Total Leaf Area (mm²)': total_area_mm2,
+            'Binary Area (mm²)': bin_area_mm2,  # Added line
             'Pixels_per_mm': pixels_per_mm,
             'Processing Time (s)': round(processing_time, 2),
             'Leaf RGB Stats': leaf_rgb_stats  # Include RGB stats
@@ -580,7 +581,7 @@ def save_image(image: np.ndarray, folder: str, filename: str, step_name: str, im
 
 def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarray, pixels_per_mm: float,
                               config: Config, result_folder: str, filename: str,
-                              top_offset: int, left_offset: int, stop_event: threading.Event, dpi: Tuple[int, int]) -> Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
+                              top_offset: int, left_offset: int, stop_event: threading.Event, dpi: Tuple[int, int]) -> Tuple[int, float, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
     """
     Find contours, calculate leaf areas, annotate the image, and compute mean RGB values within contours.
     Filters out contours smaller than the specified area threshold.
@@ -597,9 +598,10 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
         stop_event (threading.Event): Event to signal stopping of processing.
 
     Returns:
-        Tuple[int, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
+        Tuple[int, float, float, List[Tuple[str, str, str]], List[Dict[str, Any]]]:
             - Total count of valid leaves.
             - Total area in mm².
+            - Binary area in mm².
             - List of annotations with leaf IDs and positions.
             - List of RGB statistics for each leaf.
     """
@@ -664,12 +666,12 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
             # Calculate centroid for placing the annotation
             M = cv2.moments(contour)
             if M["m00"] != 0:
-                cX = int(M["m10"] / M["m00"])# + left_offset
-                cY = int(M["m01"] / M["m00"])# + top_offset
+                cX = int(M["m10"] / M["m00"])
+                cY = int(M["m01"] / M["m00"])
             else:
                 x, y, w, h = cv2.boundingRect(contour)
-                cX = x + w // 2# + left_offset
-                cY = y + h // 2# + top_offset
+                cX = x + w // 2
+                cY = y + h // 2
 
             # Prepare the annotation text
             text = f"{total_count}"
@@ -725,7 +727,13 @@ def find_and_process_contours(processed_image: np.ndarray, cropped_cv: np.ndarra
 
     # Calculate total area from areas_mm2
     total_area_mm2 = sum([leaf['Leaf Area'] for leaf in leaf_rgb_stats])
-    return total_count, total_area_mm2, table, leaf_rgb_stats
+
+    # Calculate bin_area_mm2 based on white pixels in processed_image
+    n_pixel = np.sum(processed_image == 255)
+    bin_area_mm2 = n_pixel / pixels_per_mm2
+    logger.debug(f"Binary Area: {bin_area_mm2:.2f} mm² based on white pixels.")
+
+    return total_count, total_area_mm2, bin_area_mm2, table, leaf_rgb_stats
 
 
 def compute_average_rgb(image_cv: np.ndarray, contour: np.ndarray) -> Tuple[int, int, int]:
@@ -955,27 +963,30 @@ def save_results(results_list: List[Dict[str, Any]], csv_file_path: str) -> None
             'Leaf_stem': result.get('Leaf_stem'),
             'Leaf Count': result.get('Leaf Count'),
             'Total Leaf Area (mm²)': result.get('Total Leaf Area (mm²)'),
+            'Binary Area (mm²)': result.get('Binary Area (mm²)'),  # Added line
             'Pixels_per_mm': result.get('Pixels_per_mm'),
             'Processing Time (s)': result.get('Processing Time (s)')
         }
         # Add RGB stats
         for leaf_stat in result.get('Leaf RGB Stats', []):
             row = base_info.copy()
-            row['Leaf ID'] = leaf_stat['Leaf ID']
-            row['Leaf Area'] = leaf_stat['Leaf Area']
-            row['Average R'] = leaf_stat['Mean R']
-            row['Average G'] = leaf_stat['Mean G']
-            row['Average B'] = leaf_stat['Mean B']
-            row['Average RGB'] = f"{leaf_stat['Mean R']}/{leaf_stat['Mean G']}/{leaf_stat['Mean B']}"
+            row.update({
+                'Leaf ID': leaf_stat.get('Leaf ID'),
+                'Leaf Area (mm²)': leaf_stat.get('Leaf Area'),
+                'Mean R': leaf_stat.get('Mean R'),
+                'Mean G': leaf_stat.get('Mean G'),
+                'Mean B': leaf_stat.get('Mean B')
+            })
             rows.append(row)
 
     df_csv = pd.DataFrame(rows)
 
     if os.path.exists(csv_file_path):
         try:
-            df_existing = pd.read_csv(csv_file_path)
-            df_combined = pd.concat([df_existing, df_csv], ignore_index=True)
+            existing_df = pd.read_csv(csv_file_path)
+            df_combined = pd.concat([existing_df, df_csv], ignore_index=True)
         except pd.errors.EmptyDataError:
+            logger.warning("CSV file is empty. Overwriting with new data.")
             df_combined = df_csv
     else:
         df_combined = df_csv
@@ -992,19 +1003,22 @@ def save_results(results_list: List[Dict[str, Any]], csv_file_path: str) -> None
         filename = result.get('Filename')
         pct = result.get('PCT')
         leaf_stem = result.get('Leaf_stem')
+        bin_area_mm2 = result.get('Binary Area (mm²)')  # Added line
         # Iterate through each leaf's stats
         for leaf_stat in result.get('Leaf RGB Stats', []):
-            row = {
+            raw_row = {
                 'Filename': filename,
                 'PCT': pct,
                 'Leaf_stem': leaf_stem,
-                'Leaf ID': leaf_stat['Leaf ID'],
-                'Leaf Area': leaf_stat['Leaf Area'],  # Use exact Leaf Area from stats
-                'Average R': leaf_stat['Mean R'],
-                'Average G': leaf_stat['Mean G'],
-                'Average B': leaf_stat['Mean B']
+                'Leaf ID': leaf_stat.get('Leaf ID'),
+                'Leaf Area (mm²)': leaf_stat.get('Leaf Area'),
+                'Mean R': leaf_stat.get('Mean R'),
+                'Mean G': leaf_stat.get('Mean G'),
+                'Mean B': leaf_stat.get('Mean B'),
+                'Binary Area (mm²)': bin_area_mm2  # Added line
             }
-            raw_rows.append(row)
+            raw_rows.append(raw_row)
+
     df_raw = pd.DataFrame(raw_rows)
 
     # Write "Raw_output" and "Summary" sheets to Excel
@@ -1013,7 +1027,7 @@ def save_results(results_list: List[Dict[str, Any]], csv_file_path: str) -> None
         df_raw.to_excel(writer, sheet_name='Raw_output', index=False)
 
         # Create Summary sheet with headers
-        summary_headers = ['Filename', 'PCT', 'Leaf_stem', 'Total Leaf Area', 'Average R', 'Average G', 'Average B']
+        summary_headers = ['Filename', 'PCT', 'Leaf_stem', 'Total Leaf Area', 'Binary Area (mm²)', 'Average R', 'Average G', 'Average B']
         df_summary = pd.DataFrame(columns=summary_headers)
         df_summary.to_excel(writer, sheet_name='Summary', index=False)
 
@@ -1022,44 +1036,39 @@ def save_results(results_list: List[Dict[str, Any]], csv_file_path: str) -> None
         raw_sheet = writer.sheets['Raw_output']
         summary_sheet = writer.sheets['Summary']
 
-        # Get unique combinations of Filename, PCT, Leaf_stem
-        unique_images = df_raw[['Filename', 'PCT', 'Leaf_stem']].drop_duplicates().reset_index(drop=True)
+        # Get unique combinations of Filename, PCT, Leaf_stem, Binary Area
+        unique_images = df_raw[['Filename', 'PCT', 'Leaf_stem', 'Binary Area (mm²)']].drop_duplicates().reset_index(drop=True)
 
         for idx, row in unique_images.iterrows():
-            excel_row = idx + 2  # Excel rows start at 1, header is row 1
             filename = row['Filename']
             pct = row['PCT']
             leaf_stem = row['Leaf_stem']
+            bin_area_mm2 = row['Binary Area (mm²)']  # Added line
+            total_leaf_area = df_raw[df_raw['Filename'] == filename]['Leaf Area (mm²)'].sum()
+            average_r = df_raw[df_raw['Filename'] == filename]['Mean R'].mean()
+            average_g = df_raw[df_raw['Filename'] == filename]['Mean G'].mean()
+            average_b = df_raw[df_raw['Filename'] == filename]['Mean B'].mean()
 
-            # Write Filename, PCT, Leaf_stem to Summary sheet
-            summary_sheet.cell(row=excel_row, column=1, value=filename)
-            summary_sheet.cell(row=excel_row, column=2, value=pct)
-            summary_sheet.cell(row=excel_row, column=3, value=leaf_stem)
-
-            # Define the range for SUMIF and SUMPRODUCT
-            # Raw_output sheet columns:
-            # A: Filename, B: PCT, C: Leaf_stem, D: Leaf ID, E: Leaf Area, F: Average R, G: Average G, H: Average B
-            total_leaf_area_formula = f"=SUMIF(Raw_output!A:A, Summary!A{excel_row}, Raw_output!E:E)"
-            average_r_formula = f"=SUMPRODUCT(--(Raw_output!A2:A1000=Summary!A{excel_row}), Raw_output!E2:E1000, Raw_output!F2:F1000) / Summary!D{excel_row}"
-            average_g_formula = f"=SUMPRODUCT(--(Raw_output!A2:A1000=Summary!A{excel_row}), Raw_output!E2:E1000, Raw_output!G2:G1000) / Summary!D{excel_row}"
-            average_b_formula = f"=SUMPRODUCT(--(Raw_output!A2:A1000=Summary!A{excel_row}), Raw_output!E2:E1000, Raw_output!H2:H1000) / Summary!D{excel_row}"
-
-            # Write formulas to Summary sheet
-            summary_sheet.cell(row=excel_row, column=4, value=total_leaf_area_formula)
-            summary_sheet.cell(row=excel_row, column=5, value=average_r_formula)
-            summary_sheet.cell(row=excel_row, column=6, value=average_g_formula)
-            summary_sheet.cell(row=excel_row, column=7, value=average_b_formula)
+            summary_sheet.append([
+                filename,
+                pct,
+                leaf_stem,
+                total_leaf_area,
+                bin_area_mm2,  # Added column
+                round(average_r, 2),
+                round(average_g, 2),
+                round(average_b, 2)
+            ])
 
         # Adjust column widths for better readability
         for sheet_name in ['Raw_output', 'Summary']:
             sheet = writer.sheets[sheet_name]
             for column_cells in sheet.columns:
                 length = max(len(str(cell.value)) for cell in column_cells)
-                adjusted_width = (length + 2)
-                sheet.column_dimensions[get_column_letter(column_cells[0].column)].width = adjusted_width
+                column_letter = get_column_letter(column_cells[0].column)
+                sheet.column_dimensions[column_letter].width = min(length + 2, 50)  # Limit width to 50
 
     logger.info(f"Results saved to Excel: {excel_file_path}")
-
 
 def main(stop_event: Optional[threading.Event] = None) -> None:
     """

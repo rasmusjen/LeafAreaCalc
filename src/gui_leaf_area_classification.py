@@ -32,11 +32,11 @@ raje [at] ecos [dot] au [dot] dk
 
 Date:
 -----
-December 5, 2024
+December 6, 2024
 
 Version:
 --------
-1.2.1
+1.2.2
 
 """
 

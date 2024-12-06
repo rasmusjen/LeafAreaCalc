@@ -6607,3 +6607,378 @@ AttributeError: 'NoneType' object has no attribute 'is_set'
 2024-12-05 15:16:12,850 - INFO - Processing GL-ZaF_CF_S3_CarBi_L_20240711.jpg
 2024-12-05 15:16:35,171 - INFO - Finished processing GL-ZaF_CF_S3_CarBi_L_20240711.jpg. Leaf Count: 13, Total Leaf Area: 1696.19 mm², Processing Time: 22.32 s
 2024-12-05 15:16:35,195 - INFO - Processing GL-ZaF_CF_S4_CarBi_S_20240711.jpg
+2024-12-05 15:16:52,688 - INFO - Finished processing GL-ZaF_CF_S4_CarBi_S_20240711.jpg. Leaf Count: 7, Total Leaf Area: 347.50 mm², Processing Time: 17.49 s
+2024-12-05 15:16:52,720 - INFO - Processing GL-ZaF_CF_S5_SalAr_L_20240711.jpg
+2024-12-05 15:17:12,623 - INFO - Finished processing GL-ZaF_CF_S5_SalAr_L_20240711.jpg. Leaf Count: 13, Total Leaf Area: 2342.67 mm², Processing Time: 19.90 s
+2024-12-05 15:17:12,661 - INFO - Processing GL-ZaF_CF_S6_EriSch_L_20240711.jpg
+2024-12-05 15:17:30,592 - INFO - Finished processing GL-ZaF_CF_S6_EriSch_L_20240711.jpg. Leaf Count: 7, Total Leaf Area: 758.15 mm², Processing Time: 17.93 s
+2024-12-05 15:17:30,628 - INFO - Processing GL-ZaF_CF_S7_EriSch_S_20240711.jpg
+2024-12-05 15:17:48,406 - INFO - Finished processing GL-ZaF_CF_S7_EriSch_S_20240711.jpg. Leaf Count: 3, Total Leaf Area: 424.67 mm², Processing Time: 17.78 s
+2024-12-05 15:17:48,439 - INFO - Processing GL-ZaF_CF_S8_BisViv_L_20240711.jpg
+2024-12-05 15:18:08,017 - INFO - Finished processing GL-ZaF_CF_S8_BisViv_L_20240711.jpg. Leaf Count: 11, Total Leaf Area: 1305.56 mm², Processing Time: 19.58 s
+2024-12-05 15:18:08,036 - INFO - Processing GL-ZaF_CF_S9_BisViv_S_20240711.jpg
+2024-12-05 15:18:25,312 - INFO - Finished processing GL-ZaF_CF_S9_BisViv_S_20240711.jpg. Leaf Count: 4, Total Leaf Area: 258.29 mm², Processing Time: 17.28 s
+2024-12-05 15:18:25,364 - INFO - Processing GL-ZaF_HF_S12_DupFi_L_20240712.jpg
+2024-12-05 15:18:42,673 - INFO - Finished processing GL-ZaF_HF_S12_DupFi_L_20240712.jpg. Leaf Count: 7, Total Leaf Area: 493.49 mm², Processing Time: 17.31 s
+2024-12-05 15:18:42,689 - INFO - Processing GL-ZaF_HF_S13_DupFi_S_20240712.jpg
+2024-12-05 15:18:59,567 - INFO - Finished processing GL-ZaF_HF_S13_DupFi_S_20240712.jpg. Leaf Count: 6, Total Leaf Area: 469.56 mm², Processing Time: 16.88 s
+2024-12-05 15:18:59,604 - INFO - Processing GL-ZaF_HF_S14_SalAr_L_20240712.jpg
+2024-12-05 15:19:17,702 - INFO - Finished processing GL-ZaF_HF_S14_SalAr_L_20240712.jpg. Leaf Count: 9, Total Leaf Area: 1151.87 mm², Processing Time: 18.10 s
+2024-12-05 15:19:17,730 - INFO - Processing GL-ZaF_HF_S15_EriSch_L_20240712.jpg
+2024-12-05 15:19:37,112 - INFO - Finished processing GL-ZaF_HF_S15_EriSch_L_20240712.jpg. Leaf Count: 10, Total Leaf Area: 713.10 mm², Processing Time: 19.38 s
+2024-12-05 15:19:37,195 - INFO - Processing GL-ZaF_HF_S16_ArcLat_L_20240712.jpg
+2024-12-05 15:19:56,515 - INFO - Finished processing GL-ZaF_HF_S16_ArcLat_L_20240712.jpg. Leaf Count: 8, Total Leaf Area: 937.79 mm², Processing Time: 19.32 s
+2024-12-05 15:19:56,552 - INFO - Processing GL-ZaF_HF_S17_ArcLat_S_20240712.jpg
+2024-12-05 15:20:12,875 - INFO - Finished processing GL-ZaF_HF_S17_ArcLat_S_20240712.jpg. Leaf Count: 4, Total Leaf Area: 153.34 mm², Processing Time: 16.32 s
+2024-12-05 15:20:12,911 - INFO - Processing GL-ZaF_HF_S18_BisViv_L_20240712.jpg
+2024-12-05 15:20:31,749 - INFO - Finished processing GL-ZaF_HF_S18_BisViv_L_20240712.jpg. Leaf Count: 11, Total Leaf Area: 847.85 mm², Processing Time: 18.84 s
+2024-12-05 15:20:31,769 - INFO - Processing GL-ZaF_HF_S19_SaxCer_L_20240712.jpg
+2024-12-05 15:20:50,813 - INFO - Finished processing GL-ZaF_HF_S19_SaxCer_L_20240712.jpg. Leaf Count: 11, Total Leaf Area: 499.71 mm², Processing Time: 19.04 s
+2024-12-05 15:20:50,851 - INFO - Processing GL-ZaF_HF_S20_SteLon_L_20240712.jpg
+2024-12-05 15:21:07,844 - INFO - Finished processing GL-ZaF_HF_S20_SteLon_L_20240712.jpg. Leaf Count: 8, Total Leaf Area: 99.53 mm², Processing Time: 16.99 s
+2024-12-05 15:21:07,882 - INFO - Processing GL-ZaF_HF_S21_SteLon_S_20240712.jpg
+2024-12-05 15:21:23,695 - INFO - Finished processing GL-ZaF_HF_S21_SteLon_S_20240712.jpg. Leaf Count: 3, Total Leaf Area: 89.28 mm², Processing Time: 15.81 s
+2024-12-05 15:21:23,719 - INFO - Processing GL-ZaF_HF_S22_EriAng_L_20240712.jpg
+2024-12-05 15:21:42,530 - INFO - Finished processing GL-ZaF_HF_S22_EriAng_L_20240712.jpg. Leaf Count: 8, Total Leaf Area: 661.14 mm², Processing Time: 18.81 s
+2024-12-05 15:21:42,584 - INFO - Processing GL-ZaF_HF_S23_EquArv_S_20240712.jpg
+2024-12-05 15:22:00,546 - INFO - Finished processing GL-ZaF_HF_S23_EquArv_S_20240712.jpg. Leaf Count: 5, Total Leaf Area: 964.09 mm², Processing Time: 17.96 s
+2024-12-05 15:22:00,617 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240711_GAI\leaf_analysis_results.csv
+2024-12-05 15:22:00,657 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240711_GAI\leaf_analysis_results.xlsx
+2024-12-05 15:22:00,673 - INFO - All results have been saved successfully.
+2024-12-05 15:22:00,673 - INFO - Leaf classification processing has concluded.
+2024-12-05 15:22:00,693 - INFO - Processing completed successfully.
+2024-12-05 22:36:18,875 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-05 22:36:35,616 - INFO - Displayed image with crop outline: GL-ZaF_CF_S10_SaxCer_L_20240718.jpg
+2024-12-05 22:36:37,979 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240718.jpg
+2024-12-05 22:36:46,984 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240718.jpg
+2024-12-05 22:36:50,151 - INFO - Displayed image with crop outline: GL-ZaF_CF_S3_CarBi_L_20240718.jpg
+2024-12-05 22:36:57,678 - INFO - Displayed image with crop outline: GL-ZaF_CF_S2_DupFi_S_20240718.jpg
+2024-12-05 22:36:59,167 - INFO - Displayed image with crop outline: GL-ZaF_CF_S1_DupFi_L_20240718.jpg
+2024-12-05 22:37:06,885 - INFO - Configuration saved successfully!
+2024-12-05 22:37:12,019 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240718.jpg
+2024-12-05 22:37:14,132 - INFO - Displayed image with crop outline: GL-ZaF_CF_S1_DupFi_L_20240718.jpg
+2024-12-05 22:37:14,964 - INFO - Displayed image with crop outline: GL-ZaF_CF_S2_DupFi_S_20240718.jpg
+2024-12-05 22:37:15,761 - INFO - Displayed image with crop outline: GL-ZaF_CF_S3_CarBi_L_20240718.jpg
+2024-12-05 22:37:16,620 - INFO - Displayed image with crop outline: GL-ZaF_CF_S4_CarBi_S_20240718.jpg
+2024-12-05 22:37:17,370 - INFO - Displayed image with crop outline: GL-ZaF_CF_S5_SalAr_L_20240718.jpg
+2024-12-05 22:37:18,137 - INFO - Displayed image with crop outline: GL-ZaF_CF_S6_EriSch_L_20240718.jpg
+2024-12-05 22:37:18,870 - INFO - Displayed image with crop outline: GL-ZaF_CF_S7_EriSch_S_20240718.jpg
+2024-12-05 22:37:19,745 - INFO - Displayed image with crop outline: GL-ZaF_CF_S8_VisViv_L_20240718.jpg
+2024-12-05 22:37:20,402 - INFO - Displayed image with crop outline: GL-ZaF_CF_S9_BisViv_S_20240718.jpg
+2024-12-05 22:37:21,036 - INFO - Displayed image with crop outline: GL-ZaF_HF_S12_DupFi_L_20240719.jpg
+2024-12-05 22:37:21,652 - INFO - Displayed image with crop outline: GL-ZaF_HF_S13_DupFi_S_20240719.jpg
+2024-12-05 22:37:22,324 - INFO - Displayed image with crop outline: GL-ZaF_HF_S14_SalAr_L_20240719.jpg
+2024-12-05 22:37:23,246 - INFO - Displayed image with crop outline: GL-ZaF_HF_S15_EriSch_L_20240719.jpg
+2024-12-05 22:37:24,109 - INFO - Displayed image with crop outline: GL-ZaF_HF_S16_EriSch_S_20240719.jpg
+2024-12-05 22:37:24,855 - INFO - Displayed image with crop outline: GL-ZaF_HF_S17_ArcLat_L_20240719.jpg
+2024-12-05 22:37:25,620 - INFO - Displayed image with crop outline: GL-ZaF_HF_S18_ArcLat_S_20240719.jpg
+2024-12-05 22:37:27,542 - INFO - Displayed image with crop outline: GL-ZaF_HF_S17_ArcLat_L_20240719.jpg
+2024-12-05 22:37:29,299 - INFO - Displayed image with crop outline: GL-ZaF_HF_S18_ArcLat_S_20240719.jpg
+2024-12-05 22:37:30,637 - INFO - Displayed image with crop outline: GL-ZaF_HF_S19_BisViv_L_20240719.jpg
+2024-12-05 22:37:31,761 - INFO - Displayed image with crop outline: GL-ZaF_HF_S20_BisViV_S_20240719.jpg
+2024-12-05 22:37:32,887 - INFO - Displayed image with crop outline: GL-ZaF_HF_S21_SaxCer_L_20240719.jpg
+2024-12-05 22:37:33,964 - INFO - Displayed image with crop outline: GL-ZaF_HF_S22_SteLon_L_20240719.jpg
+2024-12-05 22:37:35,121 - INFO - Displayed image with crop outline: GL-ZaF_HF_S23_SteLon_S_20240719.jpg
+2024-12-05 22:37:36,261 - INFO - Displayed image with crop outline: GL-ZaF_HF_S24_CarPra_L_20240719.jpg
+2024-12-05 22:37:37,137 - INFO - Displayed image with crop outline: GL-ZaF_HF_S25_EriAng_L_20240719.jpg
+2024-12-05 22:37:38,215 - INFO - Displayed image with crop outline: GL-ZaF_HF_S26_EquArv_S_20240719.jpg
+2024-12-05 22:37:47,608 - INFO - Configuration saved successfully!
+2024-12-05 22:37:52,370 - INFO - Executing image processing...
+2024-12-05 22:37:52,370 - INFO - Found 26 image(s) to process.
+2024-12-05 22:37:52,387 - INFO - Processing GL-ZaF_CF_S10_SaxCer_L_20240718.jpg
+2024-12-05 22:38:08,446 - INFO - Finished processing GL-ZaF_CF_S10_SaxCer_L_20240718.jpg. Leaf Count: 7, Total Leaf Area: 452.35 mm², Processing Time: 16.06 s
+2024-12-05 22:38:08,464 - INFO - Processing GL-ZaF_CF_S11_SaxCer_S_20240718.jpg
+2024-12-05 22:38:26,690 - INFO - Finished processing GL-ZaF_CF_S11_SaxCer_S_20240718.jpg. Leaf Count: 3, Total Leaf Area: 448.48 mm², Processing Time: 18.23 s
+2024-12-05 22:38:26,714 - INFO - Processing GL-ZaF_CF_S1_DupFi_L_20240718.jpg
+2024-12-05 22:38:47,203 - INFO - Finished processing GL-ZaF_CF_S1_DupFi_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 982.12 mm², Processing Time: 20.49 s
+2024-12-05 22:38:47,231 - INFO - Processing GL-ZaF_CF_S2_DupFi_S_20240718.jpg
+2024-12-05 22:39:07,071 - INFO - Finished processing GL-ZaF_CF_S2_DupFi_S_20240718.jpg. Leaf Count: 8, Total Leaf Area: 850.09 mm², Processing Time: 19.84 s
+2024-12-05 22:39:07,087 - INFO - Processing GL-ZaF_CF_S3_CarBi_L_20240718.jpg
+2024-12-05 22:39:27,440 - INFO - Finished processing GL-ZaF_CF_S3_CarBi_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 1045.12 mm², Processing Time: 20.35 s
+2024-12-05 22:39:27,465 - INFO - Processing GL-ZaF_CF_S4_CarBi_S_20240718.jpg
+2024-12-05 22:39:45,566 - INFO - Finished processing GL-ZaF_CF_S4_CarBi_S_20240718.jpg. Leaf Count: 3, Total Leaf Area: 292.14 mm², Processing Time: 18.10 s
+2024-12-05 22:39:45,584 - INFO - Processing GL-ZaF_CF_S5_SalAr_L_20240718.jpg
+2024-12-05 22:40:06,613 - INFO - Finished processing GL-ZaF_CF_S5_SalAr_L_20240718.jpg. Leaf Count: 10, Total Leaf Area: 1103.29 mm², Processing Time: 21.03 s
+2024-12-05 22:40:06,630 - INFO - Processing GL-ZaF_CF_S6_EriSch_L_20240718.jpg
+2024-12-05 22:40:27,587 - INFO - Finished processing GL-ZaF_CF_S6_EriSch_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 1105.96 mm², Processing Time: 20.96 s
+2024-12-05 22:40:27,603 - INFO - Processing GL-ZaF_CF_S7_EriSch_S_20240718.jpg
+2024-12-05 22:40:46,301 - INFO - Finished processing GL-ZaF_CF_S7_EriSch_S_20240718.jpg. Leaf Count: 4, Total Leaf Area: 811.03 mm², Processing Time: 18.70 s
+2024-12-05 22:40:46,321 - INFO - Processing GL-ZaF_CF_S8_VisViv_L_20240718.jpg
+2024-12-05 22:41:06,654 - INFO - Finished processing GL-ZaF_CF_S8_VisViv_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 696.11 mm², Processing Time: 20.33 s
+2024-12-05 22:41:06,683 - INFO - Processing GL-ZaF_CF_S9_BisViv_S_20240718.jpg
+2024-12-05 22:41:28,075 - INFO - Finished processing GL-ZaF_CF_S9_BisViv_S_20240718.jpg. Leaf Count: 3, Total Leaf Area: 148.09 mm², Processing Time: 21.39 s
+2024-12-05 22:41:28,101 - INFO - Processing GL-ZaF_HF_S12_DupFi_L_20240719.jpg
+2024-12-05 22:41:48,398 - INFO - Finished processing GL-ZaF_HF_S12_DupFi_L_20240719.jpg. Leaf Count: 8, Total Leaf Area: 544.59 mm², Processing Time: 20.30 s
+2024-12-05 22:41:48,428 - INFO - Processing GL-ZaF_HF_S13_DupFi_S_20240719.jpg
+2024-12-05 22:42:09,386 - INFO - Finished processing GL-ZaF_HF_S13_DupFi_S_20240719.jpg. Leaf Count: 9, Total Leaf Area: 847.05 mm², Processing Time: 20.96 s
+2024-12-05 22:42:09,405 - INFO - Processing GL-ZaF_HF_S14_SalAr_L_20240719.jpg
+2024-12-05 22:42:30,468 - INFO - Finished processing GL-ZaF_HF_S14_SalAr_L_20240719.jpg. Leaf Count: 10, Total Leaf Area: 1526.07 mm², Processing Time: 21.06 s
+2024-12-05 22:42:30,493 - INFO - Processing GL-ZaF_HF_S15_EriSch_L_20240719.jpg
+2024-12-05 22:42:51,440 - INFO - Finished processing GL-ZaF_HF_S15_EriSch_L_20240719.jpg. Leaf Count: 10, Total Leaf Area: 667.69 mm², Processing Time: 20.95 s
+2024-12-05 22:42:51,458 - INFO - Processing GL-ZaF_HF_S16_EriSch_S_20240719.jpg
+2024-12-05 22:43:09,521 - INFO - Finished processing GL-ZaF_HF_S16_EriSch_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 280.31 mm², Processing Time: 18.06 s
+2024-12-05 22:43:09,548 - INFO - Processing GL-ZaF_HF_S17_ArcLat_L_20240719.jpg
+2024-12-05 22:43:30,287 - INFO - Finished processing GL-ZaF_HF_S17_ArcLat_L_20240719.jpg. Leaf Count: 9, Total Leaf Area: 1335.02 mm², Processing Time: 20.74 s
+2024-12-05 22:43:30,303 - INFO - Processing GL-ZaF_HF_S18_ArcLat_S_20240719.jpg
+2024-12-05 22:43:49,956 - INFO - Finished processing GL-ZaF_HF_S18_ArcLat_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 368.21 mm², Processing Time: 19.65 s
+2024-12-05 22:43:49,997 - INFO - Processing GL-ZaF_HF_S19_BisViv_L_20240719.jpg
+2024-12-05 22:44:11,644 - INFO - Finished processing GL-ZaF_HF_S19_BisViv_L_20240719.jpg. Leaf Count: 9, Total Leaf Area: 612.62 mm², Processing Time: 21.65 s
+2024-12-05 22:44:11,684 - INFO - Processing GL-ZaF_HF_S20_BisViV_S_20240719.jpg
+2024-12-05 22:44:30,026 - INFO - Finished processing GL-ZaF_HF_S20_BisViV_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 148.68 mm², Processing Time: 18.34 s
+2024-12-05 22:44:30,057 - INFO - Processing GL-ZaF_HF_S21_SaxCer_L_20240719.jpg
+2024-12-05 22:44:50,732 - INFO - Finished processing GL-ZaF_HF_S21_SaxCer_L_20240719.jpg. Leaf Count: 8, Total Leaf Area: 345.66 mm², Processing Time: 20.68 s
+2024-12-05 22:44:50,776 - INFO - Processing GL-ZaF_HF_S22_SteLon_L_20240719.jpg
+2024-12-05 22:45:11,051 - INFO - Finished processing GL-ZaF_HF_S22_SteLon_L_20240719.jpg. Leaf Count: 9, Total Leaf Area: 77.77 mm², Processing Time: 20.28 s
+2024-12-05 22:45:11,067 - INFO - Processing GL-ZaF_HF_S23_SteLon_S_20240719.jpg
+2024-12-05 22:45:29,496 - INFO - Finished processing GL-ZaF_HF_S23_SteLon_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 40.60 mm², Processing Time: 18.43 s
+2024-12-05 22:45:29,513 - INFO - Processing GL-ZaF_HF_S24_CarPra_L_20240719.jpg
+2024-12-05 22:45:48,934 - INFO - Finished processing GL-ZaF_HF_S24_CarPra_L_20240719.jpg. Leaf Count: 4, Total Leaf Area: 443.85 mm², Processing Time: 19.42 s
+2024-12-05 22:45:48,950 - INFO - Processing GL-ZaF_HF_S25_EriAng_L_20240719.jpg
+2024-12-05 22:46:09,204 - INFO - Finished processing GL-ZaF_HF_S25_EriAng_L_20240719.jpg. Leaf Count: 7, Total Leaf Area: 512.13 mm², Processing Time: 20.25 s
+2024-12-05 22:46:09,226 - INFO - Processing GL-ZaF_HF_S26_EquArv_S_20240719.jpg
+2024-12-05 22:46:28,250 - INFO - Finished processing GL-ZaF_HF_S26_EquArv_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 733.42 mm², Processing Time: 19.02 s
+2024-12-05 22:46:28,296 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240718_GAI\leaf_analysis_results.csv
+2024-12-05 22:46:28,364 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240718_GAI\leaf_analysis_results.xlsx
+2024-12-05 22:46:28,375 - INFO - All results have been saved successfully.
+2024-12-05 22:46:28,381 - INFO - Leaf classification processing has concluded.
+2024-12-05 22:46:28,399 - INFO - Processing completed successfully.
+2024-12-06 10:52:17,727 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-06 10:53:31,827 - INFO - Executing image processing...
+2024-12-06 10:53:31,827 - INFO - Found 26 image(s) to process.
+2024-12-06 10:53:31,827 - INFO - Processing GL-ZaF_CF_S10_SaxCer_L_20240718.jpg
+2024-12-06 10:53:49,054 - INFO - Finished processing GL-ZaF_CF_S10_SaxCer_L_20240718.jpg. Leaf Count: 7, Total Leaf Area: 452.35 mm², Binary Area: 461.00 mm², Processing Time: 17.23 s
+2024-12-06 10:53:49,087 - INFO - Processing GL-ZaF_CF_S11_SaxCer_S_20240718.jpg
+2024-12-06 10:54:07,703 - INFO - Finished processing GL-ZaF_CF_S11_SaxCer_S_20240718.jpg. Leaf Count: 3, Total Leaf Area: 448.48 mm², Binary Area: 464.09 mm², Processing Time: 18.62 s
+2024-12-06 10:54:07,724 - INFO - Processing GL-ZaF_CF_S1_DupFi_L_20240718.jpg
+2024-12-06 10:54:28,242 - INFO - Finished processing GL-ZaF_CF_S1_DupFi_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 982.12 mm², Binary Area: 1007.21 mm², Processing Time: 20.52 s
+2024-12-06 10:54:28,272 - INFO - Processing GL-ZaF_CF_S2_DupFi_S_20240718.jpg
+2024-12-06 10:54:48,485 - INFO - Finished processing GL-ZaF_CF_S2_DupFi_S_20240718.jpg. Leaf Count: 8, Total Leaf Area: 850.09 mm², Binary Area: 876.92 mm², Processing Time: 20.21 s
+2024-12-06 10:54:48,501 - INFO - Processing GL-ZaF_CF_S3_CarBi_L_20240718.jpg
+2024-12-06 10:55:08,671 - INFO - Finished processing GL-ZaF_CF_S3_CarBi_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 1045.12 mm², Binary Area: 1060.35 mm², Processing Time: 20.17 s
+2024-12-06 10:55:08,691 - INFO - Processing GL-ZaF_CF_S4_CarBi_S_20240718.jpg
+2024-12-06 10:55:26,583 - INFO - Finished processing GL-ZaF_CF_S4_CarBi_S_20240718.jpg. Leaf Count: 3, Total Leaf Area: 292.14 mm², Binary Area: 292.74 mm², Processing Time: 17.89 s
+2024-12-06 10:55:26,609 - INFO - Processing GL-ZaF_CF_S5_SalAr_L_20240718.jpg
+2024-12-06 10:55:47,941 - INFO - Finished processing GL-ZaF_CF_S5_SalAr_L_20240718.jpg. Leaf Count: 10, Total Leaf Area: 1103.29 mm², Binary Area: 1109.91 mm², Processing Time: 21.33 s
+2024-12-06 10:55:47,973 - INFO - Processing GL-ZaF_CF_S6_EriSch_L_20240718.jpg
+2024-12-06 10:56:08,653 - INFO - Finished processing GL-ZaF_CF_S6_EriSch_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 1105.96 mm², Binary Area: 1127.57 mm², Processing Time: 20.68 s
+2024-12-06 10:56:08,676 - INFO - Processing GL-ZaF_CF_S7_EriSch_S_20240718.jpg
+2024-12-06 10:56:26,922 - INFO - Finished processing GL-ZaF_CF_S7_EriSch_S_20240718.jpg. Leaf Count: 4, Total Leaf Area: 811.03 mm², Binary Area: 823.14 mm², Processing Time: 18.25 s
+2024-12-06 10:56:26,942 - INFO - Processing GL-ZaF_CF_S8_VisViv_L_20240718.jpg
+2024-12-06 10:56:47,456 - INFO - Finished processing GL-ZaF_CF_S8_VisViv_L_20240718.jpg. Leaf Count: 8, Total Leaf Area: 696.11 mm², Binary Area: 699.99 mm², Processing Time: 20.51 s
+2024-12-06 10:56:47,475 - INFO - Processing GL-ZaF_CF_S9_BisViv_S_20240718.jpg
+2024-12-06 10:57:05,312 - INFO - Finished processing GL-ZaF_CF_S9_BisViv_S_20240718.jpg. Leaf Count: 3, Total Leaf Area: 148.09 mm², Binary Area: 153.14 mm², Processing Time: 17.84 s
+2024-12-06 10:57:05,332 - INFO - Processing GL-ZaF_HF_S12_DupFi_L_20240719.jpg
+2024-12-06 10:57:25,910 - INFO - Finished processing GL-ZaF_HF_S12_DupFi_L_20240719.jpg. Leaf Count: 8, Total Leaf Area: 544.59 mm², Binary Area: 561.05 mm², Processing Time: 20.58 s
+2024-12-06 10:57:25,928 - INFO - Processing GL-ZaF_HF_S13_DupFi_S_20240719.jpg
+2024-12-06 10:57:46,915 - INFO - Finished processing GL-ZaF_HF_S13_DupFi_S_20240719.jpg. Leaf Count: 9, Total Leaf Area: 847.05 mm², Binary Area: 873.21 mm², Processing Time: 20.99 s
+2024-12-06 10:57:46,932 - INFO - Processing GL-ZaF_HF_S14_SalAr_L_20240719.jpg
+2024-12-06 10:58:07,858 - INFO - Finished processing GL-ZaF_HF_S14_SalAr_L_20240719.jpg. Leaf Count: 10, Total Leaf Area: 1526.07 mm², Binary Area: 1527.78 mm², Processing Time: 20.93 s
+2024-12-06 10:58:07,873 - INFO - Processing GL-ZaF_HF_S15_EriSch_L_20240719.jpg
+2024-12-06 10:58:28,626 - INFO - Finished processing GL-ZaF_HF_S15_EriSch_L_20240719.jpg. Leaf Count: 10, Total Leaf Area: 667.69 mm², Binary Area: 688.87 mm², Processing Time: 20.75 s
+2024-12-06 10:58:28,643 - INFO - Processing GL-ZaF_HF_S16_EriSch_S_20240719.jpg
+2024-12-06 10:58:47,094 - INFO - Finished processing GL-ZaF_HF_S16_EriSch_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 280.31 mm², Binary Area: 285.30 mm², Processing Time: 18.45 s
+2024-12-06 10:58:47,115 - INFO - Processing GL-ZaF_HF_S17_ArcLat_L_20240719.jpg
+2024-12-06 10:59:07,632 - INFO - Finished processing GL-ZaF_HF_S17_ArcLat_L_20240719.jpg. Leaf Count: 9, Total Leaf Area: 1335.02 mm², Binary Area: 1362.35 mm², Processing Time: 20.52 s
+2024-12-06 10:59:07,659 - INFO - Processing GL-ZaF_HF_S18_ArcLat_S_20240719.jpg
+2024-12-06 10:59:25,393 - INFO - Finished processing GL-ZaF_HF_S18_ArcLat_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 368.21 mm², Binary Area: 377.69 mm², Processing Time: 17.73 s
+2024-12-06 10:59:25,415 - INFO - Processing GL-ZaF_HF_S19_BisViv_L_20240719.jpg
+2024-12-06 10:59:46,775 - INFO - Finished processing GL-ZaF_HF_S19_BisViv_L_20240719.jpg. Leaf Count: 9, Total Leaf Area: 612.62 mm², Binary Area: 619.12 mm², Processing Time: 21.35 s
+2024-12-06 10:59:46,775 - INFO - Processing GL-ZaF_HF_S20_BisViV_S_20240719.jpg
+2024-12-06 11:00:04,882 - INFO - Finished processing GL-ZaF_HF_S20_BisViV_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 148.68 mm², Binary Area: 151.49 mm², Processing Time: 18.11 s
+2024-12-06 11:00:04,912 - INFO - Processing GL-ZaF_HF_S21_SaxCer_L_20240719.jpg
+2024-12-06 11:00:25,294 - INFO - Finished processing GL-ZaF_HF_S21_SaxCer_L_20240719.jpg. Leaf Count: 8, Total Leaf Area: 345.66 mm², Binary Area: 354.54 mm², Processing Time: 20.38 s
+2024-12-06 11:00:25,312 - INFO - Processing GL-ZaF_HF_S22_SteLon_L_20240719.jpg
+2024-12-06 11:00:45,636 - INFO - Finished processing GL-ZaF_HF_S22_SteLon_L_20240719.jpg. Leaf Count: 9, Total Leaf Area: 77.77 mm², Binary Area: 80.33 mm², Processing Time: 20.32 s
+2024-12-06 11:00:45,654 - INFO - Processing GL-ZaF_HF_S23_SteLon_S_20240719.jpg
+2024-12-06 11:01:03,755 - INFO - Finished processing GL-ZaF_HF_S23_SteLon_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 40.60 mm², Binary Area: 43.20 mm², Processing Time: 18.10 s
+2024-12-06 11:01:03,782 - INFO - Processing GL-ZaF_HF_S24_CarPra_L_20240719.jpg
+2024-12-06 11:01:22,961 - INFO - Finished processing GL-ZaF_HF_S24_CarPra_L_20240719.jpg. Leaf Count: 4, Total Leaf Area: 443.85 mm², Binary Area: 447.28 mm², Processing Time: 19.18 s
+2024-12-06 11:01:22,985 - INFO - Processing GL-ZaF_HF_S25_EriAng_L_20240719.jpg
+2024-12-06 11:01:43,156 - INFO - Finished processing GL-ZaF_HF_S25_EriAng_L_20240719.jpg. Leaf Count: 7, Total Leaf Area: 512.13 mm², Binary Area: 525.42 mm², Processing Time: 20.17 s
+2024-12-06 11:01:43,178 - INFO - Processing GL-ZaF_HF_S26_EquArv_S_20240719.jpg
+2024-12-06 11:02:02,206 - INFO - Finished processing GL-ZaF_HF_S26_EquArv_S_20240719.jpg. Leaf Count: 3, Total Leaf Area: 733.42 mm², Binary Area: 634.09 mm², Processing Time: 19.03 s
+2024-12-06 11:02:02,247 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240718_GAI\leaf_analysis_results.csv
+2024-12-06 11:02:02,379 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240718_GAI\leaf_analysis_results.xlsx
+2024-12-06 11:02:02,380 - INFO - All results have been saved successfully.
+2024-12-06 11:02:02,386 - INFO - Leaf classification processing has concluded.
+2024-12-06 11:02:02,393 - INFO - Processing completed successfully.
+2024-12-06 11:23:44,185 - INFO - Executing image processing...
+2024-12-06 11:23:44,201 - INFO - Found 27 image(s) to process.
+2024-12-06 11:23:44,203 - INFO - Processing GL-ZaF_CF_S10_SaxCer_L_20240725.jpg
+2024-12-06 11:23:57,104 - INFO - Finished processing GL-ZaF_CF_S10_SaxCer_L_20240725.jpg. Leaf Count: 7, Total Leaf Area: 563.20 mm², Binary Area: 574.55 mm², Processing Time: 12.90 s
+2024-12-06 11:23:57,120 - INFO - Processing GL-ZaF_CF_S11_SaxCer_S_20240725.jpg
+2024-12-06 11:24:09,225 - INFO - Finished processing GL-ZaF_CF_S11_SaxCer_S_20240725.jpg. Leaf Count: 3, Total Leaf Area: 641.34 mm², Binary Area: 661.58 mm², Processing Time: 12.10 s
+2024-12-06 11:24:09,241 - INFO - Processing GL-ZaF_CF_S12_SaxFol_L_20240725.jpg
+2024-12-06 11:24:23,186 - INFO - Finished processing GL-ZaF_CF_S12_SaxFol_L_20240725.jpg. Leaf Count: 15, Total Leaf Area: 361.69 mm², Binary Area: 367.55 mm², Processing Time: 13.95 s
+2024-12-06 11:24:23,203 - INFO - Processing GL-ZaF_CF_S1_DupFi_L_20240725.jpg
+2024-12-06 11:24:36,074 - INFO - Finished processing GL-ZaF_CF_S1_DupFi_L_20240725.jpg. Leaf Count: 7, Total Leaf Area: 1814.06 mm², Binary Area: 1837.45 mm², Processing Time: 12.87 s
+2024-12-06 11:24:36,089 - INFO - Processing GL-ZaF_CF_S2_DupFi_S_20240725.jpg
+2024-12-06 11:24:47,999 - INFO - Finished processing GL-ZaF_CF_S2_DupFi_S_20240725.jpg. Leaf Count: 5, Total Leaf Area: 672.26 mm², Binary Area: 690.33 mm², Processing Time: 11.91 s
+2024-12-06 11:24:48,016 - INFO - Processing GL-ZaF_CF_S3_CarBi_L_20240725.jpg
+2024-12-06 11:25:00,851 - INFO - Finished processing GL-ZaF_CF_S3_CarBi_L_20240725.jpg. Leaf Count: 7, Total Leaf Area: 1031.74 mm², Binary Area: 1038.40 mm², Processing Time: 12.83 s
+2024-12-06 11:25:00,866 - INFO - Processing GL-ZaF_CF_S4_CarBi_S_20240725.jpg
+2024-12-06 11:25:12,683 - INFO - Finished processing GL-ZaF_CF_S4_CarBi_S_20240725.jpg. Leaf Count: 3, Total Leaf Area: 370.38 mm², Binary Area: 371.90 mm², Processing Time: 11.82 s
+2024-12-06 11:25:12,698 - INFO - Processing GL-ZaF_CF_S5_SalAr_L_20240725.jpg
+2024-12-06 11:25:25,260 - INFO - Finished processing GL-ZaF_CF_S5_SalAr_L_20240725.jpg. Leaf Count: 8, Total Leaf Area: 1367.91 mm², Binary Area: 1372.30 mm², Processing Time: 12.56 s
+2024-12-06 11:25:25,276 - INFO - Processing GL-ZaF_CF_S6_EriSch_L_20240725.jpg
+2024-12-06 11:25:38,514 - INFO - Finished processing GL-ZaF_CF_S6_EriSch_L_20240725.jpg. Leaf Count: 8, Total Leaf Area: 992.85 mm², Binary Area: 1017.94 mm², Processing Time: 13.24 s
+2024-12-06 11:25:38,514 - INFO - Processing GL-ZaF_CF_S7_EriSch_S_20240725.jpg
+2024-12-06 11:25:50,410 - INFO - Finished processing GL-ZaF_CF_S7_EriSch_S_20240725.jpg. Leaf Count: 3, Total Leaf Area: 693.46 mm², Binary Area: 700.01 mm², Processing Time: 11.90 s
+2024-12-06 11:25:50,422 - INFO - Processing GL-ZaF_CF_S8_BisViv_L_20240725.jpg
+2024-12-06 11:26:03,652 - INFO - Finished processing GL-ZaF_CF_S8_BisViv_L_20240725.jpg. Leaf Count: 8, Total Leaf Area: 1055.47 mm², Binary Area: 1063.83 mm², Processing Time: 13.23 s
+2024-12-06 11:26:03,672 - INFO - Processing GL-ZaF_CF_S9_BisViv_S_20240725.jpg
+2024-12-06 11:26:16,054 - INFO - Finished processing GL-ZaF_CF_S9_BisViv_S_20240725.jpg. Leaf Count: 4, Total Leaf Area: 651.48 mm², Binary Area: 671.42 mm², Processing Time: 12.38 s
+2024-12-06 11:26:16,061 - INFO - Processing GL-ZaF_HF_S13_DupFi_L_20240726.jpg
+2024-12-06 11:26:28,708 - INFO - Finished processing GL-ZaF_HF_S13_DupFi_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 1045.04 mm², Binary Area: 1071.88 mm², Processing Time: 12.65 s
+2024-12-06 11:26:28,708 - INFO - Processing GL-ZaF_HF_S14_DupFi_S_20240726.jpg
+2024-12-06 11:26:41,039 - INFO - Finished processing GL-ZaF_HF_S14_DupFi_S_20240726.jpg. Leaf Count: 6, Total Leaf Area: 617.72 mm², Binary Area: 635.00 mm², Processing Time: 12.33 s
+2024-12-06 11:26:41,055 - INFO - Processing GL-ZaF_HF_S15_SalAr_L_20240726.jpg
+2024-12-06 11:26:53,454 - INFO - Finished processing GL-ZaF_HF_S15_SalAr_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 1179.52 mm², Binary Area: 1174.90 mm², Processing Time: 12.40 s
+2024-12-06 11:26:53,472 - INFO - Processing GL-ZaF_HF_S16_EriSch_L_20240726.jpg
+2024-12-06 11:27:06,922 - INFO - Finished processing GL-ZaF_HF_S16_EriSch_L_20240726.jpg. Leaf Count: 12, Total Leaf Area: 716.27 mm², Binary Area: 743.25 mm², Processing Time: 13.45 s
+2024-12-06 11:27:06,934 - INFO - Processing GL-ZaF_HF_S17_EriSch_S_20240726.jpg
+2024-12-06 11:27:24,398 - INFO - Finished processing GL-ZaF_HF_S17_EriSch_S_20240726.jpg. Leaf Count: 4, Total Leaf Area: 484.46 mm², Binary Area: 492.93 mm², Processing Time: 17.46 s
+2024-12-06 11:27:24,431 - INFO - Processing GL-ZaF_HF_S18_ArcLat_L_20240726.jpg
+2024-12-06 11:27:37,816 - INFO - Finished processing GL-ZaF_HF_S18_ArcLat_L_20240726.jpg. Leaf Count: 9, Total Leaf Area: 1751.77 mm², Binary Area: 1765.41 mm², Processing Time: 13.39 s
+2024-12-06 11:27:37,831 - INFO - Processing GL-ZaF_HF_S19_ArcLat_S_20240726.jpg
+2024-12-06 11:27:49,443 - INFO - Finished processing GL-ZaF_HF_S19_ArcLat_S_20240726.jpg. Leaf Count: 3, Total Leaf Area: 487.96 mm², Binary Area: 500.05 mm², Processing Time: 11.61 s
+2024-12-06 11:27:49,462 - INFO - Processing GL-ZaF_HF_S20_BisViv_L_20240726.jpg
+2024-12-06 11:28:02,028 - INFO - Finished processing GL-ZaF_HF_S20_BisViv_L_20240726.jpg. Leaf Count: 8, Total Leaf Area: 397.16 mm², Binary Area: 401.68 mm², Processing Time: 12.57 s
+2024-12-06 11:28:02,049 - INFO - Processing GL-ZaF_HF_S21_BisViv_S_20240726.jpg
+2024-12-06 11:28:13,587 - INFO - Finished processing GL-ZaF_HF_S21_BisViv_S_20240726.jpg. Leaf Count: 3, Total Leaf Area: 240.81 mm², Binary Area: 249.54 mm², Processing Time: 11.54 s
+2024-12-06 11:28:13,610 - INFO - Processing GL-ZaF_HF_S22_SaxCer_L_20240726.jpg
+2024-12-06 11:28:25,992 - INFO - Finished processing GL-ZaF_HF_S22_SaxCer_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 317.12 mm², Binary Area: 325.25 mm², Processing Time: 12.38 s
+2024-12-06 11:28:25,992 - INFO - Processing GL-ZaF_HF_S23_SteLon_L_20240726.jpg
+2024-12-06 11:28:38,188 - INFO - Finished processing GL-ZaF_HF_S23_SteLon_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 48.02 mm², Binary Area: 49.95 mm², Processing Time: 12.20 s
+2024-12-06 11:28:38,204 - INFO - Processing GL-ZaF_HF_S24_SteLon_S_20240726.jpg
+2024-12-06 11:28:49,998 - INFO - Finished processing GL-ZaF_HF_S24_SteLon_S_20240726.jpg. Leaf Count: 5, Total Leaf Area: 80.03 mm², Binary Area: 84.32 mm², Processing Time: 11.79 s
+2024-12-06 11:28:50,020 - INFO - Processing GL-ZaF_HF_S25_CarPra_L_20240726.jpg
+2024-12-06 11:29:02,631 - INFO - Finished processing GL-ZaF_HF_S25_CarPra_L_20240726.jpg. Leaf Count: 6, Total Leaf Area: 688.24 mm², Binary Area: 693.23 mm², Processing Time: 12.61 s
+2024-12-06 11:29:02,641 - INFO - Processing GL-ZaF_HF_S26_EriAng_L_20240726.jpg
+2024-12-06 11:29:23,675 - INFO - Finished processing GL-ZaF_HF_S26_EriAng_L_20240726.jpg. Leaf Count: 12, Total Leaf Area: 1466.95 mm², Binary Area: 1485.48 mm², Processing Time: 21.03 s
+2024-12-06 11:29:23,686 - INFO - Processing GL-ZaF_HF_S27_EquArv_S_20240726.jpg
+2024-12-06 11:29:44,841 - INFO - Finished processing GL-ZaF_HF_S27_EquArv_S_20240726.jpg. Leaf Count: 5, Total Leaf Area: 581.45 mm², Binary Area: 567.73 mm², Processing Time: 21.15 s
+2024-12-06 11:29:44,862 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240725_GAI_AGB\leaf_analysis_results.csv
+2024-12-06 11:29:44,956 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240725_GAI_AGB\leaf_analysis_results.xlsx
+2024-12-06 11:29:44,956 - INFO - All results have been saved successfully.
+2024-12-06 11:29:44,971 - INFO - Leaf classification processing has concluded.
+2024-12-06 11:29:44,971 - INFO - Processing completed successfully.
+2024-12-06 11:40:51,528 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-06 11:42:11,013 - INFO - Displayed image with crop outline: GL-ZaF_CF_S10_SaxCer_L_20240725.jpg
+2024-12-06 11:42:13,786 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240725.jpg
+2024-12-06 11:42:25,683 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240725.jpg
+2024-12-06 11:42:41,336 - INFO - Displayed image with crop outline: GL-ZaF_CF_S10_SaxCer_L_20240725.jpg
+2024-12-06 11:42:43,864 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240725.jpg
+2024-12-06 11:42:46,344 - INFO - Displayed image with crop outline: GL-ZaF_CF_S12_SaxFol_L_20240725.jpg
+2024-12-06 11:42:47,550 - INFO - Displayed image with crop outline: GL-ZaF_CF_S1_DupFi_L_20240725.jpg
+2024-12-06 11:42:50,869 - INFO - Displayed image with crop outline: GL-ZaF_CF_S2_DupFi_S_20240725.jpg
+2024-12-06 11:42:55,394 - INFO - Displayed image with crop outline: GL-ZaF_CF_S3_CarBi_L_20240725.jpg
+2024-12-06 11:42:57,717 - INFO - Displayed image with crop outline: GL-ZaF_CF_S4_CarBi_S_20240725.jpg
+2024-12-06 11:43:00,447 - INFO - Displayed image with crop outline: GL-ZaF_CF_S5_SalAr_L_20240725.jpg
+2024-12-06 11:43:02,059 - INFO - Displayed image with crop outline: GL-ZaF_CF_S6_EriSch_L_20240725.jpg
+2024-12-06 11:43:03,707 - INFO - Displayed image with crop outline: GL-ZaF_CF_S7_EriSch_S_20240725.jpg
+2024-12-06 11:43:04,769 - INFO - Displayed image with crop outline: GL-ZaF_CF_S8_BisViv_L_20240725.jpg
+2024-12-06 11:43:05,691 - INFO - Displayed image with crop outline: GL-ZaF_CF_S9_BisViv_S_20240725.jpg
+2024-12-06 11:43:06,741 - INFO - Displayed image with crop outline: GL-ZaF_HF_S13_DupFi_L_20240726.jpg
+2024-12-06 11:43:07,721 - INFO - Displayed image with crop outline: GL-ZaF_HF_S14_DupFi_S_20240726.jpg
+2024-12-06 11:43:08,564 - INFO - Displayed image with crop outline: GL-ZaF_HF_S15_SalAr_L_20240726.jpg
+2024-12-06 11:43:09,406 - INFO - Displayed image with crop outline: GL-ZaF_HF_S16_EriSch_L_20240726.jpg
+2024-12-06 11:43:10,307 - INFO - Displayed image with crop outline: GL-ZaF_HF_S17_EriSch_S_20240726.jpg
+2024-12-06 11:43:11,394 - INFO - Displayed image with crop outline: GL-ZaF_HF_S18_ArcLat_L_20240726.jpg
+2024-12-06 11:43:12,319 - INFO - Displayed image with crop outline: GL-ZaF_HF_S19_ArcLat_S_20240726.jpg
+2024-12-06 11:43:23,031 - INFO - Displayed image with crop outline: GL-ZaF_HF_S20_BisViv_L_20240726.jpg
+2024-12-06 11:43:27,665 - INFO - Displayed image with crop outline: GL-ZaF_HF_S21_BisViv_S_20240726.jpg
+2024-12-06 11:43:48,971 - INFO - Displayed image with crop outline: GL-ZaF_HF_S22_SaxCer_L_20240726.jpg
+2024-12-06 11:43:50,113 - INFO - Displayed image with crop outline: GL-ZaF_HF_S23_SteLon_L_20240726.jpg
+2024-12-06 11:43:51,120 - INFO - Displayed image with crop outline: GL-ZaF_HF_S24_SteLon_S_20240726.jpg
+2024-12-06 11:43:52,084 - INFO - Displayed image with crop outline: GL-ZaF_HF_S25_CarPra_L_20240726.jpg
+2024-12-06 11:43:53,004 - INFO - Displayed image with crop outline: GL-ZaF_HF_S26_EriAng_L_20240726.jpg
+2024-12-06 11:43:53,725 - INFO - Displayed image with crop outline: GL-ZaF_HF_S27_EquArv_S_20240726.jpg
+2024-12-06 11:44:16,654 - INFO - Displayed image with crop outline: GL-ZaF_CF_S10_SaxCer_L_20240725.jpg
+2024-12-06 11:44:18,571 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240725.jpg
+2024-12-06 11:44:21,438 - INFO - Displayed image with crop outline: GL-ZaF_CF_S12_SaxFol_L_20240725.jpg
+2024-12-06 11:44:22,435 - INFO - Displayed image with crop outline: GL-ZaF_CF_S1_DupFi_L_20240725.jpg
+2024-12-06 11:44:23,213 - INFO - Displayed image with crop outline: GL-ZaF_CF_S2_DupFi_S_20240725.jpg
+2024-12-06 11:44:24,005 - INFO - Displayed image with crop outline: GL-ZaF_CF_S3_CarBi_L_20240725.jpg
+2024-12-06 11:44:24,770 - INFO - Displayed image with crop outline: GL-ZaF_CF_S4_CarBi_S_20240725.jpg
+2024-12-06 11:44:25,498 - INFO - Displayed image with crop outline: GL-ZaF_CF_S5_SalAr_L_20240725.jpg
+2024-12-06 11:44:26,227 - INFO - Displayed image with crop outline: GL-ZaF_CF_S6_EriSch_L_20240725.jpg
+2024-12-06 11:44:26,956 - INFO - Displayed image with crop outline: GL-ZaF_CF_S7_EriSch_S_20240725.jpg
+2024-12-06 11:44:27,832 - INFO - Displayed image with crop outline: GL-ZaF_CF_S8_BisViv_L_20240725.jpg
+2024-12-06 11:44:28,574 - INFO - Displayed image with crop outline: GL-ZaF_CF_S9_BisViv_S_20240725.jpg
+2024-12-06 11:44:29,396 - INFO - Displayed image with crop outline: GL-ZaF_HF_S13_DupFi_L_20240726.jpg
+2024-12-06 11:44:30,255 - INFO - Displayed image with crop outline: GL-ZaF_HF_S14_DupFi_S_20240726.jpg
+2024-12-06 11:44:31,228 - INFO - Displayed image with crop outline: GL-ZaF_HF_S15_SalAr_L_20240726.jpg
+2024-12-06 11:44:33,887 - INFO - Displayed image with crop outline: GL-ZaF_HF_S16_EriSch_L_20240726.jpg
+2024-12-06 11:44:34,761 - INFO - Displayed image with crop outline: GL-ZaF_HF_S17_EriSch_S_20240726.jpg
+2024-12-06 11:44:35,541 - INFO - Displayed image with crop outline: GL-ZaF_HF_S18_ArcLat_L_20240726.jpg
+2024-12-06 11:44:36,583 - INFO - Displayed image with crop outline: GL-ZaF_HF_S19_ArcLat_S_20240726.jpg
+2024-12-06 11:44:37,426 - INFO - Displayed image with crop outline: GL-ZaF_HF_S20_BisViv_L_20240726.jpg
+2024-12-06 11:44:38,438 - INFO - Displayed image with crop outline: GL-ZaF_HF_S21_BisViv_S_20240726.jpg
+2024-12-06 11:44:41,426 - INFO - Displayed image with crop outline: GL-ZaF_HF_S22_SaxCer_L_20240726.jpg
+2024-12-06 11:44:42,489 - INFO - Displayed image with crop outline: GL-ZaF_HF_S23_SteLon_L_20240726.jpg
+2024-12-06 11:44:43,323 - INFO - Displayed image with crop outline: GL-ZaF_HF_S24_SteLon_S_20240726.jpg
+2024-12-06 11:44:44,302 - INFO - Displayed image with crop outline: GL-ZaF_HF_S25_CarPra_L_20240726.jpg
+2024-12-06 11:44:45,864 - INFO - Displayed image with crop outline: GL-ZaF_HF_S26_EriAng_L_20240726.jpg
+2024-12-06 11:44:46,790 - INFO - Displayed image with crop outline: GL-ZaF_HF_S27_EquArv_S_20240726.jpg
+2024-12-06 11:45:09,480 - INFO - Executing image processing...
+2024-12-06 11:45:09,480 - INFO - Found 27 image(s) to process.
+2024-12-06 11:45:09,489 - INFO - Processing GL-ZaF_CF_S10_SaxCer_L_20240725.jpg
+2024-12-06 11:45:25,427 - INFO - Finished processing GL-ZaF_CF_S10_SaxCer_L_20240725.jpg. Leaf Count: 7, Total Leaf Area: 563.20 mm², Binary Area: 574.55 mm², Processing Time: 15.94 s
+2024-12-06 11:45:25,443 - INFO - Processing GL-ZaF_CF_S11_SaxCer_S_20240725.jpg
+2024-12-06 11:45:45,752 - INFO - Finished processing GL-ZaF_CF_S11_SaxCer_S_20240725.jpg. Leaf Count: 3, Total Leaf Area: 641.34 mm², Binary Area: 661.58 mm², Processing Time: 20.31 s
+2024-12-06 11:45:45,766 - INFO - Processing GL-ZaF_CF_S12_SaxFol_L_20240725.jpg
+2024-12-06 11:46:09,318 - INFO - Finished processing GL-ZaF_CF_S12_SaxFol_L_20240725.jpg. Leaf Count: 15, Total Leaf Area: 361.69 mm², Binary Area: 367.55 mm², Processing Time: 23.55 s
+2024-12-06 11:46:09,355 - INFO - Processing GL-ZaF_CF_S1_DupFi_L_20240725.jpg
+2024-12-06 11:46:30,989 - INFO - Finished processing GL-ZaF_CF_S1_DupFi_L_20240725.jpg. Leaf Count: 7, Total Leaf Area: 1814.06 mm², Binary Area: 1837.45 mm², Processing Time: 21.63 s
+2024-12-06 11:46:30,994 - INFO - Processing GL-ZaF_CF_S2_DupFi_S_20240725.jpg
+2024-12-06 11:46:51,052 - INFO - Finished processing GL-ZaF_CF_S2_DupFi_S_20240725.jpg. Leaf Count: 5, Total Leaf Area: 672.26 mm², Binary Area: 690.33 mm², Processing Time: 20.06 s
+2024-12-06 11:46:51,065 - INFO - Processing GL-ZaF_CF_S3_CarBi_L_20240725.jpg
+2024-12-06 11:47:12,890 - INFO - Finished processing GL-ZaF_CF_S3_CarBi_L_20240725.jpg. Leaf Count: 7, Total Leaf Area: 1031.74 mm², Binary Area: 1038.40 mm², Processing Time: 21.82 s
+2024-12-06 11:47:12,903 - INFO - Processing GL-ZaF_CF_S4_CarBi_S_20240725.jpg
+2024-12-06 11:47:32,427 - INFO - Finished processing GL-ZaF_CF_S4_CarBi_S_20240725.jpg. Leaf Count: 3, Total Leaf Area: 370.38 mm², Binary Area: 371.90 mm², Processing Time: 19.52 s
+2024-12-06 11:47:32,449 - INFO - Processing GL-ZaF_CF_S5_SalAr_L_20240725.jpg
+2024-12-06 11:47:53,490 - INFO - Finished processing GL-ZaF_CF_S5_SalAr_L_20240725.jpg. Leaf Count: 8, Total Leaf Area: 1367.91 mm², Binary Area: 1372.30 mm², Processing Time: 21.04 s
+2024-12-06 11:47:53,525 - INFO - Processing GL-ZaF_CF_S6_EriSch_L_20240725.jpg
+2024-12-06 11:48:15,803 - INFO - Finished processing GL-ZaF_CF_S6_EriSch_L_20240725.jpg. Leaf Count: 8, Total Leaf Area: 992.85 mm², Binary Area: 1017.94 mm², Processing Time: 22.28 s
+2024-12-06 11:48:15,821 - INFO - Processing GL-ZaF_CF_S7_EriSch_S_20240725.jpg
+2024-12-06 11:48:35,428 - INFO - Finished processing GL-ZaF_CF_S7_EriSch_S_20240725.jpg. Leaf Count: 3, Total Leaf Area: 693.46 mm², Binary Area: 700.01 mm², Processing Time: 19.61 s
+2024-12-06 11:48:35,431 - INFO - Processing GL-ZaF_CF_S8_BisViv_L_20240725.jpg
+2024-12-06 11:48:57,053 - INFO - Finished processing GL-ZaF_CF_S8_BisViv_L_20240725.jpg. Leaf Count: 8, Total Leaf Area: 1055.47 mm², Binary Area: 1063.83 mm², Processing Time: 21.62 s
+2024-12-06 11:48:57,058 - INFO - Processing GL-ZaF_CF_S9_BisViv_S_20240725.jpg
+2024-12-06 11:49:17,216 - INFO - Finished processing GL-ZaF_CF_S9_BisViv_S_20240725.jpg. Leaf Count: 4, Total Leaf Area: 651.48 mm², Binary Area: 671.42 mm², Processing Time: 20.16 s
+2024-12-06 11:49:17,245 - INFO - Processing GL-ZaF_HF_S13_DupFi_L_20240726.jpg
+2024-12-06 11:49:37,664 - INFO - Finished processing GL-ZaF_HF_S13_DupFi_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 1045.04 mm², Binary Area: 1071.88 mm², Processing Time: 20.42 s
+2024-12-06 11:49:37,682 - INFO - Processing GL-ZaF_HF_S14_DupFi_S_20240726.jpg
+2024-12-06 11:49:57,789 - INFO - Finished processing GL-ZaF_HF_S14_DupFi_S_20240726.jpg. Leaf Count: 6, Total Leaf Area: 617.72 mm², Binary Area: 635.00 mm², Processing Time: 20.11 s
+2024-12-06 11:49:57,816 - INFO - Processing GL-ZaF_HF_S15_SalAr_L_20240726.jpg
+2024-12-06 11:50:18,304 - INFO - Finished processing GL-ZaF_HF_S15_SalAr_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 1179.52 mm², Binary Area: 1174.90 mm², Processing Time: 20.49 s
+2024-12-06 11:50:18,326 - INFO - Processing GL-ZaF_HF_S16_EriSch_L_20240726.jpg
+2024-12-06 11:50:40,701 - INFO - Finished processing GL-ZaF_HF_S16_EriSch_L_20240726.jpg. Leaf Count: 12, Total Leaf Area: 716.27 mm², Binary Area: 743.25 mm², Processing Time: 22.37 s
+2024-12-06 11:50:40,727 - INFO - Processing GL-ZaF_HF_S17_EriSch_S_20240726.jpg
+2024-12-06 11:51:00,441 - INFO - Finished processing GL-ZaF_HF_S17_EriSch_S_20240726.jpg. Leaf Count: 4, Total Leaf Area: 484.46 mm², Binary Area: 492.93 mm², Processing Time: 19.71 s
+2024-12-06 11:51:00,470 - INFO - Processing GL-ZaF_HF_S18_ArcLat_L_20240726.jpg
+2024-12-06 11:51:22,993 - INFO - Finished processing GL-ZaF_HF_S18_ArcLat_L_20240726.jpg. Leaf Count: 9, Total Leaf Area: 1751.77 mm², Binary Area: 1765.41 mm², Processing Time: 22.52 s
+2024-12-06 11:51:23,033 - INFO - Processing GL-ZaF_HF_S19_ArcLat_S_20240726.jpg
+2024-12-06 11:51:43,027 - INFO - Finished processing GL-ZaF_HF_S19_ArcLat_S_20240726.jpg. Leaf Count: 3, Total Leaf Area: 487.96 mm², Binary Area: 500.05 mm², Processing Time: 19.99 s
+2024-12-06 11:51:43,039 - INFO - Processing GL-ZaF_HF_S20_BisViv_L_20240726.jpg
+2024-12-06 11:52:04,142 - INFO - Finished processing GL-ZaF_HF_S20_BisViv_L_20240726.jpg. Leaf Count: 8, Total Leaf Area: 397.16 mm², Binary Area: 401.68 mm², Processing Time: 21.10 s
+2024-12-06 11:52:04,150 - INFO - Processing GL-ZaF_HF_S21_BisViv_S_20240726.jpg
+2024-12-06 11:52:24,034 - INFO - Finished processing GL-ZaF_HF_S21_BisViv_S_20240726.jpg. Leaf Count: 3, Total Leaf Area: 240.81 mm², Binary Area: 249.54 mm², Processing Time: 19.88 s
+2024-12-06 11:52:24,047 - INFO - Processing GL-ZaF_HF_S22_SaxCer_L_20240726.jpg
+2024-12-06 11:52:37,187 - INFO - Finished processing GL-ZaF_HF_S22_SaxCer_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 317.12 mm², Binary Area: 325.25 mm², Processing Time: 13.14 s
+2024-12-06 11:52:37,211 - INFO - Processing GL-ZaF_HF_S23_SteLon_L_20240726.jpg
+2024-12-06 11:52:49,288 - INFO - Finished processing GL-ZaF_HF_S23_SteLon_L_20240726.jpg. Leaf Count: 7, Total Leaf Area: 48.02 mm², Binary Area: 49.95 mm², Processing Time: 12.08 s
+2024-12-06 11:52:49,288 - INFO - Processing GL-ZaF_HF_S24_SteLon_S_20240726.jpg
+2024-12-06 11:53:01,111 - INFO - Finished processing GL-ZaF_HF_S24_SteLon_S_20240726.jpg. Leaf Count: 5, Total Leaf Area: 80.03 mm², Binary Area: 84.32 mm², Processing Time: 11.82 s
+2024-12-06 11:53:01,111 - INFO - Processing GL-ZaF_HF_S25_CarPra_L_20240726.jpg
+2024-12-06 11:53:13,576 - INFO - Finished processing GL-ZaF_HF_S25_CarPra_L_20240726.jpg. Leaf Count: 6, Total Leaf Area: 688.24 mm², Binary Area: 693.23 mm², Processing Time: 12.46 s
+2024-12-06 11:53:13,594 - INFO - Processing GL-ZaF_HF_S26_EriAng_L_20240726.jpg
+2024-12-06 11:53:27,318 - INFO - Finished processing GL-ZaF_HF_S26_EriAng_L_20240726.jpg. Leaf Count: 12, Total Leaf Area: 1466.95 mm², Binary Area: 1485.48 mm², Processing Time: 13.72 s
+2024-12-06 11:53:27,334 - INFO - Processing GL-ZaF_HF_S27_EquArv_S_20240726.jpg
+2024-12-06 11:53:39,581 - INFO - Finished processing GL-ZaF_HF_S27_EquArv_S_20240726.jpg. Leaf Count: 5, Total Leaf Area: 581.45 mm², Binary Area: 567.73 mm², Processing Time: 12.25 s
+2024-12-06 11:53:39,610 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240725_GAI_AGB\leaf_analysis_results.csv
+2024-12-06 11:53:39,658 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240725_GAI_AGB\leaf_analysis_results.xlsx
+2024-12-06 11:53:39,660 - INFO - All results have been saved successfully.
+2024-12-06 11:53:39,665 - INFO - Leaf classification processing has concluded.
+2024-12-06 11:53:39,671 - INFO - Processing completed successfully.
