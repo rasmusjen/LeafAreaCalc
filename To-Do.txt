@@ -5,11 +5,5 @@ O:\Tech_ICOS\scripts\python\leaf_area_classification
 C:\Users\au710242\AppData\Local\anaconda3
 
 
-
-Things to do
-MAIN
-
-GUI
-
 Executable
 - Make executable (https://chatgpt.com/share/67078287-97f0-8004-a9d9-7fc54f5edc45)

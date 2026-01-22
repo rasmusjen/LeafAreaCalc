@@ -6982,3 +6982,605 @@ AttributeError: 'NoneType' object has no attribute 'is_set'
 2024-12-06 11:53:39,660 - INFO - All results have been saved successfully.
 2024-12-06 11:53:39,665 - INFO - Leaf classification processing has concluded.
 2024-12-06 11:53:39,671 - INFO - Processing completed successfully.
+2024-12-06 13:00:41,738 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-06 13:01:32,679 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-06 13:01:36,826 - INFO - Displayed image with crop outline: GL-ZaF_CF_S10_SaxCer_L_20240725.jpg
+2024-12-06 13:01:42,334 - INFO - Displayed image with crop outline: GL-ZaF_CF_S11_SaxCer_S_20240725.jpg
+2024-12-06 13:02:00,711 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_CarBi_L_20240801_0001.jpg
+2024-12-06 13:02:04,753 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_CarBi_S_20240801_0001.jpg
+2024-12-06 13:02:05,691 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_DupFi_L_20240801_0001.jpg
+2024-12-06 13:02:06,491 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_DupFi_S_20240801_0001.jpg
+2024-12-06 13:02:07,558 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_EriSc_L_20240801_0001.jpg
+2024-12-06 13:02:08,359 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_EriSc_S_20240801_0001.jpg
+2024-12-06 13:02:09,144 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_PerVi_L_20240801_0001.jpg
+2024-12-06 13:02:09,937 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_PerVi_S_20240801_0001.jpg
+2024-12-06 13:02:10,674 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_Salix_L_20240801_0001.jpg
+2024-12-06 13:02:11,447 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_SaxCe_L_20240801_0001.jpg
+2024-12-06 13:02:12,162 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_SaxCe_S_20240801_0001.jpg
+2024-12-06 13:02:13,048 - INFO - Displayed image with crop outline: 20240801_ZaF_CF_GAI_SaxFo_L_20240801_0001.jpg
+2024-12-06 13:02:13,785 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_ArcLa_L_20240803_0001.jpg
+2024-12-06 13:02:14,464 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_ArcLa_S_20240803_0001.jpg
+2024-12-06 13:02:15,171 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_CarPr_L_20240802_0001.jpg
+2024-12-06 13:02:15,917 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_DupFi_L_20240802_0001.jpg
+2024-12-06 13:02:16,660 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_DupFi_S_20240802_0001.jpg
+2024-12-06 13:02:17,368 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_EquAr_S_20240803_0001.jpg
+2024-12-06 13:02:18,091 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_EriAn_L_20240802_0001.jpg
+2024-12-06 13:02:18,991 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_EriSc_L_20240803_0001.jpg
+2024-12-06 13:02:19,883 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_EriSc_S_20240803_0001.jpg
+2024-12-06 13:02:20,669 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_PerVi_L_20240802_0001.jpg
+2024-12-06 13:02:21,422 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_PerVi_S_20240802_0001.jpg
+2024-12-06 13:02:22,218 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_SaLar_L_20240802_0001.jpg
+2024-12-06 13:02:22,984 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_SaxCe_L_20240803_0001.jpg
+2024-12-06 13:02:24,018 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_SteLo_L_20240802_0001.jpg
+2024-12-06 13:02:24,888 - INFO - Displayed image with crop outline: 20240802_ZaF_HF_GAI_SteLo_S_20240802_0001.jpg
+2024-12-06 13:02:34,409 - INFO - Configuration saved successfully!
+2024-12-06 13:02:37,630 - INFO - Executing image processing...
+2024-12-06 13:02:37,632 - INFO - Found 27 image(s) to process.
+2024-12-06 13:02:37,632 - INFO - Processing 20240801_ZaF_CF_GAI_CarBi_L_20240801_0001.jpg
+2024-12-06 13:02:50,967 - INFO - Finished processing 20240801_ZaF_CF_GAI_CarBi_L_20240801_0001.jpg. Leaf Count: 7, Total Leaf Area: 1215.64 mm², Binary Area: 1225.31 mm², Processing Time: 13.34 s
+2024-12-06 13:02:50,979 - INFO - Processing 20240801_ZaF_CF_GAI_CarBi_S_20240801_0001.jpg
+2024-12-06 13:03:02,698 - INFO - Finished processing 20240801_ZaF_CF_GAI_CarBi_S_20240801_0001.jpg. Leaf Count: 3, Total Leaf Area: 395.04 mm², Binary Area: 379.90 mm², Processing Time: 11.72 s
+2024-12-06 13:03:02,708 - INFO - Processing 20240801_ZaF_CF_GAI_DupFi_L_20240801_0001.jpg
+2024-12-06 13:03:15,052 - INFO - Finished processing 20240801_ZaF_CF_GAI_DupFi_L_20240801_0001.jpg. Leaf Count: 5, Total Leaf Area: 829.84 mm², Binary Area: 851.23 mm², Processing Time: 12.34 s
+2024-12-06 13:03:15,062 - INFO - Processing 20240801_ZaF_CF_GAI_DupFi_S_20240801_0001.jpg
+2024-12-06 13:03:27,437 - INFO - Finished processing 20240801_ZaF_CF_GAI_DupFi_S_20240801_0001.jpg. Leaf Count: 3, Total Leaf Area: 878.07 mm², Binary Area: 883.49 mm², Processing Time: 12.38 s
+2024-12-06 13:03:27,447 - INFO - Processing 20240801_ZaF_CF_GAI_EriSc_L_20240801_0001.jpg
+2024-12-06 13:03:40,213 - INFO - Finished processing 20240801_ZaF_CF_GAI_EriSc_L_20240801_0001.jpg. Leaf Count: 7, Total Leaf Area: 767.21 mm², Binary Area: 789.02 mm², Processing Time: 12.77 s
+2024-12-06 13:03:40,226 - INFO - Processing 20240801_ZaF_CF_GAI_EriSc_S_20240801_0001.jpg
+2024-12-06 13:03:52,104 - INFO - Finished processing 20240801_ZaF_CF_GAI_EriSc_S_20240801_0001.jpg. Leaf Count: 3, Total Leaf Area: 831.40 mm², Binary Area: 841.95 mm², Processing Time: 11.88 s
+2024-12-06 13:03:52,118 - INFO - Processing 20240801_ZaF_CF_GAI_PerVi_L_20240801_0001.jpg
+2024-12-06 13:04:04,454 - INFO - Finished processing 20240801_ZaF_CF_GAI_PerVi_L_20240801_0001.jpg. Leaf Count: 7, Total Leaf Area: 396.54 mm², Binary Area: 397.03 mm², Processing Time: 12.34 s
+2024-12-06 13:04:04,466 - INFO - Processing 20240801_ZaF_CF_GAI_PerVi_S_20240801_0001.jpg
+2024-12-06 13:04:16,507 - INFO - Finished processing 20240801_ZaF_CF_GAI_PerVi_S_20240801_0001.jpg. Leaf Count: 4, Total Leaf Area: 213.30 mm², Binary Area: 221.04 mm², Processing Time: 12.04 s
+2024-12-06 13:04:16,517 - INFO - Processing 20240801_ZaF_CF_GAI_Salix_L_20240801_0001.jpg
+2024-12-06 13:04:29,152 - INFO - Finished processing 20240801_ZaF_CF_GAI_Salix_L_20240801_0001.jpg. Leaf Count: 8, Total Leaf Area: 812.59 mm², Binary Area: 809.05 mm², Processing Time: 12.63 s
+2024-12-06 13:04:29,163 - INFO - Processing 20240801_ZaF_CF_GAI_SaxCe_L_20240801_0001.jpg
+2024-12-06 13:04:41,702 - INFO - Finished processing 20240801_ZaF_CF_GAI_SaxCe_L_20240801_0001.jpg. Leaf Count: 8, Total Leaf Area: 284.60 mm², Binary Area: 292.54 mm², Processing Time: 12.54 s
+2024-12-06 13:04:41,717 - INFO - Processing 20240801_ZaF_CF_GAI_SaxCe_S_20240801_0001.jpg
+2024-12-06 13:04:53,492 - INFO - Finished processing 20240801_ZaF_CF_GAI_SaxCe_S_20240801_0001.jpg. Leaf Count: 3, Total Leaf Area: 336.79 mm², Binary Area: 351.97 mm², Processing Time: 11.78 s
+2024-12-06 13:04:53,504 - INFO - Processing 20240801_ZaF_CF_GAI_SaxFo_L_20240801_0001.jpg
+2024-12-06 13:05:05,904 - INFO - Finished processing 20240801_ZaF_CF_GAI_SaxFo_L_20240801_0001.jpg. Leaf Count: 7, Total Leaf Area: 325.71 mm², Binary Area: 331.59 mm², Processing Time: 12.40 s
+2024-12-06 13:05:05,916 - INFO - Processing 20240802_ZaF_HF_GAI_ArcLa_L_20240803_0001.jpg
+2024-12-06 13:05:18,777 - INFO - Finished processing 20240802_ZaF_HF_GAI_ArcLa_L_20240803_0001.jpg. Leaf Count: 7, Total Leaf Area: 996.35 mm², Binary Area: 1017.61 mm², Processing Time: 12.86 s
+2024-12-06 13:05:18,790 - INFO - Processing 20240802_ZaF_HF_GAI_ArcLa_S_20240803_0001.jpg
+2024-12-06 13:05:30,731 - INFO - Finished processing 20240802_ZaF_HF_GAI_ArcLa_S_20240803_0001.jpg. Leaf Count: 3, Total Leaf Area: 551.80 mm², Binary Area: 558.93 mm², Processing Time: 11.94 s
+2024-12-06 13:05:30,743 - INFO - Processing 20240802_ZaF_HF_GAI_CarPr_L_20240802_0001.jpg
+2024-12-06 13:05:43,408 - INFO - Finished processing 20240802_ZaF_HF_GAI_CarPr_L_20240802_0001.jpg. Leaf Count: 7, Total Leaf Area: 435.46 mm², Binary Area: 443.26 mm², Processing Time: 12.67 s
+2024-12-06 13:05:43,421 - INFO - Processing 20240802_ZaF_HF_GAI_DupFi_L_20240802_0001.jpg
+2024-12-06 13:05:56,044 - INFO - Finished processing 20240802_ZaF_HF_GAI_DupFi_L_20240802_0001.jpg. Leaf Count: 7, Total Leaf Area: 782.86 mm², Binary Area: 803.37 mm², Processing Time: 12.62 s
+2024-12-06 13:05:56,056 - INFO - Processing 20240802_ZaF_HF_GAI_DupFi_S_20240802_0001.jpg
+2024-12-06 13:06:07,738 - INFO - Finished processing 20240802_ZaF_HF_GAI_DupFi_S_20240802_0001.jpg. Leaf Count: 3, Total Leaf Area: 229.80 mm², Binary Area: 236.90 mm², Processing Time: 11.68 s
+2024-12-06 13:06:07,750 - INFO - Processing 20240802_ZaF_HF_GAI_EquAr_S_20240803_0001.jpg
+2024-12-06 13:06:19,697 - INFO - Finished processing 20240802_ZaF_HF_GAI_EquAr_S_20240803_0001.jpg. Leaf Count: 3, Total Leaf Area: 375.01 mm², Binary Area: 375.63 mm², Processing Time: 11.95 s
+2024-12-06 13:06:19,708 - INFO - Processing 20240802_ZaF_HF_GAI_EriAn_L_20240802_0001.jpg
+2024-12-06 13:06:32,692 - INFO - Finished processing 20240802_ZaF_HF_GAI_EriAn_L_20240802_0001.jpg. Leaf Count: 7, Total Leaf Area: 893.98 mm², Binary Area: 902.08 mm², Processing Time: 12.98 s
+2024-12-06 13:06:32,705 - INFO - Processing 20240802_ZaF_HF_GAI_EriSc_L_20240803_0001.jpg
+2024-12-06 13:06:45,287 - INFO - Finished processing 20240802_ZaF_HF_GAI_EriSc_L_20240803_0001.jpg. Leaf Count: 7, Total Leaf Area: 554.48 mm², Binary Area: 572.92 mm², Processing Time: 12.58 s
+2024-12-06 13:06:45,301 - INFO - Processing 20240802_ZaF_HF_GAI_EriSc_S_20240803_0001.jpg
+2024-12-06 13:06:57,059 - INFO - Finished processing 20240802_ZaF_HF_GAI_EriSc_S_20240803_0001.jpg. Leaf Count: 3, Total Leaf Area: 557.27 mm², Binary Area: 570.29 mm², Processing Time: 11.76 s
+2024-12-06 13:06:57,070 - INFO - Processing 20240802_ZaF_HF_GAI_PerVi_L_20240802_0001.jpg
+2024-12-06 13:07:09,767 - INFO - Finished processing 20240802_ZaF_HF_GAI_PerVi_L_20240802_0001.jpg. Leaf Count: 8, Total Leaf Area: 345.93 mm², Binary Area: 354.72 mm², Processing Time: 12.70 s
+2024-12-06 13:07:09,777 - INFO - Processing 20240802_ZaF_HF_GAI_PerVi_S_20240802_0001.jpg
+2024-12-06 13:07:21,535 - INFO - Finished processing 20240802_ZaF_HF_GAI_PerVi_S_20240802_0001.jpg. Leaf Count: 3, Total Leaf Area: 126.93 mm², Binary Area: 134.34 mm², Processing Time: 11.76 s
+2024-12-06 13:07:21,548 - INFO - Processing 20240802_ZaF_HF_GAI_SaLar_L_20240802_0001.jpg
+2024-12-06 13:07:34,004 - INFO - Finished processing 20240802_ZaF_HF_GAI_SaLar_L_20240802_0001.jpg. Leaf Count: 7, Total Leaf Area: 480.61 mm², Binary Area: 485.13 mm², Processing Time: 12.46 s
+2024-12-06 13:07:34,015 - INFO - Processing 20240802_ZaF_HF_GAI_SaxCe_L_20240803_0001.jpg
+2024-12-06 13:07:46,553 - INFO - Finished processing 20240802_ZaF_HF_GAI_SaxCe_L_20240803_0001.jpg. Leaf Count: 7, Total Leaf Area: 177.42 mm², Binary Area: 185.27 mm², Processing Time: 12.54 s
+2024-12-06 13:07:46,564 - INFO - Processing 20240802_ZaF_HF_GAI_SteLo_L_20240802_0001.jpg
+2024-12-06 13:07:58,783 - INFO - Finished processing 20240802_ZaF_HF_GAI_SteLo_L_20240802_0001.jpg. Leaf Count: 7, Total Leaf Area: 50.37 mm², Binary Area: 51.99 mm², Processing Time: 12.22 s
+2024-12-06 13:07:58,797 - INFO - Processing 20240802_ZaF_HF_GAI_SteLo_S_20240802_0001.jpg
+2024-12-06 13:08:10,547 - INFO - Finished processing 20240802_ZaF_HF_GAI_SteLo_S_20240802_0001.jpg. Leaf Count: 4, Total Leaf Area: 55.96 mm², Binary Area: 59.65 mm², Processing Time: 11.75 s
+2024-12-06 13:08:10,563 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240801_GAI\leaf_analysis_results.csv
+2024-12-06 13:08:10,611 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240801_GAI\leaf_analysis_results.xlsx
+2024-12-06 13:08:10,612 - INFO - All results have been saved successfully.
+2024-12-06 13:08:10,617 - INFO - Leaf classification processing has concluded.
+2024-12-06 13:08:10,622 - INFO - Processing completed successfully.
+2024-12-09 11:25:31,020 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-09 11:25:47,876 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-09 11:27:01,386 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-09 12:38:17,772 - INFO - Displayed image with crop outline: 20240810_ZaF_CF_GAI_EriSc_S_20240810_0001.jpg
+2024-12-09 12:38:20,442 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_CarBi_L_20240810_0001.jpg
+2024-12-09 12:38:21,378 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_CarBi_S_20240810_0001.jpg
+2024-12-09 12:38:22,141 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_DupFi_L_20240810_0001.jpg
+2024-12-09 12:38:22,841 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_DupFi_S_20240810_0001.jpg
+2024-12-09 12:38:23,491 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_EriSc_L_20240810_0001.jpg
+2024-12-09 12:38:24,155 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:38:24,822 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_PerVi_S_20240810_0001.jpg
+2024-12-09 12:38:25,406 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SalAr_L_20240810_0001.jpg
+2024-12-09 12:38:26,006 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxCe_L_20240810_0001.jpg
+2024-12-09 12:38:26,937 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxCe_S_20240810_0001.jpg
+2024-12-09 12:38:45,272 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EquAr_S_20240810_0001.jpg
+2024-12-09 12:38:47,844 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:38:52,320 - INFO - Displayed image with crop outline: 20240810_ZaF_CF_GAI_EriSc_S_20240810_0001.jpg
+2024-12-09 12:38:54,442 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_CarBi_L_20240810_0001.jpg
+2024-12-09 12:38:55,152 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_CarBi_S_20240810_0001.jpg
+2024-12-09 12:38:55,815 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_DupFi_L_20240810_0001.jpg
+2024-12-09 12:38:56,386 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_DupFi_S_20240810_0001.jpg
+2024-12-09 12:38:57,000 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_EriSc_L_20240810_0001.jpg
+2024-12-09 12:38:57,603 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:38:58,140 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_PerVi_S_20240810_0001.jpg
+2024-12-09 12:38:58,730 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SalAr_L_20240810_0001.jpg
+2024-12-09 12:38:59,340 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxCe_L_20240810_0001.jpg
+2024-12-09 12:38:59,980 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxCe_S_20240810_0001.jpg
+2024-12-09 12:39:00,674 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxFo_L_20240810_0001.jpg
+2024-12-09 12:39:01,446 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_ArcLat_L_20240810_0001.jpg
+2024-12-09 12:39:02,220 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_ArcLat_S_20240810_0001.jpg
+2024-12-09 12:39:03,018 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_CarPr_L_20240810_0001.jpg
+2024-12-09 12:39:03,728 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_DupFi_L_20240810_0001.jpg
+2024-12-09 12:39:04,500 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_DupFi_S_20240810_0001.jpg
+2024-12-09 12:39:05,472 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EquAr_S_20240810_0001.jpg
+2024-12-09 12:39:06,283 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EriAn_L_20240810_0001.jpg
+2024-12-09 12:39:07,006 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EriSc_L_20240810_0001.jpg
+2024-12-09 12:39:07,830 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EriSc_S_20240810_0001.jpg
+2024-12-09 12:39:08,555 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:39:09,544 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_PerVi_S_20240810_0001.jpg
+2024-12-09 12:39:10,374 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SalAr_L_20240810_0001.jpg
+2024-12-09 12:39:11,197 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SaxCe_L_20240810_0001.jpg
+2024-12-09 12:39:12,711 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SteLo_L_20240810_0001.jpg
+2024-12-09 12:39:13,555 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SteLo_S_20240810_0001.jpg
+2024-12-09 12:41:44,773 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-09 12:42:43,528 - INFO - Displayed image with crop outline: 20240810_ZaF_CF_GAI_EriSc_S_20240810_0001.jpg
+2024-12-09 12:42:45,037 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_CarBi_L_20240810_0001.jpg
+2024-12-09 12:42:45,446 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_CarBi_S_20240810_0001.jpg
+2024-12-09 12:42:45,782 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_DupFi_L_20240810_0001.jpg
+2024-12-09 12:42:46,261 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_DupFi_S_20240810_0001.jpg
+2024-12-09 12:42:46,580 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_EriSc_L_20240810_0001.jpg
+2024-12-09 12:42:46,903 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:42:47,174 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_PerVi_S_20240810_0001.jpg
+2024-12-09 12:42:47,443 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SalAr_L_20240810_0001.jpg
+2024-12-09 12:42:47,663 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxCe_L_20240810_0001.jpg
+2024-12-09 12:42:47,880 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxCe_S_20240810_0001.jpg
+2024-12-09 12:42:48,105 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_CF_SaxFo_L_20240810_0001.jpg
+2024-12-09 12:42:48,909 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_ArcLat_L_20240810_0001.jpg
+2024-12-09 12:42:49,188 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_ArcLat_S_20240810_0001.jpg
+2024-12-09 12:42:49,680 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_CarPr_L_20240810_0001.jpg
+2024-12-09 12:42:49,984 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_DupFi_L_20240810_0001.jpg
+2024-12-09 12:42:50,407 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_DupFi_S_20240810_0001.jpg
+2024-12-09 12:42:50,724 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EquAr_S_20240810_0001.jpg
+2024-12-09 12:42:51,082 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EriAn_L_20240810_0001.jpg
+2024-12-09 12:42:51,554 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EriSc_L_20240810_0001.jpg
+2024-12-09 12:42:51,852 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_EriSc_S_20240810_0001.jpg
+2024-12-09 12:42:52,137 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:42:52,365 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_PerVi_S_20240810_0001.jpg
+2024-12-09 12:42:52,649 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SalAr_L_20240810_0001.jpg
+2024-12-09 12:42:52,865 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SaxCe_L_20240810_0001.jpg
+2024-12-09 12:42:53,683 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SteLo_L_20240810_0001.jpg
+2024-12-09 12:42:54,049 - INFO - Displayed image with crop outline: 20240810_ZaF_GAI_HF_SteLo_S_20240810_0001.jpg
+2024-12-09 12:42:57,551 - INFO - Executing image processing...
+2024-12-09 12:42:57,552 - INFO - Found 27 image(s) to process.
+2024-12-09 12:42:57,557 - INFO - Processing 20240810_ZaF_CF_GAI_EriSc_S_20240810_0001.jpg
+2024-12-09 12:43:12,263 - INFO - Finished processing 20240810_ZaF_CF_GAI_EriSc_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 592.19 mm², Binary Area: 600.35 mm², Processing Time: 14.71 s
+2024-12-09 12:43:12,283 - INFO - Processing 20240810_ZaF_GAI_CF_CarBi_L_20240810_0001.jpg
+2024-12-09 12:43:33,730 - INFO - Finished processing 20240810_ZaF_GAI_CF_CarBi_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 1025.22 mm², Binary Area: 1033.95 mm², Processing Time: 21.45 s
+2024-12-09 12:43:33,753 - INFO - Processing 20240810_ZaF_GAI_CF_CarBi_S_20240810_0001.jpg
+2024-12-09 12:43:53,024 - INFO - Finished processing 20240810_ZaF_GAI_CF_CarBi_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 480.18 mm², Binary Area: 463.91 mm², Processing Time: 19.27 s
+2024-12-09 12:43:53,041 - INFO - Processing 20240810_ZaF_GAI_CF_DupFi_L_20240810_0001.jpg
+2024-12-09 12:44:13,978 - INFO - Finished processing 20240810_ZaF_GAI_CF_DupFi_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 649.19 mm², Binary Area: 669.28 mm², Processing Time: 20.94 s
+2024-12-09 12:44:13,993 - INFO - Processing 20240810_ZaF_GAI_CF_DupFi_S_20240810_0001.jpg
+2024-12-09 12:44:33,113 - INFO - Finished processing 20240810_ZaF_GAI_CF_DupFi_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 175.64 mm², Binary Area: 181.21 mm², Processing Time: 19.12 s
+2024-12-09 12:44:33,132 - INFO - Processing 20240810_ZaF_GAI_CF_EriSc_L_20240810_0001.jpg
+2024-12-09 12:44:54,290 - INFO - Finished processing 20240810_ZaF_GAI_CF_EriSc_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 473.77 mm², Binary Area: 492.15 mm², Processing Time: 21.16 s
+2024-12-09 12:44:54,317 - INFO - Processing 20240810_ZaF_GAI_CF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:45:15,363 - INFO - Finished processing 20240810_ZaF_GAI_CF_PerVi_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 673.48 mm², Binary Area: 669.59 mm², Processing Time: 21.05 s
+2024-12-09 12:45:15,384 - INFO - Processing 20240810_ZaF_GAI_CF_PerVi_S_20240810_0001.jpg
+2024-12-09 12:45:34,772 - INFO - Finished processing 20240810_ZaF_GAI_CF_PerVi_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 286.23 mm², Binary Area: 297.37 mm², Processing Time: 19.39 s
+2024-12-09 12:45:34,791 - INFO - Processing 20240810_ZaF_GAI_CF_SalAr_L_20240810_0001.jpg
+2024-12-09 12:45:55,735 - INFO - Finished processing 20240810_ZaF_GAI_CF_SalAr_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 972.32 mm², Binary Area: 974.07 mm², Processing Time: 20.94 s
+2024-12-09 12:45:55,754 - INFO - Processing 20240810_ZaF_GAI_CF_SaxCe_L_20240810_0001.jpg
+2024-12-09 12:46:16,782 - INFO - Finished processing 20240810_ZaF_GAI_CF_SaxCe_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 351.87 mm², Binary Area: 360.91 mm², Processing Time: 21.03 s
+2024-12-09 12:46:16,801 - INFO - Processing 20240810_ZaF_GAI_CF_SaxCe_S_20240810_0001.jpg
+2024-12-09 12:46:36,922 - INFO - Finished processing 20240810_ZaF_GAI_CF_SaxCe_S_20240810_0001.jpg. Leaf Count: 4, Total Leaf Area: 452.20 mm², Binary Area: 471.31 mm², Processing Time: 20.12 s
+2024-12-09 12:46:36,938 - INFO - Processing 20240810_ZaF_GAI_CF_SaxFo_L_20240810_0001.jpg
+2024-12-09 12:46:57,258 - INFO - Finished processing 20240810_ZaF_GAI_CF_SaxFo_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 160.19 mm², Binary Area: 166.50 mm², Processing Time: 20.32 s
+2024-12-09 12:46:57,279 - INFO - Processing 20240810_ZaF_GAI_HF_ArcLat_L_20240810_0001.jpg
+2024-12-09 12:47:19,061 - INFO - Finished processing 20240810_ZaF_GAI_HF_ArcLat_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 1346.45 mm², Binary Area: 1363.09 mm², Processing Time: 21.78 s
+2024-12-09 12:47:19,090 - INFO - Processing 20240810_ZaF_GAI_HF_ArcLat_S_20240810_0001.jpg
+2024-12-09 12:47:39,148 - INFO - Finished processing 20240810_ZaF_GAI_HF_ArcLat_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 1115.95 mm², Binary Area: 1112.84 mm², Processing Time: 20.06 s
+2024-12-09 12:47:39,166 - INFO - Processing 20240810_ZaF_GAI_HF_CarPr_L_20240810_0001.jpg
+2024-12-09 12:48:00,066 - INFO - Finished processing 20240810_ZaF_GAI_HF_CarPr_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 564.04 mm², Binary Area: 561.67 mm², Processing Time: 20.90 s
+2024-12-09 12:48:00,090 - INFO - Processing 20240810_ZaF_GAI_HF_DupFi_L_20240810_0001.jpg
+2024-12-09 12:48:21,813 - INFO - Finished processing 20240810_ZaF_GAI_HF_DupFi_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 1249.02 mm², Binary Area: 1278.85 mm², Processing Time: 21.72 s
+2024-12-09 12:48:21,841 - INFO - Processing 20240810_ZaF_GAI_HF_DupFi_S_20240810_0001.jpg
+2024-12-09 12:48:42,570 - INFO - Finished processing 20240810_ZaF_GAI_HF_DupFi_S_20240810_0001.jpg. Leaf Count: 5, Total Leaf Area: 745.10 mm², Binary Area: 693.55 mm², Processing Time: 20.73 s
+2024-12-09 12:48:42,590 - INFO - Processing 20240810_ZaF_GAI_HF_EquAr_S_20240810_0001.jpg
+2024-12-09 12:49:02,289 - INFO - Finished processing 20240810_ZaF_GAI_HF_EquAr_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 426.72 mm², Binary Area: 414.24 mm², Processing Time: 19.70 s
+2024-12-09 12:49:02,306 - INFO - Processing 20240810_ZaF_GAI_HF_EriAn_L_20240810_0001.jpg
+2024-12-09 12:49:23,695 - INFO - Finished processing 20240810_ZaF_GAI_HF_EriAn_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 947.33 mm², Binary Area: 960.03 mm², Processing Time: 21.39 s
+2024-12-09 12:49:23,714 - INFO - Processing 20240810_ZaF_GAI_HF_EriSc_L_20240810_0001.jpg
+2024-12-09 12:49:45,154 - INFO - Finished processing 20240810_ZaF_GAI_HF_EriSc_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 562.09 mm², Binary Area: 579.27 mm², Processing Time: 21.44 s
+2024-12-09 12:49:45,175 - INFO - Processing 20240810_ZaF_GAI_HF_EriSc_S_20240810_0001.jpg
+2024-12-09 12:50:04,796 - INFO - Finished processing 20240810_ZaF_GAI_HF_EriSc_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 572.10 mm², Binary Area: 585.10 mm², Processing Time: 19.62 s
+2024-12-09 12:50:04,808 - INFO - Processing 20240810_ZaF_GAI_HF_PerVi_L_20240810_0001.jpg
+2024-12-09 12:50:25,896 - INFO - Finished processing 20240810_ZaF_GAI_HF_PerVi_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 1070.46 mm², Binary Area: 1068.93 mm², Processing Time: 21.09 s
+2024-12-09 12:50:25,922 - INFO - Processing 20240810_ZaF_GAI_HF_PerVi_S_20240810_0001.jpg
+2024-12-09 12:50:45,566 - INFO - Finished processing 20240810_ZaF_GAI_HF_PerVi_S_20240810_0001.jpg. Leaf Count: 3, Total Leaf Area: 142.69 mm², Binary Area: 145.03 mm², Processing Time: 19.64 s
+2024-12-09 12:50:45,601 - INFO - Processing 20240810_ZaF_GAI_HF_SalAr_L_20240810_0001.jpg
+2024-12-09 12:51:06,544 - INFO - Finished processing 20240810_ZaF_GAI_HF_SalAr_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 957.09 mm², Binary Area: 956.27 mm², Processing Time: 20.94 s
+2024-12-09 12:51:06,568 - INFO - Processing 20240810_ZaF_GAI_HF_SaxCe_L_20240810_0001.jpg
+2024-12-09 12:51:27,308 - INFO - Finished processing 20240810_ZaF_GAI_HF_SaxCe_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 241.34 mm², Binary Area: 247.17 mm², Processing Time: 20.74 s
+2024-12-09 12:51:27,333 - INFO - Processing 20240810_ZaF_GAI_HF_SteLo_L_20240810_0001.jpg
+2024-12-09 12:51:47,722 - INFO - Finished processing 20240810_ZaF_GAI_HF_SteLo_L_20240810_0001.jpg. Leaf Count: 7, Total Leaf Area: 85.03 mm², Binary Area: 89.75 mm², Processing Time: 20.39 s
+2024-12-09 12:51:47,742 - INFO - Processing 20240810_ZaF_GAI_HF_SteLo_S_20240810_0001.jpg
+2024-12-09 12:52:07,651 - INFO - Finished processing 20240810_ZaF_GAI_HF_SteLo_S_20240810_0001.jpg. Leaf Count: 5, Total Leaf Area: 105.46 mm², Binary Area: 112.97 mm², Processing Time: 19.91 s
+2024-12-09 12:52:07,688 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240808_GAI\leaf_analysis_results.csv
+2024-12-09 12:52:07,797 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240808_GAI\leaf_analysis_results.xlsx
+2024-12-09 12:52:07,802 - INFO - All results have been saved successfully.
+2024-12-09 12:52:07,810 - INFO - Leaf classification processing has concluded.
+2024-12-09 12:52:07,826 - INFO - Processing completed successfully.
+2024-12-09 15:37:57,847 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_CarBi_L_20240816_0001.jpg
+2024-12-09 15:38:00,596 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_CarBi_S_20240816_0001.jpg
+2024-12-09 15:38:01,524 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_DupFi_L_20240816_0001.jpg
+2024-12-09 15:38:02,217 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_DupFi_S_20240816_0001.jpg
+2024-12-09 15:38:03,058 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_EriSc_L_20240816_0001.jpg
+2024-12-09 15:38:03,903 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_EriSc_S_20240816_0001.jpg
+2024-12-09 15:38:04,683 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_PerVi_L_20240816_0001.jpg
+2024-12-09 15:38:05,798 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_PerVi_S_20240816_0001.jpg
+2024-12-09 15:38:06,398 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_SalAr_L_20240816_0001.jpg
+2024-12-09 15:38:07,151 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_SaxCe_L_20240816_0001.jpg
+2024-12-09 15:38:07,824 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_SaxCe_S_20240816_0001.jpg
+2024-12-09 15:38:08,457 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_CF_SaxFo_L_20240816_0001.jpg
+2024-12-09 15:38:09,239 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_ArcLa_L_20240816_0001.jpg
+2024-12-09 15:38:09,908 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_ArcLa_S_20240816_0001.jpg
+2024-12-09 15:38:10,637 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_CarPr_L_20240816_0001.jpg
+2024-12-09 15:38:11,274 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_DupFi_L_20240816_0001.jpg
+2024-12-09 15:38:11,958 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_DupFi_S_20240816_0001.jpg
+2024-12-09 15:38:12,710 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_EquAr_S_20240816_0001.jpg
+2024-12-09 15:38:13,344 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_EriAn_L_20240816_0001.jpg
+2024-12-09 15:38:15,024 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_EquAr_S_20240816_0001.jpg
+2024-12-09 15:38:17,357 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_EriAn_L_20240816_0001.jpg
+2024-12-09 15:38:17,988 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_EriSc_L_20240816_0001.jpg
+2024-12-09 15:38:18,701 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_PerVi_L_20240816_0001.jpg
+2024-12-09 15:38:19,403 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_PerVi_S_20240816_0001.jpg
+2024-12-09 15:38:20,156 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_SalAr_L_20240816_0001.jpg
+2024-12-09 15:38:20,930 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_SaxCe_L_20240816_0001.jpg
+2024-12-09 15:38:21,664 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_SteLo_L_20240816_0001.jpg
+2024-12-09 15:38:22,383 - INFO - Displayed image with crop outline: 20240816_ZaF_GAI_HF_SteLo_S_20240816_0001.jpg
+2024-12-09 15:39:59,789 - INFO - Configuration saved successfully!
+2024-12-09 15:40:04,325 - INFO - Executing image processing...
+2024-12-09 15:40:04,326 - INFO - Found 26 image(s) to process.
+2024-12-09 15:40:04,329 - INFO - Processing 20240816_ZaF_GAI_CF_CarBi_L_20240816_0001.jpg
+2024-12-09 15:40:17,403 - INFO - Finished processing 20240816_ZaF_GAI_CF_CarBi_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 958.81 mm², Binary Area: 974.30 mm², Processing Time: 13.07 s
+2024-12-09 15:40:17,424 - INFO - Processing 20240816_ZaF_GAI_CF_CarBi_S_20240816_0001.jpg
+2024-12-09 15:40:29,363 - INFO - Finished processing 20240816_ZaF_GAI_CF_CarBi_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 276.23 mm², Binary Area: 276.24 mm², Processing Time: 11.94 s
+2024-12-09 15:40:29,374 - INFO - Processing 20240816_ZaF_GAI_CF_DupFi_L_20240816_0001.jpg
+2024-12-09 15:40:42,313 - INFO - Finished processing 20240816_ZaF_GAI_CF_DupFi_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 706.05 mm², Binary Area: 725.41 mm², Processing Time: 12.94 s
+2024-12-09 15:40:42,324 - INFO - Processing 20240816_ZaF_GAI_CF_DupFi_S_20240816_0001.jpg
+2024-12-09 15:40:54,416 - INFO - Finished processing 20240816_ZaF_GAI_CF_DupFi_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 326.84 mm², Binary Area: 332.22 mm², Processing Time: 12.09 s
+2024-12-09 15:40:54,428 - INFO - Processing 20240816_ZaF_GAI_CF_EriSc_L_20240816_0001.jpg
+2024-12-09 15:41:07,060 - INFO - Finished processing 20240816_ZaF_GAI_CF_EriSc_L_20240816_0001.jpg. Leaf Count: 6, Total Leaf Area: 579.09 mm², Binary Area: 596.98 mm², Processing Time: 12.63 s
+2024-12-09 15:41:07,075 - INFO - Processing 20240816_ZaF_GAI_CF_EriSc_S_20240816_0001.jpg
+2024-12-09 15:41:19,104 - INFO - Finished processing 20240816_ZaF_GAI_CF_EriSc_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 780.73 mm², Binary Area: 792.72 mm², Processing Time: 12.03 s
+2024-12-09 15:41:19,114 - INFO - Processing 20240816_ZaF_GAI_CF_PerVi_L_20240816_0001.jpg
+2024-12-09 15:41:31,757 - INFO - Finished processing 20240816_ZaF_GAI_CF_PerVi_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 478.67 mm², Binary Area: 480.78 mm², Processing Time: 12.64 s
+2024-12-09 15:41:31,770 - INFO - Processing 20240816_ZaF_GAI_CF_PerVi_S_20240816_0001.jpg
+2024-12-09 15:41:43,784 - INFO - Finished processing 20240816_ZaF_GAI_CF_PerVi_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 425.19 mm², Binary Area: 434.66 mm², Processing Time: 12.01 s
+2024-12-09 15:41:43,797 - INFO - Processing 20240816_ZaF_GAI_CF_SalAr_L_20240816_0001.jpg
+2024-12-09 15:42:02,550 - INFO - Finished processing 20240816_ZaF_GAI_CF_SalAr_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 1062.18 mm², Binary Area: 1058.64 mm², Processing Time: 18.75 s
+2024-12-09 15:42:02,579 - INFO - Processing 20240816_ZaF_GAI_CF_SaxCe_L_20240816_0001.jpg
+2024-12-09 15:42:25,119 - INFO - Finished processing 20240816_ZaF_GAI_CF_SaxCe_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 303.50 mm², Binary Area: 308.62 mm², Processing Time: 22.54 s
+2024-12-09 15:42:25,138 - INFO - Processing 20240816_ZaF_GAI_CF_SaxCe_S_20240816_0001.jpg
+2024-12-09 15:42:46,907 - INFO - Finished processing 20240816_ZaF_GAI_CF_SaxCe_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 365.28 mm², Binary Area: 380.87 mm², Processing Time: 21.77 s
+2024-12-09 15:42:46,927 - INFO - Processing 20240816_ZaF_GAI_CF_SaxFo_L_20240816_0001.jpg
+2024-12-09 15:43:03,100 - INFO - Finished processing 20240816_ZaF_GAI_CF_SaxFo_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 182.58 mm², Binary Area: 185.31 mm², Processing Time: 16.17 s
+2024-12-09 15:43:03,122 - INFO - Processing 20240816_ZaF_GAI_HF_ArcLa_L_20240816_0001.jpg
+2024-12-09 15:43:24,825 - INFO - Finished processing 20240816_ZaF_GAI_HF_ArcLa_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 2531.20 mm², Binary Area: 2541.80 mm², Processing Time: 21.70 s
+2024-12-09 15:43:24,850 - INFO - Processing 20240816_ZaF_GAI_HF_ArcLa_S_20240816_0001.jpg
+2024-12-09 15:43:45,381 - INFO - Finished processing 20240816_ZaF_GAI_HF_ArcLa_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 469.77 mm², Binary Area: 469.81 mm², Processing Time: 20.53 s
+2024-12-09 15:43:45,405 - INFO - Processing 20240816_ZaF_GAI_HF_CarPr_L_20240816_0001.jpg
+2024-12-09 15:44:07,977 - INFO - Finished processing 20240816_ZaF_GAI_HF_CarPr_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 775.61 mm², Binary Area: 771.66 mm², Processing Time: 22.57 s
+2024-12-09 15:44:08,003 - INFO - Processing 20240816_ZaF_GAI_HF_DupFi_L_20240816_0001.jpg
+2024-12-09 15:44:30,363 - INFO - Finished processing 20240816_ZaF_GAI_HF_DupFi_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 1041.46 mm², Binary Area: 1067.57 mm², Processing Time: 22.36 s
+2024-12-09 15:44:30,383 - INFO - Processing 20240816_ZaF_GAI_HF_DupFi_S_20240816_0001.jpg
+2024-12-09 15:44:51,085 - INFO - Finished processing 20240816_ZaF_GAI_HF_DupFi_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 222.08 mm², Binary Area: 225.80 mm², Processing Time: 20.70 s
+2024-12-09 15:44:51,102 - INFO - Processing 20240816_ZaF_GAI_HF_EquAr_S_20240816_0001.jpg
+2024-12-09 15:45:12,279 - INFO - Finished processing 20240816_ZaF_GAI_HF_EquAr_S_20240816_0001.jpg. Leaf Count: 3, Total Leaf Area: 686.35 mm², Binary Area: 658.18 mm², Processing Time: 21.18 s
+2024-12-09 15:45:12,302 - INFO - Processing 20240816_ZaF_GAI_HF_EriAn_L_20240816_0001.jpg
+2024-12-09 15:45:35,107 - INFO - Finished processing 20240816_ZaF_GAI_HF_EriAn_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 1056.51 mm², Binary Area: 1047.86 mm², Processing Time: 22.81 s
+2024-12-09 15:45:35,128 - INFO - Processing 20240816_ZaF_GAI_HF_EriSc_L_20240816_0001.jpg
+2024-12-09 15:45:56,607 - INFO - Finished processing 20240816_ZaF_GAI_HF_EriSc_L_20240816_0001.jpg. Leaf Count: 6, Total Leaf Area: 348.33 mm², Binary Area: 354.91 mm², Processing Time: 21.48 s
+2024-12-09 15:45:56,622 - INFO - Processing 20240816_ZaF_GAI_HF_PerVi_L_20240816_0001.jpg
+2024-12-09 15:46:18,842 - INFO - Finished processing 20240816_ZaF_GAI_HF_PerVi_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 693.47 mm², Binary Area: 698.60 mm², Processing Time: 22.22 s
+2024-12-09 15:46:18,859 - INFO - Processing 20240816_ZaF_GAI_HF_PerVi_S_20240816_0001.jpg
+2024-12-09 15:46:39,867 - INFO - Finished processing 20240816_ZaF_GAI_HF_PerVi_S_20240816_0001.jpg. Leaf Count: 4, Total Leaf Area: 276.34 mm², Binary Area: 285.20 mm², Processing Time: 21.01 s
+2024-12-09 15:46:39,885 - INFO - Processing 20240816_ZaF_GAI_HF_SalAr_L_20240816_0001.jpg
+2024-12-09 15:46:59,864 - INFO - Finished processing 20240816_ZaF_GAI_HF_SalAr_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 1197.77 mm², Binary Area: 1194.62 mm², Processing Time: 19.98 s
+2024-12-09 15:46:59,882 - INFO - Processing 20240816_ZaF_GAI_HF_SaxCe_L_20240816_0001.jpg
+2024-12-09 15:47:17,685 - INFO - Finished processing 20240816_ZaF_GAI_HF_SaxCe_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 494.59 mm², Binary Area: 501.91 mm², Processing Time: 17.80 s
+2024-12-09 15:47:17,707 - INFO - Processing 20240816_ZaF_GAI_HF_SteLo_L_20240816_0001.jpg
+2024-12-09 15:47:39,292 - INFO - Finished processing 20240816_ZaF_GAI_HF_SteLo_L_20240816_0001.jpg. Leaf Count: 7, Total Leaf Area: 129.14 mm², Binary Area: 131.94 mm², Processing Time: 21.59 s
+2024-12-09 15:47:39,316 - INFO - Processing 20240816_ZaF_GAI_HF_SteLo_S_20240816_0001.jpg
+2024-12-09 15:47:55,202 - INFO - Finished processing 20240816_ZaF_GAI_HF_SteLo_S_20240816_0001.jpg. Leaf Count: 4, Total Leaf Area: 163.38 mm², Binary Area: 170.94 mm², Processing Time: 15.89 s
+2024-12-09 15:47:55,214 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240815_GAI\leaf_analysis_results.csv
+2024-12-09 15:47:55,259 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240815_GAI\leaf_analysis_results.xlsx
+2024-12-09 15:47:55,260 - INFO - All results have been saved successfully.
+2024-12-09 15:47:55,266 - INFO - Leaf classification processing has concluded.
+2024-12-09 15:47:55,272 - INFO - Processing completed successfully.
+2024-12-09 23:39:09,663 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_CarBi_L_20240827_0001.jpg
+2024-12-09 23:39:12,654 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_CarBi_S_20240827_0001.jpg
+2024-12-09 23:39:13,685 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_DupFi_L_20240827_0001.jpg
+2024-12-09 23:39:14,553 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_DupFi_S_20240827_0001.jpg
+2024-12-09 23:39:15,300 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_EriSc_L_20240827_0001.jpg
+2024-12-09 23:39:16,093 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_PerVi_L_20240827_0001.jpg
+2024-12-09 23:39:16,921 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_SalAr_L_20240827_0001.jpg
+2024-12-09 23:39:17,877 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_SaxCe_L_20240827_0001.jpg
+2024-12-09 23:39:18,544 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_CF_SaxFo_L_20240827_0001.jpg
+2024-12-09 23:39:19,094 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_ArcLa_L_20240827_0001.jpg
+2024-12-09 23:39:19,697 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_ArcLa_S_20240827_0001.jpg
+2024-12-09 23:39:20,410 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_CarPr_L_20240827_0001.jpg
+2024-12-09 23:39:21,156 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_DupFi_L_20240827_0001.jpg
+2024-12-09 23:39:21,808 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_DupFi_S_20240827_0001.jpg
+2024-12-09 23:39:22,556 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_EriAn_L_20240827_0001.jpg
+2024-12-09 23:39:23,216 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_EriSc_L_20240827_0001.jpg
+2024-12-09 23:39:23,960 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_PerVi_L_20240827_0001.jpg
+2024-12-09 23:39:24,628 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_SalAr_L_20240827_0001.jpg
+2024-12-09 23:39:25,421 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_SaxCe_L_20240827_0001.jpg
+2024-12-09 23:39:26,238 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_SteLo_L_20240827_0001.jpg
+2024-12-09 23:39:27,281 - INFO - Displayed image with crop outline: 20240827_ZaF_GAI_HF_SteLo_S_20240827_0001.jpg
+2024-12-09 23:39:34,084 - INFO - Configuration saved successfully!
+2024-12-09 23:39:38,584 - INFO - Executing image processing...
+2024-12-09 23:39:38,584 - INFO - Found 21 image(s) to process.
+2024-12-09 23:39:38,593 - INFO - Processing 20240827_ZaF_GAI_CF_CarBi_L_20240827_0001.jpg
+2024-12-09 23:39:52,535 - INFO - Finished processing 20240827_ZaF_GAI_CF_CarBi_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 721.74 mm², Binary Area: 723.82 mm², Processing Time: 13.94 s
+2024-12-09 23:39:52,554 - INFO - Processing 20240827_ZaF_GAI_CF_CarBi_S_20240827_0001.jpg
+2024-12-09 23:40:11,953 - INFO - Finished processing 20240827_ZaF_GAI_CF_CarBi_S_20240827_0001.jpg. Leaf Count: 3, Total Leaf Area: 281.19 mm², Binary Area: 284.30 mm², Processing Time: 19.40 s
+2024-12-09 23:40:11,981 - INFO - Processing 20240827_ZaF_GAI_CF_DupFi_L_20240827_0001.jpg
+2024-12-09 23:40:33,590 - INFO - Finished processing 20240827_ZaF_GAI_CF_DupFi_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 622.90 mm², Binary Area: 638.71 mm², Processing Time: 21.61 s
+2024-12-09 23:40:33,609 - INFO - Processing 20240827_ZaF_GAI_CF_DupFi_S_20240827_0001.jpg
+2024-12-09 23:40:53,523 - INFO - Finished processing 20240827_ZaF_GAI_CF_DupFi_S_20240827_0001.jpg. Leaf Count: 3, Total Leaf Area: 235.13 mm², Binary Area: 240.34 mm², Processing Time: 19.91 s
+2024-12-09 23:40:53,540 - INFO - Processing 20240827_ZaF_GAI_CF_EriSc_L_20240827_0001.jpg
+2024-12-09 23:41:13,636 - INFO - Finished processing 20240827_ZaF_GAI_CF_EriSc_L_20240827_0001.jpg. Leaf Count: 5, Total Leaf Area: 246.22 mm², Binary Area: 250.59 mm², Processing Time: 20.10 s
+2024-12-09 23:41:13,656 - INFO - Processing 20240827_ZaF_GAI_CF_PerVi_L_20240827_0001.jpg
+2024-12-09 23:41:32,853 - INFO - Finished processing 20240827_ZaF_GAI_CF_PerVi_L_20240827_0001.jpg. Leaf Count: 8, Total Leaf Area: 125.48 mm², Binary Area: 131.37 mm², Processing Time: 19.20 s
+2024-12-09 23:41:32,868 - INFO - Processing 20240827_ZaF_GAI_CF_SalAr_L_20240827_0001.jpg
+2024-12-09 23:41:45,801 - INFO - Finished processing 20240827_ZaF_GAI_CF_SalAr_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 725.64 mm², Binary Area: 730.81 mm², Processing Time: 12.93 s
+2024-12-09 23:41:45,801 - INFO - Processing 20240827_ZaF_GAI_CF_SaxCe_L_20240827_0001.jpg
+2024-12-09 23:42:00,079 - INFO - Finished processing 20240827_ZaF_GAI_CF_SaxCe_L_20240827_0001.jpg. Leaf Count: 6, Total Leaf Area: 158.30 mm², Binary Area: 190.03 mm², Processing Time: 14.28 s
+2024-12-09 23:42:00,097 - INFO - Processing 20240827_ZaF_GAI_CF_SaxFo_L_20240827_0001.jpg
+2024-12-09 23:42:13,391 - INFO - Finished processing 20240827_ZaF_GAI_CF_SaxFo_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 220.77 mm², Binary Area: 224.59 mm², Processing Time: 13.29 s
+2024-12-09 23:42:13,422 - INFO - Processing 20240827_ZaF_GAI_HF_ArcLa_L_20240827_0001.jpg
+2024-12-09 23:42:34,246 - INFO - Finished processing 20240827_ZaF_GAI_HF_ArcLa_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 1529.24 mm², Binary Area: 1539.46 mm², Processing Time: 20.82 s
+2024-12-09 23:42:34,266 - INFO - Processing 20240827_ZaF_GAI_HF_ArcLa_S_20240827_0001.jpg
+2024-12-09 23:42:49,053 - INFO - Finished processing 20240827_ZaF_GAI_HF_ArcLa_S_20240827_0001.jpg. Leaf Count: 3, Total Leaf Area: 120.43 mm², Binary Area: 123.79 mm², Processing Time: 14.79 s
+2024-12-09 23:42:49,063 - INFO - Processing 20240827_ZaF_GAI_HF_CarPr_L_20240827_0001.jpg
+2024-12-09 23:43:07,449 - INFO - Finished processing 20240827_ZaF_GAI_HF_CarPr_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 295.35 mm², Binary Area: 299.89 mm², Processing Time: 18.39 s
+2024-12-09 23:43:07,472 - INFO - Processing 20240827_ZaF_GAI_HF_DupFi_L_20240827_0001.jpg
+2024-12-09 23:43:28,303 - INFO - Finished processing 20240827_ZaF_GAI_HF_DupFi_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 628.36 mm², Binary Area: 644.25 mm², Processing Time: 20.83 s
+2024-12-09 23:43:28,318 - INFO - Processing 20240827_ZaF_GAI_HF_DupFi_S_20240827_0001.jpg
+2024-12-09 23:43:47,594 - INFO - Finished processing 20240827_ZaF_GAI_HF_DupFi_S_20240827_0001.jpg. Leaf Count: 3, Total Leaf Area: 129.47 mm², Binary Area: 133.66 mm², Processing Time: 19.28 s
+2024-12-09 23:43:47,617 - INFO - Processing 20240827_ZaF_GAI_HF_EriAn_L_20240827_0001.jpg
+2024-12-09 23:44:08,861 - INFO - Finished processing 20240827_ZaF_GAI_HF_EriAn_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 776.98 mm², Binary Area: 786.72 mm², Processing Time: 21.24 s
+2024-12-09 23:44:08,877 - INFO - Processing 20240827_ZaF_GAI_HF_EriSc_L_20240827_0001.jpg
+2024-12-09 23:44:30,039 - INFO - Finished processing 20240827_ZaF_GAI_HF_EriSc_L_20240827_0001.jpg. Leaf Count: 8, Total Leaf Area: 403.95 mm², Binary Area: 413.64 mm², Processing Time: 21.16 s
+2024-12-09 23:44:30,071 - INFO - Processing 20240827_ZaF_GAI_HF_PerVi_L_20240827_0001.jpg
+2024-12-09 23:44:49,998 - INFO - Finished processing 20240827_ZaF_GAI_HF_PerVi_L_20240827_0001.jpg. Leaf Count: 8, Total Leaf Area: 148.43 mm², Binary Area: 153.47 mm², Processing Time: 19.93 s
+2024-12-09 23:44:50,016 - INFO - Processing 20240827_ZaF_GAI_HF_SalAr_L_20240827_0001.jpg
+2024-12-09 23:45:10,381 - INFO - Finished processing 20240827_ZaF_GAI_HF_SalAr_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 884.03 mm², Binary Area: 886.16 mm², Processing Time: 20.36 s
+2024-12-09 23:45:10,398 - INFO - Processing 20240827_ZaF_GAI_HF_SaxCe_L_20240827_0001.jpg
+2024-12-09 23:45:31,320 - INFO - Finished processing 20240827_ZaF_GAI_HF_SaxCe_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 176.96 mm², Binary Area: 181.99 mm², Processing Time: 20.92 s
+2024-12-09 23:45:31,328 - INFO - Processing 20240827_ZaF_GAI_HF_SteLo_L_20240827_0001.jpg
+2024-12-09 23:45:52,726 - INFO - Finished processing 20240827_ZaF_GAI_HF_SteLo_L_20240827_0001.jpg. Leaf Count: 7, Total Leaf Area: 101.74 mm², Binary Area: 104.67 mm², Processing Time: 21.40 s
+2024-12-09 23:45:52,751 - INFO - Processing 20240827_ZaF_GAI_HF_SteLo_S_20240827_0001.jpg
+2024-12-09 23:46:11,602 - INFO - Finished processing 20240827_ZaF_GAI_HF_SteLo_S_20240827_0001.jpg. Leaf Count: 3, Total Leaf Area: 74.45 mm², Binary Area: 78.27 mm², Processing Time: 18.85 s
+2024-12-09 23:46:11,621 - INFO - Results saved to CSV: E:/GL-ZaF_leaf_scan_tmp/2024/20240826_GAI\leaf_analysis_results.csv
+2024-12-09 23:46:11,697 - INFO - Results saved to Excel: E:/GL-ZaF_leaf_scan_tmp/2024/20240826_GAI\leaf_analysis_results.xlsx
+2024-12-09 23:46:11,712 - INFO - All results have been saved successfully.
+2024-12-09 23:46:11,712 - INFO - Leaf classification processing has concluded.
+2024-12-09 23:46:11,728 - INFO - Processing completed successfully.
+2024-12-23 08:48:16,222 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-23 08:50:28,366 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_ArcLat_L_20240729_0001.jpg
+2024-12-23 08:50:31,534 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_ArcLat_S_20240729_0001.jpg
+2024-12-23 08:50:33,821 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg
+2024-12-23 08:50:34,820 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_S_20240729_0001.jpg
+2024-12-23 08:50:35,566 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Carex_L_20240729_0001.jpg
+2024-12-23 08:50:37,180 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_S_20240729_0001.jpg
+2024-12-23 08:50:37,597 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg
+2024-12-23 08:50:39,391 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_ArcLat_S_20240729_0001.jpg
+2024-12-23 08:50:49,288 - INFO - Configuration saved successfully!
+2024-12-23 08:50:52,628 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_ArcLat_L_20240729_0001.jpg
+2024-12-23 08:50:54,900 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_ArcLat_S_20240729_0001.jpg
+2024-12-23 08:51:01,135 - INFO - Configuration saved successfully!
+2024-12-23 08:51:04,842 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg
+2024-12-23 08:51:06,643 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_ArcLat_S_20240729_0001.jpg
+2024-12-23 08:51:12,347 - INFO - Configuration saved successfully!
+2024-12-23 08:51:16,240 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg
+2024-12-23 08:51:17,391 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_ArcLat_S_20240729_0001.jpg
+2024-12-23 08:51:19,651 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg
+2024-12-23 08:51:20,378 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_S_20240729_0001.jpg
+2024-12-23 08:51:21,109 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Carex_L_20240729_0001.jpg
+2024-12-23 08:51:22,816 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Carex_S_20240729_0001.jpg
+2024-12-23 08:51:23,629 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Cassiope_S_20240729_0001.jpg
+2024-12-23 08:51:24,431 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 08:51:51,879 - INFO - Configuration saved successfully!
+2024-12-23 08:51:59,942 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Cassiope_S_20240729_0001.jpg
+2024-12-23 08:52:01,181 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 08:52:08,847 - INFO - Configuration saved successfully!
+2024-12-23 08:52:14,697 - INFO - Configuration saved successfully!
+2024-12-23 08:52:20,082 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Cassiope_S_20240729_0001.jpg
+2024-12-23 08:52:21,363 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 08:52:31,254 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Cassiope_S_20240729_0001.jpg
+2024-12-23 08:52:31,930 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Carex_S_20240729_0001.jpg
+2024-12-23 08:52:32,581 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Carex_L_20240729_0001.jpg
+2024-12-23 08:52:33,367 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_S_20240729_0001.jpg
+2024-12-23 08:52:34,082 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg
+2024-12-23 08:52:34,816 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Bistorta_S_20240729_0001.jpg
+2024-12-23 08:52:35,082 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Carex_L_20240729_0001.jpg
+2024-12-23 08:52:35,321 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Carex_S_20240729_0001.jpg
+2024-12-23 08:52:35,622 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Cassiope_S_20240729_0001.jpg
+2024-12-23 08:52:36,138 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 08:52:36,829 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Dryas_L_20240729_0001.jpg
+2024-12-23 08:52:37,764 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Dryoct_S_20240729_0001.jpg
+2024-12-23 08:52:38,597 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Luzula_L_20240729_0001.jpg
+2024-12-23 08:52:39,450 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Luzula_S_20240729_0001.jpg
+2024-12-23 08:52:40,749 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_PedHir_L_20240729_0001.jpg
+2024-12-23 08:52:41,633 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_PedHir_S_20240729_0001.jpg
+2024-12-23 08:52:42,441 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Poa_L_20240729_0001.jpg
+2024-12-23 08:52:43,441 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Poa_S_20240729_0001.jpg
+2024-12-23 08:52:44,690 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Salarc_L_20240729_0001.jpg
+2024-12-23 08:52:45,597 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Stelon_L_20240729_0001.jpg
+2024-12-23 08:52:46,398 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_Stelon_S_20240729_0001.jpg
+2024-12-23 08:53:03,691 - INFO - Executing image processing...
+2024-12-23 08:53:03,691 - INFO - Found 19 image(s) to process.
+2024-12-23 08:53:03,697 - INFO - Processing 20240728_ZaH_GAI_AGB_ArcLat_L_20240729_0001.jpg
+2024-12-23 08:53:17,747 - INFO - Finished processing 20240728_ZaH_GAI_AGB_ArcLat_L_20240729_0001.jpg. Leaf Count: 6, Total Leaf Area: 1111.04 mm², Binary Area: 1121.58 mm², Processing Time: 14.05 s
+2024-12-23 08:53:17,747 - INFO - Processing 20240728_ZaH_GAI_AGB_ArcLat_S_20240729_0001.jpg
+2024-12-23 08:53:31,724 - INFO - Finished processing 20240728_ZaH_GAI_AGB_ArcLat_S_20240729_0001.jpg. Leaf Count: 3, Total Leaf Area: 1527.02 mm², Binary Area: 1525.97 mm², Processing Time: 13.98 s
+2024-12-23 08:53:31,739 - INFO - Processing 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg
+2024-12-23 08:53:46,208 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Bistorta_L_20240729_0001.jpg. Leaf Count: 10, Total Leaf Area: 701.10 mm², Binary Area: 702.45 mm², Processing Time: 14.47 s
+2024-12-23 08:53:46,224 - INFO - Processing 20240728_ZaH_GAI_AGB_Bistorta_S_20240729_0001.jpg
+2024-12-23 08:53:59,222 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Bistorta_S_20240729_0001.jpg. Leaf Count: 6, Total Leaf Area: 256.05 mm², Binary Area: 264.20 mm², Processing Time: 13.00 s
+2024-12-23 08:53:59,239 - INFO - Processing 20240728_ZaH_GAI_AGB_Carex_L_20240729_0001.jpg
+2024-12-23 08:54:12,582 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Carex_L_20240729_0001.jpg. Leaf Count: 7, Total Leaf Area: 352.02 mm², Binary Area: 360.53 mm², Processing Time: 13.34 s
+2024-12-23 08:54:12,598 - INFO - Processing 20240728_ZaH_GAI_AGB_Carex_S_20240729_0001.jpg
+2024-12-23 08:54:25,457 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Carex_S_20240729_0001.jpg. Leaf Count: 3, Total Leaf Area: 637.22 mm², Binary Area: 623.24 mm², Processing Time: 12.86 s
+2024-12-23 08:54:25,473 - INFO - Processing 20240728_ZaH_GAI_AGB_Cassiope_S_20240729_0001.jpg
+2024-12-23 08:54:39,112 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Cassiope_S_20240729_0001.jpg. Leaf Count: 9, Total Leaf Area: 1016.87 mm², Binary Area: 1014.48 mm², Processing Time: 13.64 s
+2024-12-23 08:54:39,129 - INFO - Processing 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 08:57:13,492 - INFO - Finished processing 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg. Leaf Count: 497, Total Leaf Area: 2062.41 mm², Binary Area: 2136.40 mm², Processing Time: 154.36 s
+2024-12-23 08:57:13,539 - INFO - Processing 20240728_ZaH_GAI_AGB_Dryas_L_20240729_0001.jpg
+2024-12-23 08:57:35,826 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Dryas_L_20240729_0001.jpg. Leaf Count: 9, Total Leaf Area: 173.89 mm², Binary Area: 176.49 mm², Processing Time: 22.29 s
+2024-12-23 08:57:35,841 - INFO - Processing 20240728_ZaH_GAI_AGB_Dryoct_S_20240729_0001.jpg
+2024-12-23 08:57:55,752 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Dryoct_S_20240729_0001.jpg. Leaf Count: 3, Total Leaf Area: 142.53 mm², Binary Area: 148.19 mm², Processing Time: 19.91 s
+2024-12-23 08:57:55,768 - INFO - Processing 20240728_ZaH_GAI_AGB_Luzula_L_20240729_0001.jpg
+2024-12-23 08:58:17,299 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Luzula_L_20240729_0001.jpg. Leaf Count: 7, Total Leaf Area: 380.42 mm², Binary Area: 392.24 mm², Processing Time: 21.53 s
+2024-12-23 08:58:17,319 - INFO - Processing 20240728_ZaH_GAI_AGB_Luzula_S_20240729_0001.jpg
+2024-12-23 08:58:37,508 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Luzula_S_20240729_0001.jpg. Leaf Count: 3, Total Leaf Area: 699.39 mm², Binary Area: 709.07 mm², Processing Time: 20.19 s
+2024-12-23 08:58:37,514 - INFO - Processing 20240728_ZaH_GAI_AGB_PedHir_L_20240729_0001.jpg
+2024-12-23 08:58:59,804 - INFO - Finished processing 20240728_ZaH_GAI_AGB_PedHir_L_20240729_0001.jpg. Leaf Count: 10, Total Leaf Area: 675.03 mm², Binary Area: 684.82 mm², Processing Time: 22.29 s
+2024-12-23 08:58:59,820 - INFO - Processing 20240728_ZaH_GAI_AGB_PedHir_S_20240729_0001.jpg
+2024-12-23 08:59:19,602 - INFO - Finished processing 20240728_ZaH_GAI_AGB_PedHir_S_20240729_0001.jpg. Leaf Count: 3, Total Leaf Area: 586.83 mm², Binary Area: 590.64 mm², Processing Time: 19.78 s
+2024-12-23 08:59:19,618 - INFO - Processing 20240728_ZaH_GAI_AGB_Poa_L_20240729_0001.jpg
+2024-12-23 08:59:41,304 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Poa_L_20240729_0001.jpg. Leaf Count: 7, Total Leaf Area: 360.40 mm², Binary Area: 371.00 mm², Processing Time: 21.69 s
+2024-12-23 08:59:41,320 - INFO - Processing 20240728_ZaH_GAI_AGB_Poa_S_20240729_0001.jpg
+2024-12-23 09:00:02,299 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Poa_S_20240729_0001.jpg. Leaf Count: 3, Total Leaf Area: 516.11 mm², Binary Area: 489.86 mm², Processing Time: 20.98 s
+2024-12-23 09:00:02,312 - INFO - Processing 20240728_ZaH_GAI_AGB_Salarc_L_20240729_0001.jpg
+2024-12-23 09:00:25,031 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Salarc_L_20240729_0001.jpg. Leaf Count: 8, Total Leaf Area: 828.26 mm², Binary Area: 831.23 mm², Processing Time: 22.72 s
+2024-12-23 09:00:25,051 - INFO - Processing 20240728_ZaH_GAI_AGB_Stelon_L_20240729_0001.jpg
+2024-12-23 09:00:49,060 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Stelon_L_20240729_0001.jpg. Leaf Count: 7, Total Leaf Area: 68.60 mm², Binary Area: 70.14 mm², Processing Time: 24.01 s
+2024-12-23 09:00:49,075 - INFO - Processing 20240728_ZaH_GAI_AGB_Stelon_S_20240729_0001.jpg
+2024-12-23 09:01:17,433 - INFO - Finished processing 20240728_ZaH_GAI_AGB_Stelon_S_20240729_0001.jpg. Leaf Count: 5, Total Leaf Area: 132.90 mm², Binary Area: 138.27 mm², Processing Time: 28.36 s
+2024-12-23 09:01:17,462 - INFO - Results saved to CSV: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB\leaf_analysis_results.csv
+2024-12-23 09:01:17,633 - INFO - Results saved to Excel: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB\leaf_analysis_results.xlsx
+2024-12-23 09:01:17,633 - INFO - All results have been saved successfully.
+2024-12-23 09:01:17,633 - INFO - Leaf classification processing has concluded.
+2024-12-23 09:01:17,647 - INFO - Processing completed successfully.
+2024-12-23 09:14:24,194 - INFO - Configuration saved successfully!
+2024-12-23 09:14:28,361 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:14:39,706 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:14:47,787 - INFO - Configuration saved successfully!
+2024-12-23 09:15:48,177 - DEBUG - Logging is configured.
+2024-12-23 09:15:48,220 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-23 09:15:48,275 - DEBUG - STREAM b'IHDR' 16 13
+2024-12-23 09:15:48,275 - DEBUG - STREAM b'zTXt' 41 198
+2024-12-23 09:15:48,275 - DEBUG - STREAM b'iCCP' 251 389
+2024-12-23 09:15:48,275 - DEBUG - iCCP profile name b'ICC profile'
+2024-12-23 09:15:48,276 - DEBUG - Compression method 0
+2024-12-23 09:15:48,276 - DEBUG - STREAM b'iTXt' 652 3446
+2024-12-23 09:15:48,276 - DEBUG - STREAM b'bKGD' 4110 6
+2024-12-23 09:15:48,276 - DEBUG - b'bKGD' 4110 6 (unknown)
+2024-12-23 09:15:48,276 - DEBUG - STREAM b'pHYs' 4128 9
+2024-12-23 09:15:48,276 - DEBUG - STREAM b'tIME' 4149 7
+2024-12-23 09:15:48,276 - DEBUG - b'tIME' 4149 7 (unknown)
+2024-12-23 09:15:48,276 - DEBUG - STREAM b'IDAT' 4168 8192
+2024-12-23 09:16:01,934 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:16:20,225 - INFO - Configuration saved successfully!
+2024-12-23 09:16:26,791 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:16:36,682 - INFO - Configuration saved successfully!
+2024-12-23 09:17:06,852 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:17:10,540 - INFO - Configuration saved successfully!
+2024-12-23 09:17:13,999 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:17:23,919 - DEBUG - Logging is configured.
+2024-12-23 09:17:23,966 - INFO - Fonts set successfully using 'Open Sans'.
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'IHDR' 16 13
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'zTXt' 41 198
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'iCCP' 251 389
+2024-12-23 09:17:24,016 - DEBUG - iCCP profile name b'ICC profile'
+2024-12-23 09:17:24,016 - DEBUG - Compression method 0
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'iTXt' 652 3446
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'bKGD' 4110 6
+2024-12-23 09:17:24,016 - DEBUG - b'bKGD' 4110 6 (unknown)
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'pHYs' 4128 9
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'tIME' 4149 7
+2024-12-23 09:17:24,016 - DEBUG - b'tIME' 4149 7 (unknown)
+2024-12-23 09:17:24,016 - DEBUG - STREAM b'IDAT' 4168 8192
+2024-12-23 09:17:26,251 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:17:57,274 - INFO - Configuration saved successfully!
+2024-12-23 09:18:00,731 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:18:59,714 - INFO - Configuration saved successfully!
+2024-12-23 09:19:04,110 - INFO - Executing image processing...
+2024-12-23 09:19:04,110 - DEBUG - Configuration settings loaded successfully.
+2024-12-23 09:19:04,110 - DEBUG - Created result folder at: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img
+2024-12-23 09:19:04,124 - DEBUG - Created intermediate folder at: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img
+2024-12-23 09:19:04,124 - DEBUG - Intermediate images will be saved to: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img
+2024-12-23 09:19:04,124 - DEBUG - Processed result images will be saved to: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img
+2024-12-23 09:19:04,124 - DEBUG - Results will be saved to CSV file at: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\leaf_analysis_results.csv
+2024-12-23 09:19:04,124 - DEBUG - Found 1 image files.
+2024-12-23 09:19:04,132 - INFO - Found 1 image(s) to process.
+2024-12-23 09:19:04,132 - DEBUG - Starting processing for image: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:19:04,132 - INFO - Processing 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:19:04,140 - DEBUG - Image size: 5104x7016 pixels, DPI: (600, 600), Pixels/mm: 23.62
+2024-12-23 09:19:04,403 - DEBUG - Cropped image dimensions: (6946, 5001, 3)
+2024-12-23 09:19:14,647 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_1_cropped_image.png
+2024-12-23 09:19:14,647 - DEBUG - Applying adaptive thresholding in RGB space.
+2024-12-23 09:19:15,171 - DEBUG - Adaptive thresholding in RGB space applied with white background.
+2024-12-23 09:19:16,012 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_2_adaptive_threshold_white_bg.png
+2024-12-23 09:19:16,044 - DEBUG - Applied CLAHE for contrast adjustment.
+2024-12-23 09:19:16,898 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_3_contrast_image.png
+2024-12-23 09:19:17,756 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_4_canny_edges.png
+2024-12-23 09:19:18,667 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_5_binary_image_with_canny.png
+2024-12-23 09:19:19,431 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_6_closed_image.png
+2024-12-23 09:19:19,765 - DEBUG - Removed small objects below 1116.002232004464 pixels.
+2024-12-23 09:19:20,475 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_7_cleaned_image.png
+2024-12-23 09:19:20,538 - DEBUG - Found 514 total contours.
+2024-12-23 09:20:08,362 - DEBUG - Contour 165 excluded due to high RGB values: R=213, G=174, B=21
+2024-12-23 09:22:06,220 - DEBUG - Created annotation table with average RGB values.
+2024-12-23 09:22:06,220 - DEBUG - Table position: (50, -8404), Width: 500px, Height: 15330px
+2024-12-23 09:22:06,538 - DEBUG - Added table to image with enhanced aesthetics.
+2024-12-23 09:22:06,729 - DEBUG - Saved final annotated image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:22:06,761 - DEBUG - Binary Area: 2659.57 mm² based on white pixels.
+2024-12-23 09:22:06,793 - INFO - Finished processing 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg. Leaf Count: 509, Total Leaf Area: 2108.14 mm², Binary Area: 2659.57 mm², Processing Time: 182.66 s
+2024-12-23 09:22:06,824 - DEBUG - Result appended for image: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:22:06,856 - INFO - Results saved to CSV: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\leaf_analysis_results.csv
+2024-12-23 09:22:06,952 - INFO - Results saved to Excel: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\leaf_analysis_results.xlsx
+2024-12-23 09:22:06,952 - INFO - All results have been saved successfully.
+2024-12-23 09:22:06,952 - INFO - Leaf classification processing has concluded.
+2024-12-23 09:22:06,952 - INFO - Processing completed successfully.
+2024-12-23 09:33:52,780 - INFO - Configuration saved successfully!
+2024-12-23 09:33:55,712 - INFO - Displayed image with crop outline: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:34:31,078 - INFO - Configuration saved successfully!
+2024-12-23 09:34:34,977 - INFO - Executing image processing...
+2024-12-23 09:34:34,977 - DEBUG - Configuration settings loaded successfully.
+2024-12-23 09:34:34,977 - DEBUG - Created result folder at: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img
+2024-12-23 09:34:34,990 - DEBUG - Created intermediate folder at: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img
+2024-12-23 09:34:34,990 - DEBUG - Intermediate images will be saved to: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img
+2024-12-23 09:34:34,990 - DEBUG - Processed result images will be saved to: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img
+2024-12-23 09:34:34,990 - DEBUG - Results will be saved to CSV file at: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\leaf_analysis_results.csv
+2024-12-23 09:34:34,990 - DEBUG - Found 1 image files.
+2024-12-23 09:34:35,005 - INFO - Found 1 image(s) to process.
+2024-12-23 09:34:35,008 - DEBUG - Starting processing for image: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:34:35,008 - INFO - Processing 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:34:35,008 - DEBUG - Image size: 5104x7016 pixels, DPI: (600, 600), Pixels/mm: 23.62
+2024-12-23 09:34:35,274 - DEBUG - Cropped image dimensions: (6946, 4746, 3)
+2024-12-23 09:34:44,933 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_1_cropped_image.png
+2024-12-23 09:34:44,933 - DEBUG - Applying adaptive thresholding in RGB space.
+2024-12-23 09:34:45,397 - DEBUG - Adaptive thresholding in RGB space applied with white background.
+2024-12-23 09:34:46,112 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_2_adaptive_threshold_white_bg.png
+2024-12-23 09:34:46,145 - DEBUG - Applied CLAHE for contrast adjustment.
+2024-12-23 09:34:46,878 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_3_contrast_image.png
+2024-12-23 09:34:47,604 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_4_canny_edges.png
+2024-12-23 09:34:48,389 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_5_binary_image_with_canny.png
+2024-12-23 09:34:49,048 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_6_closed_image.png
+2024-12-23 09:34:49,291 - DEBUG - Removed small objects below 1116.002232004464 pixels.
+2024-12-23 09:34:49,925 - DEBUG - Saved intermediate image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\intermediate_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001_7_cleaned_image.png
+2024-12-23 09:34:49,977 - DEBUG - Found 504 total contours.
+2024-12-23 09:36:46,882 - DEBUG - Created annotation table with average RGB values.
+2024-12-23 09:36:46,882 - DEBUG - Table position: (50, -8164), Width: 474px, Height: 15090px
+2024-12-23 09:36:47,009 - DEBUG - Added table to image with enhanced aesthetics.
+2024-12-23 09:36:47,120 - DEBUG - Saved final annotated image with DPI: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\result_img\20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:36:47,141 - DEBUG - Binary Area: 2150.26 mm² based on white pixels.
+2024-12-23 09:36:47,152 - INFO - Finished processing 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg. Leaf Count: 501, Total Leaf Area: 2077.64 mm², Binary Area: 2150.26 mm², Processing Time: 132.14 s
+2024-12-23 09:36:47,184 - DEBUG - Result appended for image: 20240728_ZaH_GAI_AGB_CasTet_L_20240729_0001.jpg
+2024-12-23 09:36:47,196 - INFO - Results saved to CSV: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\leaf_analysis_results.csv
+2024-12-23 09:36:47,241 - INFO - Results saved to Excel: E:/ICOS/tmp_zah_veg/2024/20240728-20240728_GAI_AGB/Single_CasTet\leaf_analysis_results.xlsx
+2024-12-23 09:36:47,248 - INFO - All results have been saved successfully.
+2024-12-23 09:36:47,248 - INFO - Leaf classification processing has concluded.
+2024-12-23 09:36:47,258 - INFO - Processing completed successfully.
