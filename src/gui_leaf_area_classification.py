@@ -48,7 +48,8 @@ import configparser
 import sys
 import threading
 import logging
-from typing import List, Dict, Any
+import json
+from typing import List, Dict, Any, Optional
 
 # Adjust the system path to include the directory containing leaf_area_classification.py
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -195,6 +196,20 @@ class LeafAreaGUI:
 
         self.image_popup = None  # Initialize popup reference
         self.current_image_index = None  # Track current image index
+        
+        # Custom crop regions storage: {image_filename: (x1, y1, x2, y2)}
+        self.custom_crop_regions = {}
+        self.load_custom_crop_regions()
+        
+        # Drawing state for interactive cropping
+        self.drawing = False
+        self.draw_start_x = None
+        self.draw_start_y = None
+        self.temp_rect_id = None
+        self.popup_scale_x = 1.0
+        self.popup_scale_y = 1.0
+        self.popup_original_size = (0, 0)
+        self.current_popup_filename = ""
 
 
     def set_font(self) -> None:
@@ -619,7 +634,7 @@ class LeafAreaGUI:
 
     def show_image_popup(self, image_path: str, current_index: int) -> None:
         """
-        Show the selected image in a popup window with a red outline indicating the crop area.
+        Show the selected image in a popup window with crop area visualization and interactive drawing.
         If the popup already exists, update the image instead of creating a new window.
 
         Args:
@@ -630,6 +645,8 @@ class LeafAreaGUI:
             img = Image.open(image_path)
             img_copy = img.copy()  # Make a copy to draw on
             draw = ImageDraw.Draw(img_copy)
+            
+            filename = os.path.basename(image_path)
 
             # Retrieve crop settings from GUI
             crop_left = self.get_crop_percentage("crop_left")
@@ -637,18 +654,24 @@ class LeafAreaGUI:
             crop_top = self.get_crop_percentage("crop_top")
             crop_bottom = self.get_crop_percentage("crop_bottom")
 
-            # Calculate crop coordinates based on percentages
+            # Calculate crop coordinates based on percentages (red outline)
             img_width, img_height = img_copy.size
             left_px = int((crop_left / 100) * img_width)
             right_px = int(img_width - (crop_right / 100) * img_width)
             top_px = int((crop_top / 100) * img_height)
             bottom_px = int(img_height - (crop_bottom / 100) * img_height)
 
-            # Draw red rectangle outlining the crop area
+            # Draw red rectangle outlining the percentage-based crop area
             draw.rectangle([(left_px, top_px), (right_px, bottom_px)], outline="red", width=3)
+            
+            # Draw green rectangle if custom crop region exists and is valid
+            if filename in self.custom_crop_regions:
+                region = self.custom_crop_regions[filename]
+                if isinstance(region, list) and len(region) == 4:
+                    draw.rectangle([(region[0], region[1]), (region[2], region[3])], outline="green", width=3)
 
             # Resize image for display if it's too large
-            max_size = (600, 400)  # Reduced from (800, 800)
+            max_size = (800, 600)
             try:
                 resample_filter = Image.ANTIALIAS
             except AttributeError:
@@ -656,44 +679,83 @@ class LeafAreaGUI:
 
             img_copy.thumbnail(max_size, resample=resample_filter)
             resized_width, resized_height = img_copy.size
+            
+            # Calculate scale factor for coordinate conversion
+            self.popup_scale_x = img_width / resized_width
+            self.popup_scale_y = img_height / resized_height
+            self.popup_original_size = (img_width, img_height)
+            self.current_popup_filename = filename
 
             img_photo = ImageTk.PhotoImage(img_copy)
 
             if self.image_popup and self.image_popup.winfo_exists():
-                # ...existing code...
-                self.image_popup.image_label.config(image=img_photo)
-                self.image_popup.image_label.image = img_photo  # Prevent garbage collection
-                # ...existing code...
+                # Update existing popup
+                self.image_popup.canvas.delete("all")
+                self.image_popup.canvas.create_image(0, 0, anchor=tk.NW, image=img_photo)
+                self.image_popup.canvas.image = img_photo
+                self.image_popup.title(f"Image Preview - {filename}")
             else:
                 # Create a new popup window
                 self.image_popup = tk.Toplevel(self.root)
-                self.image_popup.title("Image Preview")
+                self.image_popup.title(f"Image Preview - {filename}")
 
-                # Calculate additional height for buttons (10% of image height)
-                additional_height = int(resized_height * 0.1)
+                # Calculate window size with extra space for buttons
+                additional_height = 80
                 popup_height = resized_height + additional_height
                 popup_width = resized_width
 
-                self.image_popup.geometry(f"{popup_width}x{popup_height}")  # Set dynamic popup window size
-                self.image_popup.resizable(False, False)  # Prevent resizing
+                self.image_popup.geometry(f"{popup_width}x{popup_height}")
+                self.image_popup.resizable(False, False)
 
-                # Display the image in the popup
-                self.image_popup.image_label = tk.Label(self.image_popup, image=img_photo)
-                self.image_popup.image_label.image = img_photo  # Keep a reference
-                self.image_popup.image_label.pack()
+                # Create a canvas for the image
+                self.image_popup.canvas = tk.Canvas(
+                    self.image_popup, 
+                    width=resized_width, 
+                    height=resized_height,
+                    highlightthickness=0
+                )
+                self.image_popup.canvas.pack()
+                self.image_popup.canvas.create_image(0, 0, anchor=tk.NW, image=img_photo)
+                self.image_popup.canvas.image = img_photo
 
-                # Add navigation buttons below the image
-                nav_frame = tk.Frame(self.image_popup, bg="#f0f0f0")
-                nav_frame.pack(pady=5)  # Add padding to separate buttons from the image
+                # Bind mouse events for drawing
+                self.image_popup.canvas.bind("<Button-1>", self.on_mouse_down)
+                self.image_popup.canvas.bind("<B1-Motion>", self.on_mouse_drag)
+                self.image_popup.canvas.bind("<ButtonRelease-1>", self.on_mouse_up)
 
-                prev_button = tk.Button(nav_frame, text="Previous", command=self.show_previous_image, width=10)
-                prev_button.pack(side=tk.LEFT, padx=10)
+                # Add buttons frame
+                button_frame = tk.Frame(self.image_popup, bg="#f0f0f0")
+                button_frame.pack(pady=5)
 
-                next_button = tk.Button(nav_frame, text="Next", command=self.show_next_image, width=10)
-                next_button.pack(side=tk.LEFT, padx=10)
+                # Navigation buttons
+                prev_button = tk.Button(button_frame, text="Previous", command=self.show_previous_image, width=10)
+                prev_button.pack(side=tk.LEFT, padx=5)
+
+                next_button = tk.Button(button_frame, text="Next", command=self.show_next_image, width=10)
+                next_button.pack(side=tk.LEFT, padx=5)
+                
+                # Draw crop box button
+                draw_button = tk.Button(button_frame, text="Draw Crop Box", command=self.enable_draw_mode, width=12, bg="#4CAF50", fg="white")
+                draw_button.pack(side=tk.LEFT, padx=5)
+                
+                # Clear crop box button
+                clear_button = tk.Button(button_frame, text="Clear Crop Box", command=self.clear_custom_crop, width=12, bg="#f44336", fg="white")
+                clear_button.pack(side=tk.LEFT, padx=5)
+                
+                # Status label
+                self.image_popup.status_label = tk.Label(button_frame, text="", font=self.font_labels, bg="#f0f0f0")
+                self.image_popup.status_label.pack(side=tk.LEFT, padx=10)
+
+            # Update status label
+            if filename in self.custom_crop_regions:
+                if hasattr(self.image_popup, 'status_label'):
+                    self.image_popup.status_label.config(text="Custom crop: GREEN | Default: RED")
+            else:
+                if hasattr(self.image_popup, 'status_label'):
+                    self.image_popup.status_label.config(text="Default crop: RED | Draw to customize")
 
             self.current_image_index = current_index  # Update current index
-            logger.info(f"Displayed image with crop outline: {os.path.basename(image_path)}")
+            logger.info(f"Displayed image with crop outline: {filename}")
 
         except Exception as e:
             logger.error(f"Failed to open image: {image_path}. Error: {e}")
@@ -716,6 +778,126 @@ class LeafAreaGUI:
             self.current_image_index += 1
             image_path = self.get_image_path(self.current_image_index)
             self.show_image_popup(image_path, self.current_image_index)
+    
+    def enable_draw_mode(self) -> None:
+        """
+        Enable drawing mode for custom crop selection.
+        """
+        if hasattr(self.image_popup, 'status_label'):
+            self.image_popup.status_label.config(text="Draw a box by clicking and dragging")
+        logger.info("Draw mode enabled. Click and drag to select crop area.")
+    
+    def on_mouse_down(self, event) -> None:
+        """
+        Handle mouse button down event to start drawing a crop box.
+        
+        Args:
+            event: The mouse event.
+        """
+        if not self.image_popup or not hasattr(self.image_popup, 'canvas'):
+            return
+            
+        self.drawing = True
+        self.draw_start_x = event.x
+        self.draw_start_y = event.y
+        
+        # Clear any existing temporary rectangle
+        if self.temp_rect_id:
+            self.image_popup.canvas.delete(self.temp_rect_id)
+    
+    def on_mouse_drag(self, event) -> None:
+        """
+        Handle mouse drag event to draw a temporary crop box.
+        
+        Args:
+            event: The mouse event.
+        """
+        if not self.drawing or not self.image_popup or not hasattr(self.image_popup, 'canvas'):
+            return
+            
+        # Remove previous temporary rectangle
+        if self.temp_rect_id:
+            self.image_popup.canvas.delete(self.temp_rect_id)
+        
+        # Draw new temporary rectangle
+        self.temp_rect_id = self.image_popup.canvas.create_rectangle(
+            self.draw_start_x, self.draw_start_y, event.x, event.y,
+            outline="green", width=2
+        )
+    
+    def on_mouse_up(self, event) -> None:
+        """
+        Handle mouse button up event to finalize the crop box.
+        
+        Args:
+            event: The mouse event.
+        """
+        if not self.drawing or not self.image_popup or not hasattr(self.image_popup, 'canvas'):
+            return
+            
+        self.drawing = False
+        
+        # Remove temporary rectangle
+        if self.temp_rect_id:
+            self.image_popup.canvas.delete(self.temp_rect_id)
+            self.temp_rect_id = None
+        
+        # Get coordinates (ensure start < end)
+        x1 = min(self.draw_start_x, event.x)
+        y1 = min(self.draw_start_y, event.y)
+        x2 = max(self.draw_start_x, event.x)
+        y2 = max(self.draw_start_y, event.y)
+        
+        # Check if the box is large enough
+        if abs(x2 - x1) > 10 and abs(y2 - y1) > 10:
+            # Convert coordinates to original image scale
+            orig_x1 = int(x1 * self.popup_scale_x)
+            orig_y1 = int(y1 * self.popup_scale_y)
+            orig_x2 = int(x2 * self.popup_scale_x)
+            orig_y2 = int(y2 * self.popup_scale_y)
+            
+            # Clamp coordinates to image bounds
+            orig_x1 = max(0, min(orig_x1, self.popup_original_size[0]))
+            orig_y1 = max(0, min(orig_y1, self.popup_original_size[1]))
+            orig_x2 = max(0, min(orig_x2, self.popup_original_size[0]))
+            orig_y2 = max(0, min(orig_y2, self.popup_original_size[1]))
+            
+            # Store the custom crop region
+            self.custom_crop_regions[self.current_popup_filename] = [orig_x1, orig_y1, orig_x2, orig_y2]
+            self.save_custom_crop_regions()
+            
+            logger.info(f"Custom crop region saved for {self.current_popup_filename}: ({orig_x1}, {orig_y1}, {orig_x2}, {orig_y2})")
+            
+            # Refresh the image to show the new crop box
+            if self.current_image_index is not None:
+                image_path = self.get_image_path(self.current_image_index)
+                self.show_image_popup(image_path, self.current_image_index)
+        else:
+            logger.warning("Crop box too small. Draw a larger area.")
+            if hasattr(self.image_popup, 'status_label'):
+                self.image_popup.status_label.config(text="Box too small. Try again.")
+    
+    def clear_custom_crop(self) -> None:
+        """
+        Clear the custom crop region for the current image.
+        """
+        if not self.current_popup_filename:
+            logger.warning("No current image filename set")
+            return
+            
+        if self.current_popup_filename in self.custom_crop_regions:
+            del self.custom_crop_regions[self.current_popup_filename]
+            self.save_custom_crop_regions()
+            logger.info(f"Custom crop region cleared for {self.current_popup_filename}")
+            
+            # Refresh the image
+            if self.current_image_index is not None:
+                image_path = self.get_image_path(self.current_image_index)
+                self.show_image_popup(image_path, self.current_image_index)
+        else:
+            logger.info(f"No custom crop region to clear for {self.current_popup_filename}")
+            if self.image_popup and hasattr(self.image_popup, 'status_label'):
+                self.image_popup.status_label.config(text="No custom crop to clear")
 
     def get_crop_percentage(self, key: str) -> float:
         """
@@ -1050,6 +1232,47 @@ class LeafAreaGUI:
         directory = self.config.get("DEFAULT", "image_directory", fallback="")
         filename = self.images[index]
         return os.path.join(directory, filename)
+
+    def load_custom_crop_regions(self) -> None:
+        """
+        Load custom crop regions from a JSON file.
+        """
+        crop_regions_file = os.path.join(current_dir, '..', 'config', 'crop_regions.json')
+        if os.path.exists(crop_regions_file):
+            try:
+                with open(crop_regions_file, 'r') as f:
+                    loaded_data = json.load(f)
+                
+                # Validate the structure of loaded data
+                self.custom_crop_regions = {}
+                for filename, region in loaded_data.items():
+                    if isinstance(region, list) and len(region) == 4:
+                        if all(isinstance(x, (int, float)) for x in region):
+                            # Convert to integers and store
+                            self.custom_crop_regions[filename] = [int(x) for x in region]
+                        else:
+                            logger.warning(f"Invalid crop region for {filename}: coordinates must be numbers")
+                    else:
+                        logger.warning(f"Invalid crop region for {filename}: must be a list of 4 coordinates")
+                
+                logger.info(f"Loaded {len(self.custom_crop_regions)} valid custom crop regions.")
+            except Exception as e:
+                logger.error(f"Failed to load custom crop regions: {e}")
+                self.custom_crop_regions = {}
+        else:
+            self.custom_crop_regions = {}
+
+    def save_custom_crop_regions(self) -> None:
+        """
+        Save custom crop regions to a JSON file.
+        """
+        crop_regions_file = os.path.join(current_dir, '..', 'config', 'crop_regions.json')
+        try:
+            with open(crop_regions_file, 'w') as f:
+                json.dump(self.custom_crop_regions, f, indent=2)
+            logger.info(f"Saved {len(self.custom_crop_regions)} custom crop regions.")
+        except Exception as e:
+            logger.error(f"Failed to save custom crop regions: {e}")
 
 
 def main() -> None:
