@@ -29,7 +29,7 @@
 - **Mean RGB Calculation:** Compute average RGB values within detected leaf areas for color analysis.
 - **Graphical User Interface (GUI):** User-friendly interface for configuring settings, selecting directories, and monitoring processing.
 - **Logging:** Comprehensive logging with adjustable verbosity levels to track processing steps and debug issues.
-- **Image Preview:** Preview images directly within the GUI for easy verification.
+- **Image Preview:** Preview images directly within the GUI for easy verification. Preview all images at once in a grid layout with cropping settings applied, or double-click individual images for detailed view.
 - **Configuration Management:** Save and reset configurations with ease, ensuring reproducible results.
 
 ![GUI Screenshot](gui_screenshot.png)
@@ -175,15 +175,19 @@ python src/gui_leaf_area_classification.py
 - Adjust processing parameters as needed.
 - Each parameter includes an explanation and default value.
 
-4. Execute Processing
+4. Preview Images
+- Click on the "Preview All Images" button to view all images in a grid with cropping settings applied.
+- Double-click on any image in the list or grid to view it individually with the crop area outlined.
+
+5. Execute Processing
 - Click on the "Execute Processing" button to start analyzing the images.
 - Monitor the progress and logs in the enlarged output panel at the bottom.
 
-5. View Results
+6. View Results
 - Processed images with annotations will be saved in the `result_img/` folder within your image directory.
 - Intermediate images (if enabled) will be saved in the `intermediate_img/` folder.
 
-6. Stop Processing
+7. Stop Processing
 - Click on the "Stop Processing" button to terminate an ongoing analysis.
 
 ### Command-Line Interface (CLI)
