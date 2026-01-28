@@ -49,6 +49,7 @@ import sys
 import time
 import logging
 import configparser
+import json
 import cv2
 import numpy as np
 import pandas as pd
@@ -260,14 +261,25 @@ def process_images_main(stop_event: threading.Event) -> None:
         image_files = get_image_files(config)
         
         # Load custom crop regions if available
-        import json
         crop_regions_file = os.path.join(current_dir, '..', 'config', 'crop_regions.json')
         custom_crop_regions = {}
         if os.path.exists(crop_regions_file):
             try:
                 with open(crop_regions_file, 'r') as f:
-                    custom_crop_regions = json.load(f)
-                logger.info(f"Loaded {len(custom_crop_regions)} custom crop regions.")
+                    loaded_data = json.load(f)
+                
+                # Validate the structure of loaded data
+                for filename, region in loaded_data.items():
+                    if isinstance(region, list) and len(region) == 4:
+                        if all(isinstance(x, (int, float)) for x in region):
+                            # Convert to integers and store
+                            custom_crop_regions[filename] = [int(x) for x in region]
+                        else:
+                            logger.warning(f"Invalid crop region for {filename}: coordinates must be numbers")
+                    else:
+                        logger.warning(f"Invalid crop region for {filename}: must be a list of 4 coordinates")
+                
+                logger.info(f"Loaded {len(custom_crop_regions)} valid custom crop regions.")
             except Exception as e:
                 logger.warning(f"Failed to load custom crop regions: {e}")
 
@@ -433,14 +445,41 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
     # Step 1: Cropping based on custom region or configured percentages
     height, width = image_cv.shape[:2]
     
-    if custom_crop_region:
-        # Use custom crop region [x1, y1, x2, y2]
-        left = custom_crop_region[0]
-        top = custom_crop_region[1]
-        right = custom_crop_region[2]
-        bottom = custom_crop_region[3]
-        cropped_image = image_cv[top:bottom, left:right]
-        logger.info(f"Using custom crop region for {filename}: ({left}, {top}, {right}, {bottom})")
+    if custom_crop_region and isinstance(custom_crop_region, list) and len(custom_crop_region) == 4:
+        # Validate and use custom crop region [x1, y1, x2, y2]
+        x1, y1, x2, y2 = custom_crop_region
+        
+        # Ensure coordinates are integers
+        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+        
+        # Validate that coordinates form a valid rectangle
+        if x1 < x2 and y1 < y2:
+            # Clamp coordinates to image bounds
+            left = max(0, min(x1, width))
+            top = max(0, min(y1, height))
+            right = max(0, min(x2, width))
+            bottom = max(0, min(y2, height))
+            
+            # Ensure we still have a valid region after clamping
+            if left < right and top < bottom:
+                cropped_image = image_cv[top:bottom, left:right]
+                logger.info(f"Using custom crop region for {filename}: ({left}, {top}, {right}, {bottom})")
+            else:
+                logger.warning(f"Invalid custom crop region after clamping for {filename}. Using percentage-based crop.")
+                # Fall back to percentage-based cropping
+                left = int(width * config.crop_left_pct)
+                right = int(width * (1 - config.crop_right_pct))
+                top = int(height * config.crop_top_pct)
+                bottom = int(height * (1 - config.crop_bottom_pct))
+                cropped_image = image_cv[top:bottom, left:right]
+        else:
+            logger.warning(f"Invalid custom crop coordinates for {filename} (x1 >= x2 or y1 >= y2). Using percentage-based crop.")
+            # Fall back to percentage-based cropping
+            left = int(width * config.crop_left_pct)
+            right = int(width * (1 - config.crop_right_pct))
+            top = int(height * config.crop_top_pct)
+            bottom = int(height * (1 - config.crop_bottom_pct))
+            cropped_image = image_cv[top:bottom, left:right]
     else:
         # Use percentage-based cropping
         left = int(width * config.crop_left_pct)
