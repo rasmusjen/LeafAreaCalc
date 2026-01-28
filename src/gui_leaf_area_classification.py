@@ -107,6 +107,13 @@ class LeafAreaGUI:
     and display logs and results.
     """
 
+    # Constants for preview grid layout
+    PREVIEW_THUMBNAIL_WIDTH = 200
+    PREVIEW_THUMBNAIL_HEIGHT = 150
+    PREVIEW_GRID_COLUMNS = 4
+    PREVIEW_GRID_PADDING = 10
+    PREVIEW_LARGE_IMAGE_THRESHOLD = 50
+
     def __init__(self, root: tk.Tk):
         """
         Initialize the LeafAreaGUI.
@@ -602,6 +609,19 @@ class LeafAreaGUI:
         # Bind double-click to display image (optional)
         self.image_listbox.bind('<Double-1>', self.on_image_select)
 
+        # Add "Preview All Images" button
+        preview_all_button = tk.Button(
+            parent, 
+            text="Preview All Images", 
+            command=self.show_all_images_preview,
+            font=self.font_buttons, 
+            bg="#FF9800", 
+            fg="white", 
+            padx=5, 
+            pady=5
+        )
+        preview_all_button.pack(padx=10, pady=(0, 10), fill=tk.X)
+
     def on_image_select(self, event: tk.Event) -> None:
         """
         Handle the event when an image is double-clicked in the list.
@@ -650,9 +670,10 @@ class LeafAreaGUI:
             # Resize image for display if it's too large
             max_size = (600, 400)  # Reduced from (800, 800)
             try:
-                resample_filter = Image.ANTIALIAS
-            except AttributeError:
                 resample_filter = Image.LANCZOS
+            except AttributeError:
+                # Fallback to ANTIALIAS for older Pillow versions
+                resample_filter = Image.ANTIALIAS
 
             img_copy.thumbnail(max_size, resample=resample_filter)
             resized_width, resized_height = img_copy.size
@@ -716,6 +737,150 @@ class LeafAreaGUI:
             self.current_image_index += 1
             image_path = self.get_image_path(self.current_image_index)
             self.show_image_popup(image_path, self.current_image_index)
+
+    def show_all_images_preview(self) -> None:
+        """
+        Display all images in a grid view with crop areas outlined.
+        Each thumbnail is clickable to open the full preview of that image.
+        """
+        directory = self.config.get("DEFAULT", "image_directory", fallback="")
+        if not directory or not os.path.isdir(directory):
+            messagebox.showwarning("No Directory", "Please select an image directory first.")
+            return
+
+        if not self.images:
+            messagebox.showinfo("No Images", "No images found in the selected directory.")
+            return
+
+        # Warn if there are many images
+        if len(self.images) > self.PREVIEW_LARGE_IMAGE_THRESHOLD:
+            result = messagebox.askyesno(
+                "Large Image Set",
+                f"You have {len(self.images)} images. Loading all thumbnails may take a moment and use significant memory. Continue?"
+            )
+            if not result:
+                return
+
+        preview_window = None
+        try:
+            # Validate crop settings before creating window
+            try:
+                crop_left = self.get_crop_percentage("crop_left")
+                crop_right = self.get_crop_percentage("crop_right")
+                crop_top = self.get_crop_percentage("crop_top")
+                crop_bottom = self.get_crop_percentage("crop_bottom")
+            except (ValueError, KeyError) as e:
+                logger.warning(f"Invalid crop settings, using defaults: {e}")
+                # Use default values if crop settings are invalid
+                crop_left = 20.0
+                crop_right = 3.0
+                crop_top = 3.0
+                crop_bottom = 3.0
+
+            # Create a new top-level window for the grid preview
+            preview_window = tk.Toplevel(self.root)
+            preview_window.title("Preview All Images")
+            preview_window.geometry("1000x700")
+
+            # Add a scrollable canvas
+            canvas = tk.Canvas(preview_window, bg="#f0f0f0")
+            scrollbar_y = tk.Scrollbar(preview_window, orient="vertical", command=canvas.yview)
+            scrollbar_x = tk.Scrollbar(preview_window, orient="horizontal", command=canvas.xview)
+            
+            scrollable_frame = tk.Frame(canvas, bg="#f0f0f0")
+            
+            scrollable_frame.bind(
+                "<Configure>",
+                lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            )
+            
+            canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+            canvas.configure(yscrollcommand=scrollbar_y.set, xscrollcommand=scrollbar_x.set)
+            
+            # Pack the scrollbars and canvas
+            scrollbar_y.pack(side="right", fill="y")
+            scrollbar_x.pack(side="bottom", fill="x")
+            canvas.pack(side="left", fill="both", expand=True)
+
+            # Process and display each image
+            for idx, filename in enumerate(self.images):
+                image_path = os.path.join(directory, filename)
+                
+                try:
+                    # Open and process the image using context manager
+                    with Image.open(image_path) as img:
+                        img_copy = img.copy()
+                    
+                    draw = ImageDraw.Draw(img_copy)
+
+                    # Calculate crop coordinates based on percentages
+                    img_width, img_height = img_copy.size
+                    left_px = int((crop_left / 100) * img_width)
+                    right_px = int(img_width - (crop_right / 100) * img_width)
+                    top_px = int((crop_top / 100) * img_height)
+                    bottom_px = int(img_height - (crop_bottom / 100) * img_height)
+
+                    # Draw red rectangle outlining the crop area
+                    draw.rectangle([(left_px, top_px), (right_px, bottom_px)], outline="red", width=2)
+
+                    # Create thumbnail using LANCZOS filter (recommended replacement for ANTIALIAS)
+                    try:
+                        resample_filter = Image.LANCZOS
+                    except AttributeError:
+                        # Fallback to ANTIALIAS for older Pillow versions
+                        resample_filter = Image.ANTIALIAS
+                    
+                    img_copy.thumbnail(
+                        (self.PREVIEW_THUMBNAIL_WIDTH, self.PREVIEW_THUMBNAIL_HEIGHT), 
+                        resample=resample_filter
+                    )
+                    img_photo = ImageTk.PhotoImage(img_copy)
+
+                    # Calculate grid position
+                    row = idx // self.PREVIEW_GRID_COLUMNS
+                    col = idx % self.PREVIEW_GRID_COLUMNS
+
+                    # Create a frame for each thumbnail
+                    thumb_frame = tk.Frame(scrollable_frame, bg="#ffffff", bd=2, relief=tk.RAISED)
+                    thumb_frame.grid(
+                        row=row, column=col, 
+                        padx=self.PREVIEW_GRID_PADDING, 
+                        pady=self.PREVIEW_GRID_PADDING
+                    )
+
+                    # Create clickable image label
+                    img_label = tk.Label(thumb_frame, image=img_photo, cursor="hand2")
+                    img_label.image = img_photo  # Keep a reference
+                    img_label.pack()
+
+                    # Bind click event to open full preview
+                    img_label.bind(
+                        "<Button-1>", 
+                        lambda e, path=image_path, index=idx: self.show_image_popup(path, index)
+                    )
+
+                    # Add filename label below the thumbnail
+                    name_label = tk.Label(
+                        thumb_frame, 
+                        text=filename, 
+                        font=("Arial", 8), 
+                        bg="#ffffff", 
+                        wraplength=self.PREVIEW_THUMBNAIL_WIDTH
+                    )
+                    name_label.pack()
+
+                except Exception as e:
+                    logger.error(f"Failed to load thumbnail for {filename}: {e}")
+                    continue
+
+            logger.info(f"Preview window created with {len(self.images)} images.")
+
+        except Exception as e:
+            logger.error(f"Failed to create preview window: {e}")
+            messagebox.showerror("Preview Error", f"Failed to create preview window:\n{e}")
+            # Close preview window if it was created but encountered an error
+            if preview_window and preview_window.winfo_exists():
+                preview_window.destroy()
 
     def get_crop_percentage(self, key: str) -> float:
         """
