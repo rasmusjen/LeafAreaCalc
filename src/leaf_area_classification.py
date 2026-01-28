@@ -258,6 +258,18 @@ def process_images_main(stop_event: threading.Event) -> None:
 
         # Get list of image files to process
         image_files = get_image_files(config)
+        
+        # Load custom crop regions if available
+        import json
+        crop_regions_file = os.path.join(current_dir, '..', 'config', 'crop_regions.json')
+        custom_crop_regions = {}
+        if os.path.exists(crop_regions_file):
+            try:
+                with open(crop_regions_file, 'r') as f:
+                    custom_crop_regions = json.load(f)
+                logger.info(f"Loaded {len(custom_crop_regions)} custom crop regions.")
+            except Exception as e:
+                logger.warning(f"Failed to load custom crop regions: {e}")
 
         # Define paths for results
         csv_file_path = os.path.join(config.image_directory, 'leaf_analysis_results.csv')
@@ -272,7 +284,7 @@ def process_images_main(stop_event: threading.Event) -> None:
                 break
 
             image_path = os.path.join(config.image_directory, image_file)
-            result = process_image(image_path, config, intermediate_folder, result_folder, stop_event)
+            result = process_image(image_path, config, intermediate_folder, result_folder, stop_event, custom_crop_regions)
 
             if result:
                 results_list.append(result)
@@ -289,7 +301,7 @@ def process_images_main(stop_event: threading.Event) -> None:
         logger.info("Image processing completed.")
 
 def process_image(image_path: str, config: Config, intermediate_folder: str, result_folder: str,
-                 stop_event: threading.Event) -> Optional[Dict[str, Any]]:
+                 stop_event: threading.Event, custom_crop_regions: Dict[str, List[int]] = None) -> Optional[Dict[str, Any]]:
     """
     Process a single image and return the analysis results along with RGB statistics.
 
@@ -299,6 +311,7 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         intermediate_folder (str): Directory to save intermediate images.
         result_folder (str): Directory to save result images.
         stop_event (threading.Event): Event to signal stopping of processing.
+        custom_crop_regions (Dict[str, List[int]]): Optional custom crop regions per image filename.
 
     Returns:
         Optional[Dict[str, Any]]: Dictionary containing:
@@ -313,6 +326,9 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
     if stop_event.is_set():
         logger.info("Processing was stopped before starting.")
         return None
+    
+    if custom_crop_regions is None:
+        custom_crop_regions = {}
 
     start_time = time.time()
     filename = os.path.basename(image_path)
@@ -331,10 +347,13 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
 
         # Convert to OpenCV format (BGR)
         image_cv = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+        
+        # Get custom crop region for this image if available
+        custom_region = custom_crop_regions.get(filename, None)
 
         # Apply image preprocessing steps
         processed_image, cropped_cv, top_offset, left_offset, dpi = preprocess_image(
-            image_cv, config, intermediate_folder, filename, pixels_per_mm, stop_event, dpi
+            image_cv, config, intermediate_folder, filename, pixels_per_mm, stop_event, dpi, custom_region
         )
 
         if stop_event.is_set():
@@ -387,7 +406,8 @@ def process_image(image_path: str, config: Config, intermediate_folder: str, res
         return None
 
 def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: str, filename: str,
-                    pixels_per_mm: float, stop_event: threading.Event, dpi: Tuple[int, int]) -> Tuple[np.ndarray, np.ndarray, int, int, Tuple[int, int]]:
+                    pixels_per_mm: float, stop_event: threading.Event, dpi: Tuple[int, int], 
+                    custom_crop_region: List[int] = None) -> Tuple[np.ndarray, np.ndarray, int, int, Tuple[int, int]]:
     """
     Apply preprocessing steps to the image, including adaptive thresholding in RGB space
     immediately after cropping, before converting to grayscale.
@@ -400,6 +420,7 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
         pixels_per_mm (float): Pixels per millimeter.
         stop_event (threading.Event): Event to signal stopping of processing.
         dpi (Tuple[int, int]): DPI of the original image.
+        custom_crop_region (List[int]): Optional custom crop region [x1, y1, x2, y2].
 
     Returns:
         Tuple[np.ndarray, np.ndarray, int, int, Tuple[int, int]]:
@@ -409,14 +430,25 @@ def preprocess_image(image_cv: np.ndarray, config: Config, intermediate_folder: 
             - Left offset used during cropping.
             - DPI tuple.
     """
-    # Step 1: Cropping based on configured percentages
+    # Step 1: Cropping based on custom region or configured percentages
     height, width = image_cv.shape[:2]
-    left = int(width * config.crop_left_pct)
-    right = int(width * (1 - config.crop_right_pct))
-    top = int(height * config.crop_top_pct)
-    bottom = int(height * (1 - config.crop_bottom_pct))
-
-    cropped_image = image_cv[top:bottom, left:right]
+    
+    if custom_crop_region:
+        # Use custom crop region [x1, y1, x2, y2]
+        left = custom_crop_region[0]
+        top = custom_crop_region[1]
+        right = custom_crop_region[2]
+        bottom = custom_crop_region[3]
+        cropped_image = image_cv[top:bottom, left:right]
+        logger.info(f"Using custom crop region for {filename}: ({left}, {top}, {right}, {bottom})")
+    else:
+        # Use percentage-based cropping
+        left = int(width * config.crop_left_pct)
+        right = int(width * (1 - config.crop_right_pct))
+        top = int(height * config.crop_top_pct)
+        bottom = int(height * (1 - config.crop_bottom_pct))
+        cropped_image = image_cv[top:bottom, left:right]
+    
     logger.debug(f"Cropped image dimensions: {cropped_image.shape}")
 
     save_image(cropped_image, intermediate_folder, filename, '1_cropped_image', config.img_debug, dpi)
