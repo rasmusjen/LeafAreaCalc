@@ -7584,3 +7584,7 @@ AttributeError: 'NoneType' object has no attribute 'is_set'
 2024-12-23 09:36:47,248 - INFO - All results have been saved successfully.
 2024-12-23 09:36:47,248 - INFO - Leaf classification processing has concluded.
 2024-12-23 09:36:47,258 - INFO - Processing completed successfully.
+2026-01-28 16:08:42,701 - DEBUG - Logging is configured.
+2026-01-28 16:09:03,065 - DEBUG - Logging is configured.
+2026-01-28 16:09:03,518 - INFO - Fonts set successfully using 'Open Sans'.
+2026-01-28 16:09:03,854 - ERROR - An error occurred during image processing: bitmap "/home/runner/work/LeafAreaCalc/LeafAreaCalc/src/assets/LAC.ico" not defined

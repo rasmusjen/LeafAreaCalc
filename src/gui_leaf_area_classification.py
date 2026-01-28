@@ -876,52 +876,6 @@ class LeafAreaGUI:
         log_level = getattr(logging, log_level_str.upper(), logging.DEBUG)
         logger.setLevel(log_level)
 
-
-        def reset_to_defaults(self) -> None:
-            """
-            Reset all settings to default values.
-            """
-            # Define default values
-            defaults = {
-                "image_directory": "",
-                "area_threshold": "2",
-                "adaptive_threshold": "True",
-                "adaptive_window_size": "15",
-                "adaptive_C": "2",
-                "color_threshold": "180",
-                "kernel_size": "(3, 3)",
-                "log_level": "DEBUG"
-            }
-
-            # Reset entries
-            self.dir_label.config(text=defaults["image_directory"])
-            for key, default_val in defaults.items():
-                if key in ["adaptive_threshold"]:
-                    self.entries[key].set(default_val == "True")
-                elif key in ["adaptive_window_size", "adaptive_C", "color_threshold", "kernel_size"]:
-                    self.entries[key].delete(0, tk.END)
-                    self.entries[key].insert(0, default_val)
-                elif key == "log_level":
-                    self.entries[key].set(default_val)
-                else:
-                    self.entries[key].delete(0, tk.END)
-                    self.entries[key].insert(0, default_val)
-
-            # Update config
-            for key, default_val in defaults.items():
-                self.config.set("DEFAULT", key, default_val)
-
-            with open(self.config_file, 'w') as configfile:
-                self.config.write(configfile)
-
-            # Clear image list
-            self.image_listbox.delete(0, tk.END)
-            logger.info("Settings reset to default values.")
-            messagebox.showinfo("Reset", "Settings have been reset to default values.")
-
-            # Update logging level
-            logger.setLevel(logging.DEBUG)
-
         # Disable RGB threshold entries if filter_rgb is False
         filter_rgb_var = self.entries.get("filter_rgb")
         if filter_rgb_var and not filter_rgb_var.get():
