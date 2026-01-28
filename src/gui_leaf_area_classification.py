@@ -107,6 +107,13 @@ class LeafAreaGUI:
     and display logs and results.
     """
 
+    # Constants for preview grid layout
+    PREVIEW_THUMBNAIL_WIDTH = 200
+    PREVIEW_THUMBNAIL_HEIGHT = 150
+    PREVIEW_GRID_COLUMNS = 4
+    PREVIEW_GRID_PADDING = 10
+    PREVIEW_LARGE_IMAGE_THRESHOLD = 50
+
     def __init__(self, root: tk.Tk):
         """
         Initialize the LeafAreaGUI.
@@ -663,9 +670,10 @@ class LeafAreaGUI:
             # Resize image for display if it's too large
             max_size = (600, 400)  # Reduced from (800, 800)
             try:
-                resample_filter = Image.ANTIALIAS
-            except AttributeError:
                 resample_filter = Image.LANCZOS
+            except AttributeError:
+                # Fallback to ANTIALIAS for older Pillow versions
+                resample_filter = Image.ANTIALIAS
 
             img_copy.thumbnail(max_size, resample=resample_filter)
             resized_width, resized_height = img_copy.size
@@ -745,7 +753,7 @@ class LeafAreaGUI:
             return
 
         # Warn if there are many images
-        if len(self.images) > 50:
+        if len(self.images) > self.PREVIEW_LARGE_IMAGE_THRESHOLD:
             result = messagebox.askyesno(
                 "Large Image Set",
                 f"You have {len(self.images)} images. Loading all thumbnails may take a moment and use significant memory. Continue?"
@@ -753,6 +761,7 @@ class LeafAreaGUI:
             if not result:
                 return
 
+        preview_window = None
         try:
             # Validate crop settings before creating window
             try:
@@ -793,20 +802,15 @@ class LeafAreaGUI:
             scrollbar_x.pack(side="bottom", fill="x")
             canvas.pack(side="left", fill="both", expand=True)
 
-            # Define thumbnail size and grid parameters
-            thumb_width = 200
-            thumb_height = 150
-            columns = 4
-            padding = 10
-
             # Process and display each image
             for idx, filename in enumerate(self.images):
                 image_path = os.path.join(directory, filename)
                 
                 try:
-                    # Open and process the image
-                    img = Image.open(image_path)
-                    img_copy = img.copy()
+                    # Open and process the image using context manager
+                    with Image.open(image_path) as img:
+                        img_copy = img.copy()
+                    
                     draw = ImageDraw.Draw(img_copy)
 
                     # Calculate crop coordinates based on percentages
@@ -826,16 +830,23 @@ class LeafAreaGUI:
                         # Fallback to ANTIALIAS for older Pillow versions
                         resample_filter = Image.ANTIALIAS
                     
-                    img_copy.thumbnail((thumb_width, thumb_height), resample=resample_filter)
+                    img_copy.thumbnail(
+                        (self.PREVIEW_THUMBNAIL_WIDTH, self.PREVIEW_THUMBNAIL_HEIGHT), 
+                        resample=resample_filter
+                    )
                     img_photo = ImageTk.PhotoImage(img_copy)
 
                     # Calculate grid position
-                    row = idx // columns
-                    col = idx % columns
+                    row = idx // self.PREVIEW_GRID_COLUMNS
+                    col = idx % self.PREVIEW_GRID_COLUMNS
 
                     # Create a frame for each thumbnail
                     thumb_frame = tk.Frame(scrollable_frame, bg="#ffffff", bd=2, relief=tk.RAISED)
-                    thumb_frame.grid(row=row, column=col, padx=padding, pady=padding)
+                    thumb_frame.grid(
+                        row=row, column=col, 
+                        padx=self.PREVIEW_GRID_PADDING, 
+                        pady=self.PREVIEW_GRID_PADDING
+                    )
 
                     # Create clickable image label
                     img_label = tk.Label(thumb_frame, image=img_photo, cursor="hand2")
@@ -843,10 +854,19 @@ class LeafAreaGUI:
                     img_label.pack()
 
                     # Bind click event to open full preview
-                    img_label.bind("<Button-1>", lambda e, path=image_path, index=idx: self.show_image_popup(path, index))
+                    img_label.bind(
+                        "<Button-1>", 
+                        lambda e, path=image_path, index=idx: self.show_image_popup(path, index)
+                    )
 
                     # Add filename label below the thumbnail
-                    name_label = tk.Label(thumb_frame, text=filename, font=("Arial", 8), bg="#ffffff", wraplength=thumb_width)
+                    name_label = tk.Label(
+                        thumb_frame, 
+                        text=filename, 
+                        font=("Arial", 8), 
+                        bg="#ffffff", 
+                        wraplength=self.PREVIEW_THUMBNAIL_WIDTH
+                    )
                     name_label.pack()
 
                 except Exception as e:
@@ -858,6 +878,9 @@ class LeafAreaGUI:
         except Exception as e:
             logger.error(f"Failed to create preview window: {e}")
             messagebox.showerror("Preview Error", f"Failed to create preview window:\n{e}")
+            # Close preview window if it was created but encountered an error
+            if preview_window and preview_window.winfo_exists():
+                preview_window.destroy()
 
     def get_crop_percentage(self, key: str) -> float:
         """
