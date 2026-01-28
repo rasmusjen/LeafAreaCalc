@@ -8,6 +8,11 @@ node_modules/
 dist/
 build/
 
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+
 # Ignore environment variable files
 .env
 *.env
