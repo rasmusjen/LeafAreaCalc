@@ -744,7 +744,30 @@ class LeafAreaGUI:
             messagebox.showinfo("No Images", "No images found in the selected directory.")
             return
 
+        # Warn if there are many images
+        if len(self.images) > 50:
+            result = messagebox.askyesno(
+                "Large Image Set",
+                f"You have {len(self.images)} images. Loading all thumbnails may take a moment and use significant memory. Continue?"
+            )
+            if not result:
+                return
+
         try:
+            # Validate crop settings before creating window
+            try:
+                crop_left = self.get_crop_percentage("crop_left")
+                crop_right = self.get_crop_percentage("crop_right")
+                crop_top = self.get_crop_percentage("crop_top")
+                crop_bottom = self.get_crop_percentage("crop_bottom")
+            except (ValueError, KeyError) as e:
+                logger.warning(f"Invalid crop settings, using defaults: {e}")
+                # Use default values if crop settings are invalid
+                crop_left = 20.0
+                crop_right = 3.0
+                crop_top = 3.0
+                crop_bottom = 3.0
+
             # Create a new top-level window for the grid preview
             preview_window = tk.Toplevel(self.root)
             preview_window.title("Preview All Images")
@@ -769,12 +792,6 @@ class LeafAreaGUI:
             scrollbar_y.pack(side="right", fill="y")
             scrollbar_x.pack(side="bottom", fill="x")
             canvas.pack(side="left", fill="both", expand=True)
-
-            # Get crop settings
-            crop_left = self.get_crop_percentage("crop_left")
-            crop_right = self.get_crop_percentage("crop_right")
-            crop_top = self.get_crop_percentage("crop_top")
-            crop_bottom = self.get_crop_percentage("crop_bottom")
 
             # Define thumbnail size and grid parameters
             thumb_width = 200
@@ -802,11 +819,12 @@ class LeafAreaGUI:
                     # Draw red rectangle outlining the crop area
                     draw.rectangle([(left_px, top_px), (right_px, bottom_px)], outline="red", width=2)
 
-                    # Create thumbnail
+                    # Create thumbnail using LANCZOS filter (recommended replacement for ANTIALIAS)
                     try:
-                        resample_filter = Image.ANTIALIAS
-                    except AttributeError:
                         resample_filter = Image.LANCZOS
+                    except AttributeError:
+                        # Fallback to ANTIALIAS for older Pillow versions
+                        resample_filter = Image.ANTIALIAS
                     
                     img_copy.thumbnail((thumb_width, thumb_height), resample=resample_filter)
                     img_photo = ImageTk.PhotoImage(img_copy)
